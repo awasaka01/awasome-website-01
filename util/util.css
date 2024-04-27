@@ -1,0 +1,80 @@
+:root {
+
+    /* Font */
+    --fontfamily: 'Roboto', sans-serif;
+    --fontcolor1: #ffffff;
+    --fontcolor2: #d4d4d4;
+    --fontcolor3: #ffffff;
+
+    /* Colors */
+    --bgcolor1: #221e22;
+    --bgcolor2: #312a31;
+    --bgcolor3: #3e373e;
+    --bgcolor4: #453b45;
+    --hicolor: #ff6aa3;
+}
+
+
+/* Default Base CSS */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--bgcolor1);
+    color: var(--fontcolor1);
+
+    margin: 0;
+    padding: 0;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+p {
+    margin: 0;
+    padding: 0;
+}
+
+
+/* Custom Highlight Color */
+::selection {
+    color: #242324;
+    background: #ffb7e8;
+    /* WebKit/Blink Browsers */
+}
+
+::-moz-selection {
+    color: #242324;
+    background: #ffb7e8;
+    /* Gecko Browsers */
+}
+
+
+
+/* Home Button */
+.homebutton {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+
+    margin: 5px;
+
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+    user-select: none;
+
+    transition-property: transform, color;
+    transition-duration: 200ms;
+}
+
+.homebutton:hover {
+    color: var(--hicolor);
+    transform: scale(1.1);
+
+}
+
+.homebutton i {
+    font-size: 3em;
+}
