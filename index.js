@@ -9,14 +9,10 @@ function init () {
 	// Create one of each element
 	const fragment = document.createDocumentFragment();
 
-	symbols.forEach((symbol) => {
-		const e = document.createElement("p");
-		e.className = "heart";
-		fragment.appendChild(e);
-	});
-
+	const amount = Math.ceil(window.screen.width * window.screen.height / 100000 + 5);
 	const container = document.getElementById("heartcontainer");
-	container.appendChild(fragment);
+	container.innerHTML = Array(amount).fill("<div class=\"heart\"></div>").join(" ");
+	console.log(amount);
 
 
 	const randomDrop = (element) => {
