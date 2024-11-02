@@ -1,80 +1,144 @@
 :root {
-
-    /* Font */
-    --fontfamily: 'Roboto', sans-serif;
-    --fontcolor1: #ffffff;
-    --fontcolor2: #d4d4d4;
-    --fontcolor3: #ffffff;
-
-    /* Colors */
-    --bgcolor1: #221e22;
-    --bgcolor2: #312a31;
-    --bgcolor3: #3e373e;
-    --bgcolor4: #453b45;
-    --hicolor: #ff6aa3;
+  --pallete02: #0f0e0f;
+  --pallete03: #131214;
+  --pallete04: #181718;
+  --pallete05: #1a181c;
+  --pallete06: #1e1c21;
+  --pallete07: #201e24;
+  --pallete08: #232029;
+  --pallete09: #282530;
+  --pallete10: #2d2938;
+  --pallete11: #342e42;
+  --pallete12: #39304a;
+  --pallete13: #3e3352;
+  --pallete14: #433659;
+  --pallete15: #483861;
+  --pallete16: #4c3869;
+  --pallete17: #4f3a6e;
+  --pallete18: #543c77;
+  --pallete19: #5b407d;
+  --pallete20: #614483;
+  --pallete21: #69488e;
+  --pallete22: #714d99;
+  --pallete23: #77509f;
+  --pallete24: #7c53a6;
+  --pallete25: #8055ab;
+  --pallete26: #8657b2;
+  --pallete27: #8d59bb;
+  --pallete28: #955cbd;
+  --pallete29: #9e60c4;
+  --pallete30: #a962cc;
+  --pallete31: #b763cf;
+  --pallete32: #cd6ac7;
+  --pallete33: #d971e8;
+  --pallete34: #d56cbd;
+  --pallete35: #de6eb3;
+  --pallete36: #eb759c;
+  --pallete37: #ef7b92;
+  --pallete38: #f2828a;
+  --pallete39: #f48b86;
+  --pallete40: #f49686;
+  --pallete41: #f39e82;
+  --pallete42: #f2ab87;
+  --pallete43: #f1b78e;
+  --pallete44: #f2be97;
+  --pallete45: #f1c9a2;
+  --pallete46: #f3d5b4;
+  --pallete47: #f5e0c7;
+  --pallete48: #f6e8d0;
+  --pallete49: #f7efde;
+  --pallete50: #f9f6eb;
+  --pallete51: #fefdfb;
+  /* Font */
+  --fontfamily: "Roboto", sans-serif;
+  --fontcolor1: #fefdfb;
+  --fontcolor2: #d2d0cc;
+  --fontcolor3: #9c9b98;
+  /* Colors */
+  /* --bgcolor0: #0f0f10;
+  --bgcolor1: #1a181c;
+  --bgcolor2: #262428;
+  --bgcolor3: #373238;
+  --bgcolor4: #605765;
+  --bgcolor5: #1d1b1e;
+  --bgcolor6: #1d1b1e;
+  --bgcolor7: #1d1b1e;
+  --bgcolor8: #1d1b1e;
+  --bgcolor9: #1d1b1e; */
+  --bgcolor0: #0f0f10;
+  --bgcolor1: var(--pallete04);
+  --bgcolor2: var(--pallete10);
+  --bgcolor3: var(--pallete15);
+  --bgcolor4: var(--pallete20);
+  --bgcolor5: var(--pallete25);
+  --bgcolor6: var(--pallete30);
+  --bgcolor7: #1d1b1e;
+  --bgcolor8: #1d1b1e;
+  --bgcolor9: #1d1b1e;
+  --hicolor: var(--pallete37);
+  --selectionfg: var(--fontcolor1);
+  --selectionbg: var(--hicolor);
 }
-
 
 /* Default Base CSS */
 body {
-    font-family: 'Roboto', sans-serif;
-    background-color: var(--bgcolor1);
-    color: var(--fontcolor1);
-
-    margin: 0;
-    padding: 0;
-    width: 100%;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  font-family: "Roboto", sans-serif;
+  background-color: var(--bgcolor1);
+  color: var(--fontcolor1);
+  margin: 0;
+  padding: 0;
+  min-width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
 }
 
 p {
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
 }
 
-
 /* Custom Highlight Color */
+::-moz-selection {
+  color: var(--selectionfg);
+  background: var(--selectionbg);
+  /* WebKit/Blink Browsers */
+}
 ::selection {
-    color: #242324;
-    background: #ffb7e8;
-    /* WebKit/Blink Browsers */
+  color: var(--selectionfg);
+  background: var(--selectionbg);
+  /* WebKit/Blink Browsers */
 }
 
 ::-moz-selection {
-    color: #242324;
-    background: #ffb7e8;
-    /* Gecko Browsers */
+  color: var(--selectionfg);
+  background: var(--selectionbg);
+  /* Gecko Browsers */
 }
-
-
 
 /* Home Button */
 .homebutton {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 1;
-
-    margin: 5px;
-
-    color: inherit;
-    text-decoration: none;
-    cursor: pointer;
-    user-select: none;
-
-    transition-property: transform, color;
-    transition-duration: 200ms;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  margin: 5px;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+  transition-property: transform, color;
+  transition-duration: 200ms;
 }
 
 .homebutton:hover {
-    color: var(--hicolor);
-    transform: scale(1.1);
-
+  color: var(--hicolor);
+  transform: scale(1.1);
 }
 
 .homebutton i {
-    font-size: 3em;
-}
+  font-size: 3em;
+}/*# sourceMappingURL=util.css.map */

@@ -1,0 +1,10 @@
+{
+	"editor.fontSize": 14,
+	"files.exclude": {
+		"**/*.css": true,
+		"**/*.css.map": true
+	},
+	"javascript.updateImportsOnFileMove.enabled": "always",
+	"typescript.updateImportsOnFileMove.enabled": "always",
+	"markdown.updateLinksOnFileMove.enabled": "always"
+}
