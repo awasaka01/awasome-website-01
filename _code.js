@@ -51,7 +51,7 @@ const startNextMovement = (element) => {
 		return;
 	}
 
-	element.addEventListener("transitionend", (e) => { return startNextMovement(e.target); }, { once: true });
+	element.addEventListener("transitionend", (e) => startNextMovement(e.target), { once: true });
 };
 const direction = {
 	x: rect.x < mouse.x ? 50 : -50,

@@ -43,10 +43,9 @@ p {
   --default-button-border-raised-inner: inset 2px 2px var(--button-highlight), inset -3px -3px var(--button-shadow), inset 3px 3px var(--button-face);
   --default-button-border-sunken-outer: inset 2px 2px var(--window-frame), inset -1px -1px var(--window-frame);
   --default-button-border-sunken-inner: inset -2px -2px var(--button-highlight), inset 3px 3px var(--button-shadow), inset -3px -3px var(--button-face);
-  --shadowed-out: inset 0.2em 0.2em 0 0 var(--general-highlight),
-  				inset -0.2em -0.2em 0 0 var(--general-shadow);
-  --shadowed-in: inset -0.2em -0.2em 0 0 var(--general-highlight),
-  			   inset 0.2em 0.2em 0 0 var(--general-shadow);
+  --shadowed-out: inset 5px 5px 0px 0px rgba(255, 255, 255, 0.22),
+  	inset 10px 9px 0px 0px rgba(255, 255, 255, 0.28), inset -10px -10px 0px 0px rgba(0, 0, 0, 0.48), inset -5px -5px 0px 0px rgba(0, 0, 0, 0.51);
+  --shadowed-in: inset 5px 5px 0px 0px rgba(255, 255, 255, 0.22), inset 10px 9px 0px 0px rgba(255, 255, 255, 0.28), inset -10px -10px 0px 0px rgba(0, 0, 0, 0.48), inset -5px -5px 0px 0px rgba(0, 0, 0, 0.51);
 }
 
 @font-face {
@@ -59,7 +58,7 @@ p {
   box-sizing: border-box;
   min-height: 100vh;
   background-color: var(--bgcolor1);
-  /* box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #dfdfdf, inset -2px -2px grey, inset 2px 2px #fff; */
+  /* box-shadow:                                     inset -1px -1px #0a0a0a, inset 1px 1px #dfdfdf, inset -2px -2px grey, inset 2px 2px #fff; */
 }
 
 .title-bar {
@@ -127,8 +126,10 @@ p {
   justify-content: center;
   align-items: center;
   font-style: unset;
-  color: inherit; /* blue colors for links too */
-  text-decoration: inherit; /* no underline */
+  color: inherit;
+  /* blue colors for links too */
+  text-decoration: inherit;
+  /* no underline */
   -webkit-mask-size: 90%;
           mask-size: 90%;
   -webkit-mask-position: center;
@@ -139,10 +140,16 @@ p {
   background-color: #ffffff;
   width: 70%;
   height: 70%;
-  image-rendering: optimizeSpeed; /* STOP SMOOTHING, GIVE ME SPEED  */ /* Firefox                        */
-  image-rendering: -o-crisp-edges; /* Opera                          */ /* Chrome (and eventually Safari) */
-  image-rendering: pixelated; /* Universal support since 2021   */
-  image-rendering: optimize-contrast; /* CSS3 Proposed                  */
+  image-rendering: optimizeSpeed;
+  /* STOP SMOOTHING, GIVE ME SPEED  */
+  /* Firefox                        */
+  image-rendering: -o-crisp-edges;
+  /* Opera                          */
+  /* Chrome (and eventually Safari) */
+  image-rendering: pixelated;
+  /* Universal support since 2021   */
+  image-rendering: optimize-contrast;
+  /* CSS3 Proposed                  */
   -ms-interpolation-mode: nearest-neighbor;
 }
 
@@ -174,7 +181,8 @@ svg {
   padding-bottom: 1px;
 }
 
-.heart, .heart * {
+.heart,
+.heart * {
   position: fixed;
   font-size: inherit;
   width: 11em;

@@ -2,149 +2,113 @@ const AWA = {};
 
 import chroma from "https://unpkg.com/chroma-js@3.0.0/index.js";
 
-
-
 // Random number generator between min and max
-export const rr = (min, max) => { return Math.floor(Math.random() * (max - min + 1)) + min; };
+/**
+ * Generates a random integer between min and max, inclusive.
+ * @param {number} min - The minimum value.
+ * @param {number} max - The maximum value.
+ * @returns {number} A random integer between min and max.
+ */
+export const rr = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
-Array.prototype.random = function () { return this[Math.floor(Math.random() * this.length)]; };
-Array.prototype.sum = function () { return this.reduce((a, c) => { return a + c; }, 0); };
+Array.prototype.random = function () {
+    return this[Math.floor(Math.random() * this.length)];
+};
 
-
+Array.prototype.sum = function () {
+    return this.reduce((a, c) => a + c, 0);
+};
 
 /**
  * Generates a random color as a hex string.
  * @param {Object} options - Options to generate the color.
- * @param {string} [options.colorRange="oklab"] - The color range of the generated color.
+ * @param {string} [options.colorspace="oklab"] - The color space of the generated color.
+ * @param {Array<number>} [options.l=[0, 100]] - Lightness range.
+ * @param {Array<number>} [options.c=[0, 100]] - Chroma range.
+ * @param {Array<number>} [options.h=[0, 255]] - Hue range.
+ * @param {number} [options.precision=1000] - Precision for random generation.
  * @returns {string} A random color as a hex string.
  */
 export const randomColor = ({
-	colorspace = "oklab", // or hsl
-	l = [0, 100], // 0.00 - 1.00
-	c = [0, 100], // 0.00 - 0.37
-	h = [0, 255], // 0 - 255
-	precision = 1000,
+    colorspace = "oklab",
+    l = [0, 100],
+    c = [0, 100],
+    h = [0, 255],
+    precision = 1000,
 } = {}) => {
-	l = rr(...l.map((x) => { return x * precision; })) / (precision * 100);
-	c = rr(...c.map((x) => { return (x * 0.4) * precision; })) / (precision * 100);
-	h = rr(...h.map((x) => { return x * precision; })) / precision;
+    l = rr(...l.map((x) => x * precision)) / (precision * 100);
+    c = rr(...c.map((x) => (x * 0.4) * precision)) / (precision * 100);
+    h = rr(...h.map((x) => x * precision)) / precision;
 
-	return chroma.oklch(l, c, h).hex();
-};
-
-
-// Initiliaztion Function for webpage additions
-export const init = (options = {}) => {
-	// Default Options
-	options = Object.assign({ homeButton: 1 }, options);
-
-
-	// Home Button 0:None 1:FullBar 2:Basic
-	if (options.homeButton === 1) {
-		const html = "<a href=\"/\" class=\"homebutton\"><div><i class=\"material-icons\">home</i></div></a>";
-		document.body.innerHTML += html;
-	}
-	if (options.homeButton === 2) {
-		const html = "<a href=\"/\" class=\"homebutton\"><div><i class=\"material-icons\">home</i></div></a>";
-		document.body.innerHTML += html;
-	}
-};
-
-export const getDistance = (coordA, coordB) => {
-	return Math.sqrt((coordA[0] - coordB[0]) ** 2 + (coordA[1] - coordB[1]) ** 2);
-};
-
-
-// Remove duplicate objects from array by ID
-export const removeDuplicatesByID = (keyname, array) => {
-	return [...array.reduce((a, c) => { a.set(c[keyname], c); return a; }, new Map()).values()];
+    return chroma.oklch(l, c, h).hex();
 };
 
 
 
+/**
+ * Calculates the distance between two coordinates.
+ * @param {Array<number>} coordA - The first coordinate [x, y].
+ * @param {Array<number>} coordB - The second coordinate [x, y].
+ * @returns {number} The distance between the two coordinates.
+ */
+export const getDistance = (coordA, coordB) => Math.sqrt((coordA[0] - coordB[0]) ** 2 + (coordA[1] - coordB[1]) ** 2);
+
+/**
+ * Removes duplicate objects from an array by ID.
+ * @param {string} keyname - The key name to check for duplicates.
+ * @param {Array<Object>} array - The array to remove duplicates from.
+ * @returns {Array<Object>} A new array with duplicates removed.
+ */
+export const removeDuplicatesByID = (keyname, array) => [...array.reduce((a, c) => {
+        a.set(c[keyname], c);
+        return a;
+    }, new Map()).values()];
 
 // Performance Analyzer
 const values = {};
+
+/**
+ * Analyzes performance by measuring and logging performance entries.
+ */
 export const perf = () => {
+    const marks = performance.getEntriesByType("mark");
+    if (marks.length === 0) { return; }
 
+    marks.forEach((mark) => {
+        if (mark.name.startsWith("/")) { return; }
+        performance.measure(mark.name, mark.name, "/" + mark.name);
+    });
 
-	//
-	const marks = performance.getEntriesByType("mark");
-	if (marks.length === 0) { return; }
+    const marksGrouped = Object.groupBy(marks, ({ name }) => name);
 
-	marks.forEach((mark) => {
-		if (mark.name.startsWith("/")) { return; }
-		performance.measure(mark.name, mark.name, "/" + mark.name);
-	});
+    const markNames = Object.keys(marksGrouped).filter((key) => !key.startsWith("/"));
 
-	//
-	const marksGrouped = Object.groupBy(marks, ({ name }) => { return name; });
+    const pairs = markNames.flatMap((key) => marksGrouped[key].map((x) => [x, marksGrouped["/" + key].shift()]));
 
-	const markNames = Object.keys(marksGrouped).filter((key) => { return !key.startsWith("/"); });
+    markNames.forEach((key) => {
+        if (values[key] === undefined) {
+            values[key] = { list: [], avg: 0 };
+        }
+    });
 
-	const pairs = markNames.flatMap((key) => {
-			return marksGrouped[key].map((x) => { return [x, marksGrouped["/" + key].shift()]; });
-	});
+    console.log("\n\n");
+    console.log(pairs);
+    console.log(marksGrouped);
 
-	markNames.forEach((key) => { if (values[key] === undefined) { values[key] = { list: [], avg: 0 }; } });
+    pairs.forEach((pair) => {
+        const ref = values[pair[0].name];
+        ref.list.push(pair[1].startTime - pair[0].startTime);
+        if (ref.list.length > 1000) { ref.list.shift(); }
+    });
 
-	console.log("\n\n");
-	console.log(pairs);
-	console.log(marksGrouped); // leftover
+    markNames.forEach((key) => {
+        values[key].avg = values[key].list.sum() / values[key].list.length;
+    });
+    [].sum();
 
+    console.log(values);
 
-
-
-	pairs
-	.forEach((pair) => {
-		const ref = values[pair[0].name];
-		ref.list.push(pair[1].startTime - pair[0].startTime);
-		if (ref.list.length > 1000) { ref.list.shift(); }
-	});
-
-
-	markNames.forEach((key) => {
-		values[key].avg = values[key].list.sum() / values[key].list.length;
-	});
-	[].sum();
-
-	console.log(values);
-
-
-	// const all = performance.getEntriesByType("measure");
-	// all.forEach((measure) => {
-	// 	values[measure.name] !== undefined
-	// 	? values[measure.name].push(measure.duration)
-	// 	: values[measure.name] = [measure.duration];
-	// 	if (values[measure.name].length > 1000) { values[measure.name].shift(); }
-
-	// });
-	// console.log(values);
-
-	// console.log("\n\n\n\n");
-	// console.log([
-	// "|	Performance Analyzer:",
-
-	// 	all.map((x) => { return `|	${x.name}: ${x.duration}ms`; }).join("\n"),
-	// ].join("\n"));
-
-	performance.clearMarks(); performance.clearMeasures();
+    performance.clearMarks();
+    performance.clearMeasures();
 };
 
-
-	// Object.defineProperty(Array.prototype, "random", {
-	// 	value: function (compare) { return this; },
-	// });
-
-
-
-// // Select random item from array
-// Array.prototype.sample = () => this[Math.floor(Math.random() * this.length)];
-
-
-// // Main Util Function
-// const Util = {
-
-// 	// Returns a random number between max and min (inclusive)
-// 	randrange: (min, max) => Math.floor(Math.random() * (max - min + 1)) + min,
-// };

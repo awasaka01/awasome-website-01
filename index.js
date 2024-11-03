@@ -5,11 +5,11 @@ const svgs = [
 ];
 
 import { rr, randomColor } from "/util/util.js";
+import chroma from "https://unpkg.com/chroma-js@3.0.0/index.js";
 
 
 window.addEventListener("load", () => {
-
-
+	document.body.style.backgroundColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
 	// for (let ee = 0; ee < 100; ee++) {
 	// 	const color = randomColor({
 	// 		l: [80, 80],
@@ -45,7 +45,7 @@ window.addEventListener("load", () => {
 
 	// Falling Hearts
 	const symbols = ["./images/fallingheartmask.svg"];
-	const randomSymbol = () => { return symbols[Math.floor(Math.random() * symbols.length)]; };
+	const randomSymbol = () => symbols[Math.floor(Math.random() * symbols.length)];
 
 	// Create one of each element
 	const amount = Math.ceil(window.screen.width * window.screen.height / 100000 + 5);
