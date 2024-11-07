@@ -1,0 +1,375 @@
+@use "/helpers/_bundled.scss" as *;
+
+
+
+@function stripes($color1: transparent, $color2: transparent, $linesize: 1em, $angle: 135deg) {
+	@return repeating-linear-gradient($angle, $color1 0, $color1 $linesize, $color2 $linesize, $color2 $linesize * 2);
+}
+
+
+
+
+// Page List
+#page-list {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 2em;
+
+	padding: 1em 4em;
+	width: 100%;
+	max-width: 1000px;
+	box-sizing: border-box;
+	
+
+	.page {
+		position: relative;
+		font-family: "Roboto Mono", monospace;
+		cursor: pointer;
+
+		flex-grow: 1;
+		display: flex;
+		flex-direction: column;
+
+
+		&::after, &::before, & a {
+			transition: ease-in-out 120ms;
+			transition-property: height margin-top background-color;
+		}
+		
+		&::after, a {
+			outline: 4px solid $hi-1d8;
+		}
+
+		a {
+			
+			padding: 1em 2em;
+			box-shadow: 0 0 10px 0 #000000eb;
+			background-color: $hi-1;
+
+			&:hover {
+				
+				background-color: $hi-1dd;
+			}
+			&::before {
+				transition: top 120ms ease-in-out;
+
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: calc(100% - 1em);
+				
+				outline: transparent dashed 2px;
+				outline-offset: -0.5em;
+				content: "";
+				white-space: pre;
+			}
+
+		}
+
+		&::after {																
+			content: "";
+			height: 1em;
+			z-index: -1;
+			background: stripes($hi-1d8, $hi-1da, 0.5em);
+	
+		}
+
+		&::before {
+			content: "";
+			height: 0;
+		}
+
+
+		&:hover {
+			//transform: translateY(1em);
+			&::after { margin-top: -1em; }
+			&::before { height: 1em;}
+			a::before {
+				top: 1em; 
+				outline-color: rgba($fg-1, 0.5);
+			}
+			// outline: rgba($fg-3l5, 0.3) 0.2em dashed;
+			// transition: all 60ms ease-in-out;
+		}
+
+		// Zoom in border when clicked
+		// outline-offset: -0.8em;
+		// transition: all 300ms linear, outline 100ms linear, outline-offset 1000ms linear;
+
+		&:active a::before, &:focus-within a::before {
+			transition: outline-offset 400ms ease-in, outline-width 1500ms ease-in;
+			outline-offset: 200vmax;
+			outline-width: 1000px;
+		}
+
+		color: $fg-1;
+		.title {
+			font-size: 2em;
+			font-weight: bold;
+
+			text-decoration-line: underline;
+			text-decoration-color: rgba($fg-1, 0.5);
+			text-decoration-thickness: 0.1em;
+			text-decoration-skip-ink: unset;
+		}
+
+		.desc {
+			font-weight: 300;
+		}
+	}
+
+}
+
+
+
+
+
+
+
+
+// Header
+// .title-bar {
+// 	width: 100%;
+// 	padding: 6px;
+// 	box-sizing: border-box;
+
+// 	div {
+// 		@extend %flex-center;
+// 		@include raisedEffect();
+
+// 		font-size: x-large;
+// 		font-family: win98;
+
+// 		box-sizing: border-box;
+// 		padding: 0.3em;
+// 		width: 100%;
+// 		height: 2em;
+
+// 		background: linear-gradient(90deg, rgba(119, 80, 159, 1) 0%, rgba(205, 106, 199, 1) 40%, rgba(243, 213, 180, 1) 100%);
+// 	}
+
+// 	p {
+// 		margin-right: auto;
+// 		margin-left: 0.3em;
+// 	}
+
+// 	.title-bar-button {
+// 		@extend %flex-center;
+// 		@include raisedEffect();
+
+// 		background-color: $bg-1;
+// 		border: 1.5px solid #0000000d;
+
+// 		height: 100%;
+// 		aspect-ratio: 1 / 1;
+// 		margin-left: 4px;
+
+// 		font-size: 0.5em;
+// 		transition: all 100ms;
+
+// 		&:hover { background-color: $bg-1l1; }
+
+// 		&:active,
+// 		&.active {
+// 			@include raisedEffect();
+
+// 			font-size: 0.5em;
+// 			background-color: $bg-1l2;
+
+// 			min-height: 100%;
+// 			aspect-ratio: 1 / 1;
+
+// 			position: relative;
+// 			transform: translate(0.1em, 0.1em);
+// 			transition: all 5ms;
+
+// 			&:hover { background-color: $bg-1l3; }
+// 		}
+
+// 		&::after {
+// 			@extend %flex-center;
+		
+// 			mask-size: 90%;
+// 			mask-position: center;
+// 			mask-repeat: no-repeat;
+// 			content: "";
+		
+// 			background-color: $fg-1;
+// 			image-rendering: optimizeSpeed;
+
+// 			width: 70%;
+// 			height: 70%;
+		
+// 		}
+// 		&:active::after,
+// 		&.active::after {
+// 			background-color: $fg-1l2;
+// 		}
+// 	}
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// saving code for later 😭:
+
+/* #region Pages */
+// #page-list {
+// 	width: 100%;
+// 	box-sizing: border-box;
+// 	padding: 40px;
+// 	align-self: center;
+// 	display: flex;
+// 	flex-wrap: wrap;
+
+// 	font-size: 1.1em;
+// 	flex-direction: row;
+
+// 	align-items: stretch;
+// }
+
+// .page-link {
+// 	flex: 1;
+// 	outline: none !important;
+// }
+
+// .page {
+// 	color: var($fontcolor1);
+// 	justify-content: center;
+// 	padding: 10px 15px;
+// 	margin: 3px;
+// 	white-space: nowrap;
+// 	background-color: $bg3;
+// 	border: 4px solid $bg2;
+// 	transition: border-color 100ms ease-out;
+// 	cursor: pointer;
+// 	flex-direction: column;
+// 	align-items: center;
+
+// 	display: flex;
+
+// 	box-shadow:
+// 		inset 0px 8px 0px 0px red,
+// 		inset 0px 2px 0px 0px rgba(0, 0, 0, 1),
+// 		inset 0px 2px 0px 0px rgba(0, 0, 0, 1),
+// 		inset 0px 2px 0px 0px rgba(0, 0, 0, 1);
+// }
+
+// .page:hover,
+// .page-link:focus-within > .page {
+// 	transition: border-color 10ms ease-out;
+// 	border-color: var($hicolor);
+// 	background-color: $bg4;
+// }
+
+// .page-title {
+// 	font-weight: 500;
+// 	font-size: 1.2em;
+// }
+
+// .page-link {
+// 	text-decoration: none;
+// }
+
+// .page-desc {
+// 	color: var($fontcolor2);
+// }
+
+// /* #endregion */
+
+
+// #heartcontainer {
+// 	font-size: 1.5vmin;
+// 	top: 0;
+// 	left: 0;
+// 	width: 100%;
+// 	height: 100vh;
+// 	position: fixed;
+// 	z-index: 1;
+// 	pointer-events: none;
+// }
+
+/* #region Falling Hearts */
+/* .heart {
+	position: fixed;
+	font-size: calc(1vw * 1vh);
+	width: 4em;
+	height: 4em;
+	position: fixed;
+	/* top: -2em; /
+	pointer-events: none;
+	display: flex;
+	align-items: center;
+	z-index: 1;
+	justify-content: center;
+}
+svg {
+	padding-left: 1px;
+	padding-right: 1px;
+	padding-top: 1px;
+	padding-bottom: 1px;
+}
+
+.heart,
+.heart * {
+	position: fixed;
+	font-size: inherit;
+	width: 11em;
+	height: 11em;
+}
+
+.heart {
+	top: -10em;
+	left: 0;
+	transition: all 100ms linear;
+}
+.heart * {
+	width: 100%;
+	display: block;
+	height: 100%;
+}
+.heartpath {
+	width: 100%;
+	height: 100%;
+} */
+
+@keyframes Fall {
+	0% {
+		top: -1em;
+	}
+
+	100% {
+		top: 100vh;
+	}
+}
+
+/* #heartcontainer {
+	content: " ";
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100vh;
+	position: fixed;
+	z-index: 1;
+	pointer-events: none;
+} */
+/* #endregion */

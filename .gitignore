@@ -5,6 +5,7 @@
 *.scss.map
 
 
+
 # to remove all ignored files from the repo
 
 # git rm -r --cached ./

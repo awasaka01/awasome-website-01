@@ -1,112 +1,92 @@
 [
 	{
-		"id": "template",
+		"filename": "template",
 		"title": "temp",
 		"desc": "template page"
 	},
 	{
-		"id": "keyboard",
+		"filename": "keyboard",
 		"title": "Keyboard Generator",
 		"desc": "make kebord",
-		"hide": true
+		"hfilenamee": true
 	},
 	{
-		"id": "ball",
+		"filename": "ball",
 		"title": "BALL",
 		"desc": "ball"
 	},
 	{
-		"id": "game",
+		"filename": "game",
 		"title": "Game??",
 		"desc": "yeah ok"
 	},
 	{
-		"id": "bleh",
-		"title": "eee6ea910",
-		"desc": "des2616yo[tpm"
+		"filename": "character_copy",
+		"title": "Character Copier",
+		"desc": "Um has useful chars or something"
 	},
 	{
-		"id": "bl16161eh",
-		"title": "eee16163ea910",
-		"desc": "des16cyo[tpm"
+		"filename": "color_highlight",
+		"title": "Color Highlighter",
+		"desc": "Um has useful chars or something"
 	},
 	{
-		"id": "bl171eh",
+		"filename": "bl171eh",
 		"title": "eeeea8910",
 		"desc": "descy76o[tpm"
 	},
 	{
-		"id": "b71717eh",
-		"title": "a",
-		"desc": "a"
-	},
-	{
-		"id": "bleh",
-		"title": "eee6ea910",
-		"desc": "des2616yo[tpm"
-	},
-	{
-		"id": "bl16161eh",
-		"title": "eee16163ea910",
-		"desc": "des16cyo[tpm"
-	},
-	{
-		"id": "bl171eh",
-		"title": "eeeea8910",
-		"desc": "descy76o[tpm"
-	},
-	{
-		"id": "b71717eh",
+		"filename": "b71717eh",
 		"title": "eeeea62910",
 		"desc": "descy5o[tpm"
 	},
 	{
-		"id": "bleh",
+		"filename": "bleh",
 		"title": "eee6ea910",
 		"desc": "des2616yo[tpm"
 	},
 	{
-		"id": "bl16161eh",
+		"filename": "bl16161eh",
 		"title": "eee16163ea910",
 		"desc": "des16cyo[tpm"
 	},
 	{
-		"id": "bl171eh",
+		"filename": "bl171eh",
 		"title": "eeeea8910",
-		"desc": "descy76111111111111111o[tpm"
+		"desc": "descy7611o[tpm"
 	},
 	{
-		"id": "b71717eh",
+		"filename": "b71717eh",
 		"title": "eeeea62910",
 		"desc": "de111scy5o[tpm"
 	},
 	{
-		"id": "bleh",
+		"filename": "bleh",
 		"title": "eee6ea910",
 		"desc": "des2616yo[tpm"
 	},
 	{
-		"id": "bl16161eh",
+		"filename": "bl16161eh",
 		"title": "eee16163ea910",
-		"desc": "des11111111111116cyo[tpm"
+		"desc": "des11111116cyo[tpm"
 	},
 	{
-		"id": "bl171eh",
-		"title": "eeee111111111111111111a8910",
+		"filename": "bl171eh",
+		"title": "i",
 		"desc": "descy76o[tpm"
 	},
 	{
-		"id": "b71717eh",
+		"filename": "b71717eh",
 		"title": "eeeea62910",
 		"desc": "descy5o[tpm"
 	},
 	{
-		"id": "bleh",
+		"filename": "bleh",
 		"title": "eee6ea910",
 		"desc": "des2616yo[tpm"
 	},
 	{
-		"id": "bl16161eh",
+		"filename": "bl16161eh",
 		"title": "eee16163ea910",
 		"desc": "des16cyo[tpm"
 	}

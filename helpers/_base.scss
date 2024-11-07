@@ -1,0 +1,116 @@
+@use "sass:map";
+@use "sass:color";
+@use "colors.scss" as *;
+
+
+
+					// outline: 0.05em dashed #ffffff75 ;
+					// outline-offset: -0.2em;
+
+
+
+// Import fonts
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
+
+@font-face {
+	font-family: unifont;
+	src: url("/media/fonts/unifont.ttf");
+}
+
+@font-face {
+	font-family: win98;
+	src: url("/media/fonts/Windows Regular.ttf");
+}
+$main-font: "Roboto", sans-serif;
+
+
+// Raised button shahdow looking effect
+@function _corner($id, $offsets) { @return map.get($offsets, $id) map.get($offsets, $id); }
+@function _adjust($id, $offsets) { @return map.get($offsets, $id) map.get($offsets, $id); }
+
+@function raisedEffect($base-color, $height: 0.1em, $opacity: 0.5, $inverted: false) {
+	$height: if($inverted==true, 0 - $height, $height);
+
+	$offsets: (
+		tl-in: $height,     tl-ou: $height * 2,
+		br-in: 0 - $height, br-ou: 0 - $height * 2
+	);
+
+	// Simulate opacity by mixing colors
+
+		
+	$hc1: color.mix($base-color, $highlight-color1, $opacity * 100);
+	$hc2: color.mix($base-color, $highlight-color2, $opacity * 100);
+	$sc1: color.mix($base-color, $shadow-color1, $opacity * 100);
+	$sc2: color.mix($base-color, $shadow-color2, $opacity * 100);
+
+	@if ($inverted == false) {
+		@return
+		inset _corner("tl-in", $offsets) 0 0 rgba($hc1, 1),
+		inset _corner("tl-ou", $offsets) 0 0 rgba($hc2, 1),
+		inset _corner("br-in", $offsets) 0 0 rgba($sc1, 1),
+		inset _corner("br-ou", $offsets) 0 0 rgba($sc2, 1);
+		
+	} @else {
+		@return
+		inset _corner("br-in", $offsets) 0 0 rgba($sc1, 1),
+		inset _corner("br-ou", $offsets) 0 0 rgba($sc2, 1),
+		inset _corner("tl-in", $offsets) 0 0 rgba($hc2, 1),
+		inset _corner("tl-ou", $offsets) 0 0 rgba($hc1, 1);
+	}
+}
+
+
+// box-shadow: inset -1px -1px #0a0a0a,
+// inset 1px 1px #fff,
+// inset -2px -2px grey,
+// inset 2px 2px #dfdfdf;
+%flex-center {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+
+
+
+
+// Default Base CSS
+body {
+	background-color: $bg-1;
+	color: $fg-1;
+	font-family: $main-font;
+
+	max-width: 100vw;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+
+	display: flex;
+	align-items: center;
+	flex-direction : column;
+	justify-content: flex-end;
+}
+
+p {
+	margin: 0;
+	padding: 0;
+}
+
+a {
+	font-style: unset;
+	color: inherit;
+	text-decoration: inherit;
+}
+
+// Custom Highlight Color
+::selection {
+	color: $selection-fg;
+	background: $selection-bg;
+}
+
+// Home Button [removed kinda]
+// .homebutton{position:absolute;top:0;left:0;z-index:1;margin:5px;color:inherit;text-decoration:none;cursor:pointer;user-select:none;transition:transform 200ms,color 200ms}
+// .homebutton:hover {	color: var(--hicolor); transform: scale(1.1); }
+// .homebutton i {	font-size: 3em; }

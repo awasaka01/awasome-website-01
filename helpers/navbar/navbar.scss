@@ -1,0 +1,82 @@
+@use "/helpers/bundled.scss" as *;
+
+// Set specific icons for each button
+$buttons: "home", "heart", "oneko";
+@each $b in $buttons { #button-#{$b}::after { mask-image: url(/media/images/icon_#{$b}.png); } }
+
+
+// Title bar container
+.title-bar-container {
+	font-family: win98; 
+	width: 100%;
+	font-size: 1.5em;
+	height: 2.5em;
+
+
+	// Inner content section of title bar
+	.title-bar {
+		box-shadow: raisedEffect(#77509f, 0.05em, 0.2), 0 -10px 7px 10px #00000080;
+		background: linear-gradient(90deg, 
+			#77509f 0%, 
+			rgba(205, 106, 199, 1) 35%, 
+			rgba(243, 213, 180, 1) 100%
+		);	
+		width: 100%;
+		height: 100%;
+		box-sizing: border-box;
+
+		display: flex;
+		align-items: center;
+
+		padding: 0.2em { left: 0.5em; };
+
+		> p { margin-right: auto; }
+
+		// Title bar buttons
+		.title-bar-button {
+
+			margin: 0.1em;
+			aspect-ratio: 1 / 1;
+			box-sizing: border-box;
+			height: calc(100% - 0.2em);
+			cursor: pointer;
+
+			transition: all 20ms;
+
+			background-color: $bg-2;
+			box-shadow: raisedEffect($bg-2, 0.05em);
+			&:hover { background-color: $bg-2l4; }
+
+
+			// Pseudo element for the icons in buttons
+			&::after {
+				content: "";	
+				width: 100%;
+				height: 100%;
+				display: block;
+				position: sticky;
+
+				mask-size: 70%;
+				mask-position: center;
+				mask-repeat: no-repeat;
+				image-rendering: pixelated;
+
+				background-color: $fg-1;
+				&:hover { background-color: $fg-1l1; }
+			}
+
+			// Button pushed down
+			&:active, &.active { 				
+				box-shadow: raisedEffect($bg-2d2, 0.05em, $inverted: true);
+				background-color: $bg-2d6;
+
+				&:hover { background-color: $bg-2d2; }
+				&::after {
+					mask-size: 65%;
+					background-color: $fg-1d6; 
+					&:hover { background-color: $fg-2; }
+				}
+			}
+		}
+	}
+}
