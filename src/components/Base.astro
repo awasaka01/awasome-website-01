@@ -1,0 +1,43 @@
+---
+import { paths } from "../../public/app-root.js";
+const { title = "default title haha", icon: favicon = "/public/favicon.svg" } = Astro.props
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<slot name="head-start"></slot>
+
+	<!-- Meta -->
+	<meta charset="UTF-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<meta name="author" content="awa"/>
+
+
+	<!-- Display -->
+	<title>{paths.home}</title>
+	<link rel="icon" href={favicon} type="image/gif"/>
+
+
+	<!-- Helpers + External Modules -->
+	<!-- <script type="importmap">{"imports":{
+		"awa": "/helpers/helpers.js",
+		"chroma-js": "https://unpkg.com/chroma-js@3.0.0/index.js"
+	}}</script> -->
+
+
+	<!-- Local CSS and JS -->
+	<!-- <link rel="stylesheet" href="main.css"/>
+	<script src="main.js" type="module"></script> -->
+
+
+	<slot name="head"></slot>
+</head>
+<body>
+
+	<slot></slot>
+
+</body>
+</html>
+
