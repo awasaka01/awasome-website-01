@@ -1,18 +1,25 @@
 {
-  "name": "",
-  "type": "module",
-  "version": "0.0.1",
-  "scripts": {
-    "dev": "astro dev",
-    "start": "astro dev",
-    "build": "astro check && astro build",
-    "preview": "astro preview",
-    "astro": "astro"
-  },
-  "dependencies": {
-    "@astrojs/check": "^0.9.4",
-    "astro": "^4.16.10",
-    "astro-dynamic-import": "^1.1.2",
-    "typescript": "^5.6.3"
-  }
+	"name": "awasomewebsite",
+	"version": "1.0.0",
+	"description": "9",
+	"main": "index.js",
+	"scripts": {
+		"watch:sass": "sass --watch src:__dist/ --style=compressed --no-source-map",
+		"build:sass": "sass src:__dist/ --style=compressed --no-source-map",
+		"watch:eleventy": "eleventy --serve",
+		"build:eleventy": "eleventy",
+		"clean": "rimraf __dist",
+		"start": "npm-run-all clean --parallel build:sass watch:*",
+		"build": "npm-run-all clean build:*"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"@11ty/eleventy": "^3.0.0",
+		"eleventy": "^1.0.7",
+		"npm-run-all": "^4.1.5",
+		"rimraf": "^6.0.1",
+		"sass": "^1.80.6"
+	}
 }
