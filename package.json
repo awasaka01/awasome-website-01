@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
 	"name": "awasomewebsite",
 	"version": "1.0.0",
 	"description": "9",
@@ -23,3 +24,16 @@
 		"sass": "^1.80.6"
 	}
 }
+=======
+  "name": "awasomewebsite",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
+>>>>>>> 2c3aeae970ab9d342453a1579924507b5591dfcb
