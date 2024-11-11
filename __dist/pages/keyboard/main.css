@@ -1,0 +1,12 @@
+#table {
+  border: 1px solid white;
+  border-collapse: collapse;
+  margin-top: 40px;
+  max-width: 90%;
+}
+
+#table td {
+  border: 1px solid white;
+  width: 40px;
+  aspect-ratio: 1/1;
+}

@@ -1,39 +1,27 @@
 {
-<<<<<<< HEAD
 	"name": "awasomewebsite",
 	"version": "1.0.0",
 	"description": "9",
 	"main": "index.js",
 	"scripts": {
-		"watch:sass": "sass --watch src:__dist/ --style=compressed --no-source-map",
-		"build:sass": "sass src:__dist/ --style=compressed --no-source-map",
-		"watch:eleventy": "eleventy --serve",
-		"build:eleventy": "eleventy",
+		"watch:sass": "sass --watch src:__dist --no-source-map",
+		"build:sass": "sass src:__dist --style=compressed --no-source-map",
+		"watch:eleventy": "eleventy --quiet --serve",
+		"build:eleventy": "eleventy --quiet",
 		"clean": "rimraf __dist",
-		"start": "npm-run-all clean --parallel build:sass watch:*",
-		"build": "npm-run-all clean build:*"
+		"watch": "npm-run-all --parallel watch:*",
+		"start": "npm-run-all clean --parallel watch:*",
+		"build": "npm-run-all clean build:sass build:eleventy"
 	},
 	"keywords": [],
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
 		"@11ty/eleventy": "^3.0.0",
+		"@11ty/eleventy-plugin-rss": "^2.0.2",
 		"eleventy": "^1.0.7",
 		"npm-run-all": "^4.1.5",
 		"rimraf": "^6.0.1",
 		"sass": "^1.80.6"
 	}
 }
-=======
-  "name": "awasomewebsite",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
-}
->>>>>>> 2c3aeae970ab9d342453a1579924507b5591dfcb

@@ -1,0 +1,13 @@
+{
+	"files.exclude": {
+		"**/*.css": true,
+		"**/*.css.map": true,
+		"**/jsconfig.json": true,
+		"**/pnpm-lock.yaml": true,
+		"**/package.json": true,
+		"**/.vscode/": true,
+		"**/node_modules/": true,
+		"**/.gitignore": true,
+		"**/.eleventy.js": true
+	}
+}
