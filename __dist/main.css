@@ -1,6 +1,4 @@
 @charset "UTF-8";
-@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap");
 /* 
 ┌─────────────────────────────────────────────────────────────────────────────────────────────────────────┐
 !                                                                                                         !
@@ -10,12 +8,22 @@
 └─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
 617761 */
 @font-face {
-  font-family: unifont;
-  src: url("/media/fonts/unifont.ttf");
+  font-family: "Roboto Mono";
+  src: url("/media/fonts/RobotoMono.ttf") format("truetype-variations");
+  font-weight: 1 999;
+  font-display: swap;
 }
 @font-face {
-  font-family: win98;
+  font-family: "Roboto";
+  src: url("/media/fonts/RobotoFlex.ttf");
+  font-weight: 1 999;
+  font-display: swap;
+}
+@font-face {
+  font-family: "win98";
   src: url("/media/fonts/Windows Regular.ttf");
+  font-weight: 400;
+  font-display: swap;
 }
 body {
   background-color: #1e1c1f;
@@ -28,12 +36,12 @@ body {
   display: flex;
   align-items: center;
   flex-direction: column;
-  justify-content: flex-end;
 }
 
-p {
+*, *::before, *::after {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
 a {
@@ -45,6 +53,69 @@ a {
 ::selection {
   color: #ffffff;
   background: #ff0000;
+}
+
+@font-face {
+  font-family: "Terminal";
+  src: url("./media/fonts/gohufont-11.ttf");
+}
+p {
+  margin: 0;
+  padding: 0;
+}
+
+.blink::after {
+  content: "|";
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+#main-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: max-content;
+  background-color: rgba(0, 0, 0, 0.2588235294);
+  border: 2px solid rgb(84, 84, 84);
+  margin-top: 40px;
+}
+#main-title .-header {
+  width: 100%;
+  background-color: gray;
+  display: flex;
+  justify-content: right;
+}
+#main-title .-text {
+  font-size: 0.5rem;
+  white-space: pre;
+  line-height: 1ch;
+  font-family: "Terminal";
+  padding: 0px;
+  margin-top: 2ch;
+  margin-left: 2ch;
+}
+#main-title .-text .a {
+  color: #ff305d;
+}
+#main-title .-text .b {
+  color: #d6103b;
+}
+#main-title .-text .c {
+  color: #fa1a4b;
+}
+#main-title .-text .d {
+  color: rgba(178, 40, 185, 0.2509803922);
+}
+#main-title .-text .e {
+  color: rgba(183, 37, 178, 0.1294117647);
+}
+
+html {
+  height: 100%;
 }
 
 #page-list {

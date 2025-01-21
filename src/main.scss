@@ -10,7 +10,60 @@
 
 
 
-  
+@font-face {
+	font-family: "Terminal";
+	src: url("./media/fonts/gohufont-11.ttf");
+}
+p {
+	margin: 0;
+	padding: 0;
+}
+
+
+.blink::after {
+	content: "|";
+	animation: blink 1s step-end infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+#main-title {
+	.-header {
+		width: 100%;
+		background-color: gray;
+		display: flex;
+		justify-content: right;
+	}
+	.-text {
+		font-size: 0.5rem;
+
+		white-space: pre;
+		line-height: 1ch;
+		font-family: "Terminal";
+	
+		.a { color: #ff305d }
+		.b { color: #d6103b }
+		.c { color: #fa1a4b }
+		.d { color: #b228b940 }
+		.e { color: #b725b221 }
+		padding: 0px;
+		margin-top: 2ch;
+		margin-left: 2ch;
+	
+	}
+	
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	height: max-content;
+	background-color: #00000042;
+	border: 2px solid rgb(84, 84, 84);
+	margin-top: 40px;
+}
+
+html {
+	height: 100%;
+
+}
 
 
 

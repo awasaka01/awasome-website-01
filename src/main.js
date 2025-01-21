@@ -6,8 +6,17 @@ const svgs = [
 import { getDistance, rr } from "awa";
 import chroma from "chroma-js";
 let el;
+console.log(document.readyState);
 
-window.addEventListener("load", () => {
+document.addEventListener("readystatechange", () => { console.log(document.readyState); });
+
+
+
+document.addEventListener("DOMContentLoaded", () => { console.log("DOMContentLoaded"); });
+document.addEventListener("", () => { console.log("ready"); });
+
+
+document.addEventListener("DOMContentLoaded", (event) => {
 	// document.body.style.backgroundColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
 	// for (let ee = 0; ee < 100; ee++) {
 	// 	const color = randomColor({
@@ -35,7 +44,7 @@ async function generatePageList (params) {
 	const pageData = await (await fetch("/pages/pages.json")).json();
 
 	pageList.innerHTML = pageData.filter((page) => page.hidden !== true).map((page) => `
-		<div tabindex="0" class="page"><a href="/pages/${page.filename}/">
+		<div tabindex="0" class="page"><a href="/pages/${page.filename}/" aria-label="${page.title}">
 			<p class="title">${page.title}</p>
 			<p class="line"></p> 
 			<p class="desc">${page.desc}</p> 

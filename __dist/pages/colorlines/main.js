@@ -47,7 +47,7 @@ window.addEventListener("load", () => {
 	let mouse = { x: 0, y: 0, get xy () { return [this.x, this.y]; } };
 	let prev = null;
 	window.addEventListener("mousemove", (mouseEvent) => {
-		mouse.x = mouseEvent.clientX; mouse.y = mouseEvent.clientY;
+		mouse.x = mouseEvent.pageX; mouse.y = mouseEvent.pageY;
 
 		// Make the shadow follow the mouse
 		cover.style.left = `${mouse.x}px`; cover.style.top = `${mouse.y}px`;

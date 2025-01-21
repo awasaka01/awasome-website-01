@@ -3,15 +3,16 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta name="author" content="awa"/>
+<meta name="description" content="{{ description | default: 'silly little website' }}">
 
 
 <!-- Display -->
 <title>{{ title | default: "default title haha" }}</title>
-<link rel="icon" href={{ favicon | default: "/media/images/favicon.ico" }} type="image/gif"/>
+<link rel="icon" href="{{ favicon | default: '/media/images/favicon.ico' }}" type="image/gif"/>
 
 
 <!-- Helpers + External Modules -->
-<script type="importmap">{"imports":{
+<script type="importmap">{ "imports": {
 	"awa": "/helpers/util.js",
 	"chroma-js": "https://unpkg.com/chroma-js@3.0.0/index.js"
 }}</script>

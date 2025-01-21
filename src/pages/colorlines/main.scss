@@ -8,7 +8,7 @@
 	top: 0;
 	left: 0;
 	width: 201vw;
-	height: 201vh;
+	height: 201%;
 	// mask-image: radial-gradient(circle, rgb(255, 255, 255) 0%, transparent 90%);
 	// mask-size:20% 20% ;
 	// mask-repeat: no-repeat;
@@ -18,6 +18,7 @@
 	background: radial-gradient(circle, transparent 0%, $bg-1 40%);
 	background-size: 50%;
 	background-position: center;
+	opacity: 0;
 	
 	transform: translate(-50%, -50%);
 }
@@ -29,7 +30,7 @@
 	z-index: -9003;
 }
 #page-bg-points {
-	position: fixed;
+	position: absolute;
 	top: 0;
 	left: 0;
 	z-index: -9002;

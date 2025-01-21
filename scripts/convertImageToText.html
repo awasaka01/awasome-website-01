@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<script type="module" src="convertImageToText.js"></script>
+</head>
+<body>
+
+	<canvas id="canvas"></canvas>
+
+	<div id="terminal">
+		<p>FlomWer Personal Home Machine RE-BCA [Version 73.2.1a]</p>
+		<p>(C) Copyright IRAIA Corporation, 2077. All rights reserved.</p>
+		<p>-----------------------------------------------------------</p>
+		<br>
+		<div id="output"></div>
+		<br>
+		<p class="blink">C:\></p>
+	</div>
+
+	
+	<style>
+		@font-face {
+			font-family: win98;
+			src: url("./gohufont-11.ttf");
+		}
+		p {
+			margin: 0;
+			padding: 0;
+		}
+		span {
+			outline: 1px solid rgba(255, 255, 255, 0.005);
+		}
+
+
+		.blink::after {
+			content: "|";
+			animation: blink 1s step-end infinite;
+		}
+		@keyframes blink { 50% { opacity: 0; } }
+		body {
+			font-family: win98;
+			background-color: #1e1c1f;
+			color: rgb(194, 194, 194);
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			flex-direction: column;
+			padding: 40px;
+
+			font-size: 10px;
+		}
+		canvas {
+			display: none;
+			image-rendering: pixelated;
+			width: 100%
+
+		}
+		#output {
+			white-space: pre;
+			line-height: 1ch;
+		}
+	</style>
+</body>
+</html>
