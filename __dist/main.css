@@ -52,9 +52,8 @@ a {
   flex-wrap: wrap;
   gap: 2em;
   font-size: smaller;
-  padding: 1em 4em;
+  padding: 4em;
   width: 100%;
-  max-width: 1000px;
   box-sizing: border-box;
 }
 #page-list .page {
@@ -64,6 +63,7 @@ a {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+  box-shadow: 0 0 40px 10px #1e1c1f;
   color: #e2e0db;
   text-decoration-color: rgba(226, 224, 219, 0.5);
 }

@@ -6,7 +6,7 @@
 	"scripts": {
 		"watch:sass": "sass --watch src:__dist --no-source-map",
 		"build:sass": "sass src:__dist --style=compressed --no-source-map",
-		"watch:eleventy": "eleventy --quiet --serve",
+		"watch:eleventy": "eleventy --quiet --serve --incremental",
 		"build:eleventy": "eleventy --quiet",
 		"clean": "rimraf __dist",
 		"watch": "npm-run-all --parallel watch:*",

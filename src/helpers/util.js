@@ -53,23 +53,24 @@ export const randomColor = ({
 
 
 /**
- * ?Calculates the distance between two coordinates.
+ * ? Calculate the distance between two coordinates.
  * @param {Array<number>} coordA - The first coordinate [x, y].
  * @param {Array<number>} coordB - The second coordinate [x, y].
  * @returns {number} The distance between the two coordinates.
  */
 export const getDistance = (coordA, coordB) => Math.sqrt((coordA[0] - coordB[0]) ** 2 + (coordA[1] - coordB[1]) ** 2);
 
+
+
 /**
- * ?Removes duplicate objects from an array by ID.
+ * ? Remove duplicate objects from an array by ID.
  * @param {string} keyname - The key name to check for duplicates.
  * @param {Array<Object>} array - The array to remove duplicates from.
  * @returns {Array<Object>} A new array with duplicates removed.
  */
-export const removeDuplicatesByID = (keyname, array) => [...array.reduce((a, c) => {
-        a.set(c[keyname], c);
-        return a;
-    }, new Map()).values()];
+export const removeDuplicatesByID = (keyname, array) => [...array.reduce((a, c) => { a.set(c[keyname], c); return a; }, new Map()).values()];
+
+
 
 // Performance Analyzer
 const values = {};

@@ -1,0 +1,51 @@
+@import "../../helpers/bundled.scss";
+
+
+
+#page-bg-cover {
+	position: fixed;
+	z-index: -9001;
+	top: 0;
+	left: 0;
+	width: 201vw;
+	height: 201vh;
+	// mask-image: radial-gradient(circle, rgb(255, 255, 255) 0%, transparent 90%);
+	// mask-size:20% 20% ;
+	// mask-repeat: no-repeat;
+	// mask-position: center center;
+	content: "";
+	// background-color: red;
+	background: radial-gradient(circle, transparent 0%, $bg-1 40%);
+	background-size: 50%;
+	background-position: center;
+	
+	transform: translate(-50%, -50%);
+}
+#page-bg-canvas { 
+	position: absolute;
+	opacity: 0.8;
+	top: 0;
+	left: 0;
+	z-index: -9003;
+}
+#page-bg-points {
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: -9002;
+}
+
+
+#page-bg-image {
+	content: "";
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	z-index: -9004;
+	height: 100vh;
+
+	background-image: url(/media/images/site_background.png);
+	filter: brightness(0) saturate(100%) invert(53%) sepia(36%) saturate(6217%) hue-rotate(239deg) brightness(102%) contrast(85%);
+	opacity: 50%;
+}

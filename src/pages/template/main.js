@@ -1,7 +1,7 @@
-import * as AWA from "awa";
+import {} from "awa";
+
 window.addEventListener("load", () => {
 
-console.log(uwu)
-
+	//
 
 });
