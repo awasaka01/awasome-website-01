@@ -1,37 +1,24 @@
 // Imports
 @use "helpers/_bundled.scss" as *;
-@use 'sass:list';
-@use 'sass:math';
 
-@function steppedGradient($colors) {
-	$list: ();
-    $per: math.percentage(math.div(1, list.length($colors)));
-	@for $i from 1 through list.length($colors) {
- $list: list.append($list, list.nth($colors, $i) #{($i - 1) * $per $i * $per}, comma);
-	}
-	@return $list
+
+
+
+
+html {
+	position: relative; // Required for the + corners
+	min-height: 100%; 
 }
-
-@function stripes($color1: transparent, $color2: transparent, $linesize: 15px, $angle: 135deg) {
-	@return repeating-linear-gradient($angle, $color1 0, $color1 $linesize, $color2 $linesize, $color2 $linesize * 2);
-}
-
-
-
 @font-face {
 	font-family: "Terminal";
 	src: url("./media/fonts/gohufont-11.ttf");
 }
-body {
-	align-content: center;
-	min-width: 100%;
-  	display: inline-flex !important; /* added */
-}
 
+.unhideRandom {
+	display: flex;
+	flex-direction: row;
+}
 #corners {
-	font-family: monospace;
-	font-size: 100px;
-	margin: -10px;
 	* {
 		width: 10px;height: 10px;
 		--gradient: #0000 40%, rgba(255, 255, 255, 0.173) 0 60%, #0000 0;
@@ -48,131 +35,135 @@ body {
 
 	
 }
-html {
-	position: relative;
-	min-height: 100%;
-}
-
-
-// Terminal
+// Terminal, main menu for page selection
 #terminal {
-	.darker {
-		
-			color: rgba($fg-1, .5)
-	}
+
+	$text-color: $fg-1la;
+	$a: #ff5b81; $b: #ff4375; $c: #ff2558; $d: #ce3bd640; $e: #cd39c821;
+
+	background: radial-gradient(circle,#1a1825 0%, #070c12 100%);
+
+	color: rgba($text-color, 0.3);
 	font-family: Terminal;
 	font-size: 1rem;
+	text-shadow: 0 0 4px;
+
+	margin-top: 40px;
+	padding: 20px;
+	border: 7px solid #000000;
 
 	display: flex;
-	flex-direction: column;
 	align-content: left;
-	padding: 20px;
-	background: radial-gradient(circle,rgba(0, 0, 0, 0.864) 0%, rgba(0, 0, 0, 0.922) 100%);
-	background-color: rgb(59, 135, 137);
+	flex-direction: column;
 	position: relative;
-text-shadow: 0 0 4px;
-	border:7px solid rgb(0, 0, 0);
-filter: sepia(5%);
-&:before {
-    content: " ";
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    background: linear-gradient(
-        to bottom,
-        rgba(0, 0, 0, 0) 50%,
-        rgba(0, 0, 0, 0.092) 50%
-    );
-    background-size: 100% 16px;
-    z-index: 2;
-    pointer-events: none;
-}
-&::after {
-  content: " ";
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  background: linear-gradient(rgba(18, 16, 16, 0.108) 50%, rgba(0, 0, 0, 0.147) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-  z-index: 2;
-  background-size: 100% 2px, 3px 100%;
-  pointer-events: none;
-}
+
+	.title { color: $c }
+
+	// Base rules for effects
+	&::after, &::before {
+		content: " ";
+		display: block;
+		position: absolute;
+		top: 0; left: 0; bottom: 0;	right: 0; z-index: 2;
+		pointer-events: none;
+	}
+	// Striped Lines effect
+	&:before {
+		background: linear-gradient(to bottom, #0000 50%, #00000017 50%);
+		background-size: 100% 16px;
+	}
+
+	// Faint RGB Pixelated effect
+	&::after {
+		background: linear-gradient(to bottom, #1210101c 50%, #00000025 50%), 
+					linear-gradient(to right, #ff00000f, #00ff0005, #0000ff0f);
+		background-size: 100% 2px, 3px 100%;
+	}
 
 
-
+	// List of page links <p><a href="/">-> <u>Title</u> - Description</a></p>
 	.links {
-			display: flex;
-			flex-direction: column;
-		p {
-			display: flex;
+		display: flex;
+		flex-direction: column;
+		white-space: pre; // Disable the auto-collpase of spaces ' ' in the html (after the ->)
 
-			&:hover, &:focus-within, &:focus {  
-				&, * {color: $bg-1 !important; text-decoration-color: #0000; }
-			background: linear-gradient(to right, steppedGradient(
-				 //#f3a7cd #f3a7bd #f3a7af #f3aba7 #f3b9a7 
-				 #fa1a4b
-				));
-			box-shadow:#fa1a4b 0 0 10px;
-			}
-			color: rgba($fg-1, .5)
-		}
 		a {
+			display: flex;
+			width: 100%;
+			color: rgba($text-color, .5);
 			outline: none;
 
 			cursor: pointer;
-			width: 100%;
+			&:hover, &:focus-within, &:focus {  
+				&, * { color: $bg-1; text-decoration-color: #0000; }
+				background-color: $c;
+				box-shadow: $c 0 0 10px;
+			}
 		}
 		u {
-			color: $fg-1;
-			text-decoration-color:  rgba($fg-1, .7);
+			color: $text-color;
+			text-decoration-color: rgba($text-color, .7);
 			text-decoration-thickness: 1px;
 			text-underline-offset: 2px;
 		}
 	}
-
-
-	#output {
-	white-space: pre;
-	line-height: 1ch;
-		.a {
-			color: #ff305d;
-		}
-		.b {
-			color: #fa1a4b;
-		}
-		.c {
-			color: #d6103b;
-		}
-		.d {
-			color: #b228b940;
-		}
-		.e {
-			color: #b725b221;
-		}}
+	#logo-text {
+		white-space: pre; line-height: 1ch; // Required to make all characters square
+		.a { color: $a;	} .b { color: $b; } .c { color: $c; } .d { color: $d; } .e { color: $e;	}
+	}
 }
+
 // Blinking effect
 .blink::after {
 	content: "|";
 	animation: blink 1s step-end infinite;
 }
-@keyframes blink {
-	50% {
-		opacity: 0;
-	}
-}
+@keyframes blink { 50% { opacity: 0; } }
 
 
-p {
-	white-space: pre;
-	margin: 0;
-	padding: 0;
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// saving code for later 😭 (hoarder):
+// saving code for later 😭 (hoarder):
+// saving code for later 😭 (hoarder):
+// saving code for later 😭 (hoarder):
+
+/*
 b {
 	font-size: 100%;
 }
@@ -265,11 +256,6 @@ canvas {
 	border: 2px solid rgb(84, 84, 84);
 	margin-top: 40px;
 }
-
-// saving code for later 😭 (hoarder):
-// saving code for later 😭 (hoarder):
-// saving code for later 😭 (hoarder):
-// saving code for later 😭 (hoarder):
 
 // Page List
 // #page-list {
