@@ -10,28 +10,59 @@
 
 	<canvas id="canvas"></canvas>
 
-	<div id="terminal">
+	<div id="terminal"style="--n:53">
 		<p>FlomWer Personal Home Machine RE-BCA [Version 73.2.1a]</p>
 		<p>(C) Copyright IRAIA Corporation, 2077. All rights reserved.</p>
 		<p>-----------------------------------------------------------</p>
 		<br>
-		<div id="output"></div>
+		<div id="output"><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> </div>
 		<br>
+		<p>---------------------------------------------------------------------------------------------</p>
+		<p  style="text-align: center;"><b>Things I've made:</b></p>
+		<div class="links">
+			<a><span>Rain World Scugbook</span> - Description of the thingy</a>
+		</div>
+		
 		<p class="blink">C:\></p>
 	</div>
 
+	<div class="fadeInUp-animation" id="ew">
+		hello
+	</div>
 	
-	<style>
+	<style> 
+	body {
+		cursor:default
+	}
 		@font-face {
 			font-family: win98;
 			src: url("./gohufont-11.ttf");
 		}
 		p {
+			white-space: pre;
 			margin: 0;
 			padding: 0;
 		}
+		b {
+			font-size: 200%;
+		}
 		span {
 			outline: 1px solid rgba(255, 255, 255, 0.005);
+		}
+		
+		
+		@keyframes fadeIn {
+		0% {
+			opacity: 0;
+		}
+		100% {
+			opacity: 1;
+		}
+		}
+
+		span {
+		animation: fadeIn;
+		animation-timing-function: step-end;
 		}
 
 

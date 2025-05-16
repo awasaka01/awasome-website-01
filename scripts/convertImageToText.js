@@ -35,37 +35,41 @@ const colors = [
 
 
 	{
-		id: "1",
+		id: "1", letter: "a",
 		original: "#ffffffff",
 		color: "#ff305d", // #ffafbcff,
 		char: (x, y) => awawa(x, y),
 	},
 	{
-		id: "2",
+		id: "2", letter: "b",
 		original: "#adadadff",
 		color: "#fa1a4b", // #e8042aff,
 		char: (x, y) => awawa(x, y),
 	},
 	{
-		id: "3",
+		id: "3", letter: "c",
 		original: "#646464ff",
 		color: "#d6103b", // #ff516eff,
 		char: (x, y) => awawa(x, y),
 	},
 	{
-		id: "4",
+		id: "4", letter: "d",
 		original: "#2a2a2aff",
 		color: "#b228b940", // #541c6e6f,
 		char: (x, y) => awawa(x, y),
 	},
 	{
-		id: "5",
+		id: "5", letter: "e",
 		original: "#171717ff",
 		color: "#b725b221", // #ac2ee66f,
 		char: (x, y) => awawa(x, y),
 	},
 ];
-function awawa (x, y) { return ["a", "w"][awawaCounter++ % 2]; }
+//function awawa (x, y) { return ["a", "w"][awawaCounter++ % 2]; }
+function awawa (x, y) { 
+	const chars = "aw".split("")
+	return chars[awawaCounter++ % chars.length]; 
+}
 
 
 window.addEventListener("load", () => {
@@ -108,7 +112,7 @@ window.addEventListener("load", () => {
 			.map((group) => {
 				const obj = colors.find((x) => x.id === group[0]);
 				return obj === undefined ? group
-				: `<span style="color: ${obj.color}">${[...Array(group.length)].map(() => obj.char()).join("")}</span>`;
+				: `<span class="${obj.letter}" style="animation-duration: ${Math.random() * 4000}ms">${[...Array(group.length)].map(() => obj.char()).join("")}</span>`;
 			}).join("");
 		}).join("<br>");
 		// Color the string

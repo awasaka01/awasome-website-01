@@ -1,4 +1,4 @@
-@import "/helpers/bundled.scss";
+@use "../../helpers/_bundled.scss" as *;
 
 p {
 	font-family: "unifont";
