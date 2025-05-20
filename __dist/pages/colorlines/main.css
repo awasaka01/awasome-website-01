@@ -1,98 +1,17 @@
-@charset "UTF-8";
-/* 
-┌─────────────────────────────────────────────────────────────────────────────────────────────────────────┐
-!                                                                                                         !
-!   WARNING: Code beyond this point has been generated via script, anything changed will be overwritten   !
-?   [file://./generate-colors.js]                                                                         ?
-!                                                                                                         !
-└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
-617761 */
-@font-face {
-  font-family: "Roboto Mono";
-  src: url("/media/fonts/RobotoMono.ttf") format("truetype-variations");
-  font-weight: 1 999;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Roboto";
-  src: url("/media/fonts/RobotoFlex.ttf");
-  font-weight: 1 999;
-  font-display: swap;
-}
-@font-face {
-  font-family: "win98";
-  src: url("/media/fonts/Windows Regular.ttf");
-  font-weight: 400;
-  font-display: swap;
-}
-body {
-  background-color: #1e1c1f;
-  color: #e2e0db;
-  font-family: "Roboto", sans-serif;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-}
+/* Error: Undefined variable.
+ *    ,
+ * 18 |     background: radial-gradient(circle, transparent 0%, $bg-1 40%);
+ *    |                                                         ^^^^^
+ *    '
+ *   src\pages\colorlines\main.scss 18:54  root stylesheet */
 
-*, *::before, *::after {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-a {
-  font-style: unset;
-  color: inherit;
-  text-decoration: inherit;
-}
-
-::selection {
-  color: #ffffff;
-  background: #ff0000;
-}
-
-#page-bg-cover {
-  position: fixed;
-  z-index: -9001;
-  top: 0;
-  left: 0;
-  width: 201vw;
-  height: 201%;
-  content: "";
-  background: radial-gradient(circle, transparent 0%, #1e1c1f 40%);
-  background-size: 50%;
-  background-position: center;
-  opacity: 0;
-  transform: translate(-50%, -50%);
-}
-
-#page-bg-canvas {
-  position: absolute;
-  opacity: 0.8;
-  top: 0;
-  left: 0;
-  z-index: -9003;
-}
-
-#page-bg-points {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: -9002;
-}
-
-#page-bg-image {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  z-index: -9004;
-  height: 100vh;
-  background-image: url(/media/images/site_background.png);
-  filter: brightness(0) saturate(100%) invert(53%) sepia(36%) saturate(6217%) hue-rotate(239deg) brightness(102%) contrast(85%);
-  opacity: 50%;
+body::before {
+  font-family: "Source Code Pro", "SF Mono", Monaco, Inconsolata, "Fira Mono",
+      "Droid Sans Mono", monospace, monospace;
+  white-space: pre;
+  display: block;
+  padding: 1em;
+  margin-bottom: 1em;
+  border-bottom: 2px solid black;
+  content: "Error: Undefined variable.\a    \2577 \a 18 \2502      background: radial-gradient(circle, transparent 0%, $bg-1 40%);\d\a    \2502                                                          ^^^^^\a    \2575 \a   src\\pages\\colorlines\\main.scss 18:54  root stylesheet";
 }

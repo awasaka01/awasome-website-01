@@ -1,9 +1,10 @@
-//----------------------
-@use 'sass:list';
-@use 'sass:math';
-//----------------------
-// included in _bundled
-//----------------------
+//--------------------------------\\
+// ~ forwarded in _bundled.scss ~ \\
+//--------------------------------\\
+
+@use "./colors.scss" as *;
+@use "sass:list";
+@use "sass:math";
 
 // Generate a linear-gradient but with harsh borders between each color instead of being smooth
 
@@ -23,4 +24,97 @@
 // [example] background: f_stripes(red, blue, 10px, to left);
 @function f_stripes($color1: transparent, $color2: transparent, $linesize: 15px, $angle: 135deg) {
 	@return repeating-linear-gradient($angle, $color1 0, $color1 $linesize, $color2 $linesize, $color2 $linesize * 2);
+}
+
+
+
+
+// Raised button shahdow looking effect
+@function _corner($id, $offsets) { @return map.get($offsets, $id) map.get($offsets, $id); }
+@function _adjust($id, $offsets) { @return map.get($offsets, $id) map.get($offsets, $id); }
+
+@function f_raisedEffect($base-color, $height: 0.1em, $opacity: 0.5, $inverted: false) {
+	$height: if($inverted==true, 0 - $height, $height);
+
+	$offsets: (
+		tl-in: $height,     tl-ou: $height * 2,
+		br-in: 0 - $height, br-ou: 0 - $height * 2
+	);
+
+	// Simulate opacity by mixing colors
+
+		
+	$hc1: color.mix($base-color, $highlight-color1, $opacity * 100);
+	$hc2: color.mix($base-color, $highlight-color2, $opacity * 100);
+	$sc1: color.mix($base-color, $shadow-color1, $opacity * 100);
+	$sc2: color.mix($base-color, $shadow-color2, $opacity * 100);
+
+	@if ($inverted == false) {
+		@return
+		inset _corner("tl-in", $offsets) 0 0 rgba($hc1, 1),
+		inset _corner("tl-ou", $offsets) 0 0 rgba($hc2, 1),
+		inset _corner("br-in", $offsets) 0 0 rgba($sc1, 1),
+		inset _corner("br-ou", $offsets) 0 0 rgba($sc2, 1);
+		
+	} @else {
+		@return
+		inset _corner("br-in", $offsets) 0 0 rgba($sc1, 1),
+		inset _corner("br-ou", $offsets) 0 0 rgba($sc2, 1),
+		inset _corner("tl-in", $offsets) 0 0 rgba($hc2, 1),
+		inset _corner("tl-ou", $offsets) 0 0 rgba($hc1, 1);
+	}
+}
+
+// @function f_98shadow_full($depth: 1.5px, $width: 4px, $main: $bg-1l1, $light1: $bg-1l2, $dark1: $bg-1d2, $light2: $bg-1l4, $dark2: $bg-1d4, $light3: null, $dark3: null) {
+// 	$light3: $light1 !default; $dark3: $dark1 !default; $width: $width * 2;
+// 	@return f_98shadow_inner(), f_98shadow_outer();
+// }
+
+@function f_98shadow_inner($depth: 1.5px, $main: $bg-1l1, $light1: $bg-1l2, $dark1: $bg-1d2) {
+	@return 		
+	$depth $depth 0 $depth $light1,
+	0 0 0 			2*$depth $dark1;
+}
+
+@function f_98shadow_outer($depth: 1.5px, $width: 20px, $main: $bg-1l1, $light2: $bg-1l2, $dark2: $bg-1d2, $light3: $bg-1l4, $dark3: $bg-1d4) {
+	@return 		
+	0 0 0 			2*$depth+$width $main,
+
+	$depth $depth 0 $width+ 3*$depth $dark3,
+	0 0 0 			$width+ 4*$depth $light3,
+	
+	$depth $depth 0 $width+ 5*$depth $dark2,
+	0 0 0 			$width+ 6*$depth $light2;
+}
+
+
+// Blinking effect
+.blink::after {
+	content: "|";
+	animation: blink 1s step-end infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+
+
+
+@mixin terminalStyle {
+	font-family: Terminal;
+	text-shadow: 0 0 4px; // Glowing text
+	background: radial-gradient(circle,#1a1825 0%, #070c12 100%);
+
+	// Striped Lines + Faint RGB Pixelated overlay effects
+	position: relative;
+	&::before {
+		content: " ";
+		display: block;
+		position: absolute;
+		top: 0; left: 0; bottom: 0;	right: 0; z-index: 2;
+		pointer-events: none;
+
+		background: linear-gradient(to bottom, #1210101c 50%, #00000025 50%), 
+					linear-gradient(to right, #ff00000f, #00ff0005, #0000ff0f),
+					linear-gradient(to bottom, #0000 50%, #00000017 50%);
+		background-size: 100% 2px, 3px 100%, 100% 16px;;
+	}
 }

@@ -1,13 +1,14 @@
 {
 	"files.exclude": {
+		"**/.eleventy.js": false,
+		"**/.gitignore": false,
+		"**/.vscode/": false,
 		"**/*.css": false,
 		"**/*.css.map": false,
 		"**/jsconfig.json": false,
-		"**/pnpm-lock.yaml": false,
-		"**/package.json": false,
-		"**/.vscode/": false,
 		"**/node_modules/": false,
-		"**/.gitignore": false,
-		"**/.eleventy.js": false
+		"**/package.json": false,
+		"**/pnpm-lock.yaml": false,
+		"**/pnpm-workspace.yaml": false
 	}
 }

@@ -4,29 +4,12 @@ title: awasomewebsite 01
 
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		{% include "head.html" %}
-	</head>
-	<body>
-		<!-- {% include "navbar.html" %} -->
-		<div hidden>
-			<div id="main-title">
-				<div class="-header">
-					<img src="./media/images/icon_close.png" alt="" />
-				</div>
-				<div class="-text">{% include "logo-text.html" %}</div>
-			</div>
+<head> {% include "head.html" %} </head>
+<body>
+	<section id="container">
 
-			<!-- <div id="heartcontainer"> -->
-			uwu1a123141qas1111aee124
-			<div id="page-list"></div>
-
-			<div id="page-bg-image"></div>
-		</div>
-
-		<div id="terminal" style="--n: 53">
-			<span class="darker">
-
+	<div id="pageList" style="--n: 53">
+		<span class="darker">
 			<div class="unhideRandom">
 				<br>
 				<!--
@@ -34,7 +17,7 @@ title: awasomewebsite 01
 				-->
 				<p hidden>""</p> 
 				<p hidden>""</p> 
-				<p hidden>""</p> 
+				<p hidden>"If you are what you eat then my client is an innocent man!"</p> 
 				<p hidden>"Some mischievous creature snuck into the control room!"</p> 
 				<p hidden>"The dinos are escaping!"</p>
 				<p hidden>"A wild Dino is escaping your park!"</p>
@@ -45,28 +28,51 @@ title: awasomewebsite 01
 			<p>FlomWer Personal Home Machine LT-TM [Version 73.63.75.67]</p>
 			<p>(C) Copyright AWASAKA Corporation, 2077. All rights reserved.</p>
 			<p>-------------------------------------------------------------</p>
-			</span>
-			<br>
-			{% include "logo-text.html" %}
-			<p hidden>---------------------------------------------------------------------------------------------</p>
-			<br><br>
-			<p class="darker">C:\> run welcome.sh</p>
-			<p class="title"><b>Things I've (not yet) made:</b></p>
-			<br>
-			<div class="links">
-				<p><a href="/">-> <u>Rain World Scugbook</u> - Description of the thingy</a></p>
-				<p><a href="/">-> <u>Steve Locator</u> - Finds steve</a></p>
-				<p><a href="/">-> <u>TGieleie aaaaaof the thingy</u> - Descrthingy</a></p>
-				<p><a href="/">-> <u>TGieleie a a of the thingy</u> - Descriptiose ase ase a eas n of the thingy</a></p>
-				<p><a href="/">-> <u>TGieleie aease ase ae of the thingy</u> - Descriptae aseaion of the thingy</a></p>
-				<p><a href="/">-> <u>TGieleie aehingy</u> - Descriptae hingy</a></p>
-				<p><a href="/">-> <u>lorem</u> - AAAAAAAAAAAAAAAAAAAA  AAAA AAAAAAAAA AA AAAAAAAAAAAAAAAAAAAAAAAAAAAA</a></p>
-			</div> 
-			<br>
-			<p class="blink darker">C:\></p>
-		</div>
+		</span>
+		<br>
+		{% include "logo-text.html" %}
+		<p hidden>---------------------------------------------------------------------------------------------</p>
+		<br><br>
+		<p class="darker">C:\> run welcome.sh</p>
+		<p class="title"><b>Things I've (not yet) made:</b></p>
+		<br>
+		<div class="links">
+			<p><a href="/">-> <u>Rain World Scugbook</u> - Description of the thingy</a></p>
+			<p><a href="/">-> <u>Steve Locator</u> - Finds steve</a></p>
+			<p><a href="/">-> <u>TGieleie aaaaaof the thingy</u> - Descrthingy</a></p>
+			<p><a href="/">-> <u>TGieleie a a of the thingy</u> - Descriptiose ase ase a eas n of the thingy</a></p>
+			<p><a href="/">-> <u>TGieleie aease ase ae of the thingy</u> - Descriptae aseaion of the thingy</a></p>
+			<p><a href="/">-> <u>TGieleie aehingy</u> - Descriptae hingy</a></p>
+			<p><a href="/">-> <u>lorem</u> - AAAAAAAAAAAAAAAAAAAA  AAAA AAAAAAAAA AA AAAAAAAAAAAAAAAAAAAAAAAAAAAA</a></p>
+		</div> 
+		<br>
+		
+		<p class="blink darker">C:\></p>
+	</div>
+
+	<div id="barcode"><div><div></div></div></div>		
+	
+	
+
+	<div>
+		<br><br><br><br><br>
+	</div>
+
+	<div id="sorting">
+		<span><p id="random">Random</p> <p></p> </span>
+		<span>
+			<div>| </div><p>Loop: <output id="loopCount">   </output>
+			<div> | </div><p>Delay: 4ms</p>
+			<div> | </div><p>Bars: 60</p>
+			<div> |</div>
+		</span>
+		<span id="sortingBars">
+			<div style="height: 60em;"></div>
+		</span>
+	</div>
 
 
-		<div id="corners"><p></p><p></p><p></p><p></p></div>
-	</body>
+</section>
+	<div id="corners"><p></p><p></p><p></p><p></p></div> <!-- Plus symbol in each corner -->
+</body>
 </html>

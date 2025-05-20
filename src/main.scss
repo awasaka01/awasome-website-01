@@ -1,23 +1,21 @@
 // Imports
 @use "helpers/_bundled.scss" as *;
 
-
-
-
-
 html {
 	position: relative; // Required for the + corners
 	min-height: 100%; 
 }
-@font-face {
-	font-family: "Terminal";
-	src: url("./media/fonts/gohufont-11.ttf");
-}
+body { @extend %bodyDefaults; }
+
+
 
 .unhideRandom {
 	display: flex;
 	flex-direction: row;
 }
+
+
+
 #corners {
 	* {
 		width: 10px;height: 10px;
@@ -35,50 +33,77 @@ html {
 
 	
 }
-// Terminal, main menu for page selection
-#terminal {
 
-	$text-color: $fg-1la;
-	$a: #ff5b81; $b: #ff4375; $c: #ff2558; $d: #ce3bd640; $e: #cd39c821;
 
+$text-color: $fg-1la;
+$a: #ff5b81; $b: #ff4375; $c: #ff2558; $d: #ce3bd640; $e: #cd39c821;
+
+
+#container {
+	background-color: $bg-1l1;
+	$width: 30px;
+	$depth: 3px;
+
+
+	margin: 50px 35px 100px;
+	max-width: min-content;
+	min-width: 0px;
+	display: inline-flex;
+	flex-direction: column;
+	
+  	box-shadow: f_98shadow_outer($depth, $width), 50px 50px 100px 0px rgba(0, 0, 0, 0.234);
+
+
+
+	> * {
+		padding: 10px;
+		@include terminalStyle;
+  		box-shadow: f_98shadow_inner($depth) 	, inset 50px 50px 100px 0 rgba(0, 0, 0, 0.34);
+	}
+
+	> *:not(:first-child) {
+		margin-top: $width + $depth*4;
+  		box-shadow: f_98shadow_inner($depth), inset 50px 50px 100px 0 rgba(0, 0, 0, 0.34);
+		
+	}
+}
+
+
+@mixin terminalStyle {
+	font-family: Terminal;
+	text-shadow: 0 0 4px; // Glowing text
 	background: radial-gradient(circle,#1a1825 0%, #070c12 100%);
 
-	color: rgba($text-color, 0.3);
-	font-family: Terminal;
-	font-size: 1rem;
-	text-shadow: 0 0 4px;
-
-	margin-top: 40px;
-	padding: 20px;
-	border: 7px solid #000000;
-
-	display: flex;
-	align-content: left;
-	flex-direction: column;
+	// Striped Lines + Faint RGB Pixelated overlay effects
 	position: relative;
-
-	.title { color: $c }
-
-	// Base rules for effects
-	&::after, &::before {
+	&::before {
 		content: " ";
 		display: block;
 		position: absolute;
 		top: 0; left: 0; bottom: 0;	right: 0; z-index: 2;
 		pointer-events: none;
-	}
-	// Striped Lines effect
-	&:before {
-		background: linear-gradient(to bottom, #0000 50%, #00000017 50%);
-		background-size: 100% 16px;
-	}
 
-	// Faint RGB Pixelated effect
-	&::after {
 		background: linear-gradient(to bottom, #1210101c 50%, #00000025 50%), 
-					linear-gradient(to right, #ff00000f, #00ff0005, #0000ff0f);
-		background-size: 100% 2px, 3px 100%;
+					linear-gradient(to right, #ff00000f, #00ff0005, #0000ff0f),
+					linear-gradient(to bottom, #0000 50%, #00000017 50%);
+		background-size: 100% 2px, 3px 100%, 100% 16px;;
 	}
+}
+
+
+
+// Main menu for page selection
+#pageList {
+	@include terminalStyle;
+
+	color: rgba($text-color, 0.3);
+	font-size: 16px;
+
+	padding: 20px;
+	display: flex;	
+	flex-direction: column;
+
+	.title { color: $c }
 
 
 	// List of page links <p><a href="/">-> <u>Title</u> - Description</a></p>
@@ -95,9 +120,9 @@ html {
 
 			cursor: pointer;
 			&:hover, &:focus-within, &:focus {  
-				&, * { color: $bg-1; text-decoration-color: #0000; }
 				background-color: $c;
 				box-shadow: $c 0 0 10px;
+				&, * { color: $bg-1; text-decoration-color: #0000; }
 			}
 		}
 		u {
@@ -113,12 +138,74 @@ html {
 	}
 }
 
-// Blinking effect
-.blink::after {
-	content: "|";
-	animation: blink 1s step-end infinite;
+
+
+
+
+#barcode {
+	display: inline-flex;
+
+	// The actual bars
+	> div {
+		display: inline-flex;
+		height: 90px;
+		flex-grow: 1;
+		> div {
+		display: inline-flex;
+
+		width: 50%;
+		margin-left: 50%;
+		
+		background-color: currentColor;
+		box-shadow: 0 0 10px currentColor;
+		}
+
+	}
 }
-@keyframes blink { 50% { opacity: 0; } }
+
+
+
+
+
+
+
+
+
+
+
+
+#sorting {
+	
+	color: rgba($text-color, 0.7);
+	@include terminalStyle;
+	
+	flex-direction: column;
+	padding: 10px;
+  	box-shadow: f_98shadow_full(), inset 50px 50px 100px 0 rgba(0, 0, 0, 0.34), 50px 50px 100px 0px rgba(0, 0, 0, 0.234);
+	&, * {
+		display: flex;
+		
+	white-space: pre;
+	}
+	div {
+		color: rgba($text-color, 0.2);
+	}
+
+	#sortingBars {
+		align-items: end;
+		font-size: 1px;
+		* {
+
+		content: "";
+		background-color: $c;
+		color: $c;
+		box-shadow: 0 0 10px currentColor;
+		flex-grow: 1;
+		}
+	}
+}
+
+
 
 
 
@@ -162,6 +249,77 @@ html {
 // saving code for later 😭 (hoarder):
 // saving code for later 😭 (hoarder):
 // saving code for later 😭 (hoarder):
+
+
+// #funbar {
+// 	box-shadow: f_98shadow_full();
+// 	padding: 5px;
+// 	display: inline-flex;
+// 	color: red;
+// 	max-width: 100%;
+// 	position: relative;
+// 		height: 100px;
+// 	background: radial-gradient(circle,#1a1825 0%, #070c12 100%);
+	
+
+// 	// Base rules for effects
+// 	&::after, &::before {
+// 		content: " ";
+// 		display: block;
+// 		position: absolute;
+// 		top: 0; left: 0; bottom: 0;	right: 0; z-index: 2;
+// 		pointer-events: none;
+// 	}
+// 	// Striped Lines effect
+// 	&:before {
+// 		background: linear-gradient(to bottom, #0000 50%, #00000017 50%);
+// 		background-size: 100% 16px;
+// 	}
+
+
+// 	// Faint RGB Pixelated effect
+// 	&::after {
+// 		background: linear-gradient(to bottom, #1210101c 50%, #00000025 50%), 
+// 					linear-gradient(to right, #ff00000f, #00ff0005, #0000ff0f);
+// 		background-size: 100% 2px, 3px 100%;
+// 	}
+
+// 	canvas {
+// 	max-width: 100%;
+// 		display: inline-flex;
+// 		overflow: hidden;
+// 		image-rendering: pixelated; image-rendering: crisp-edges;
+
+// 	}
+// }
+// 	// <div id="funbar" style="font-family: 'Times New Roman', Times, serif; line-height: 2cap;">	
+// 	// 	<canvas width="10000" height="100"></canvas>
+// 	// </div>
+// 	const canvas = document.querySelector("#funbar canvas"); /** @type {HTMLElement} */
+// 	const ctx = canvas.getContext("2d"); /** @type {CanvasRenderingContext2D} */
+
+// 	var rect = canvas.parentNode.getBoundingClientRect();
+// 	canvas.width = rect.width;
+// 	canvas.height = rect.height;
+// // 	ctx.font = "30px Arial";
+// // 	ctx.fillText("Hello World", -10, 50);
+
+// ctx.fillStyle = "#ff2558";
+// ctx.shadowBlur = 10;
+// ctx.shadowColor = "#ff2558";
+// // ctx.fillRect(0, 50, 100, 100);
+
+// setInterval(() => {
+
+// 	ctx.globalCompositeOperation = "copy";
+// 	ctx.drawImage(ctx.canvas, 10, 0);
+// 	// reset back to normal for subsequent operations.
+// 	ctx.globalCompositeOperation = "source-over";
+
+// 	ctx.fillRect(10, 0, 10, randomInteger(0, 100));
+// }, 200);
+
+
 
 /*
 b {
@@ -389,7 +547,7 @@ canvas {
 
 // 	div {
 // 		@extend %flex-center;
-// 		@include raisedEffect();
+// 		@include
 
 // 		font-size: x-large;
 // 		font-family: win98;

@@ -4,11 +4,6 @@ import chroma from "https://unpkg.com/chroma-js@3.0.0/index.js";
 
 
 
-export const init = (header = true) => {
-
-};
-
-
 // Random number generator between min and max
 /**
  * Generates a random integer between min and max, inclusive.
@@ -16,18 +11,23 @@ export const init = (header = true) => {
  * @param {number} max - The maximum value.
  * @returns {number} A random integer between min and max.
  */
-export const rr = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-
-Array.prototype.random = function () {
-    return this[Math.floor(Math.random() * this.length)];
-};
-
-Array.prototype.sum = function () {
-    return this.reduce((a, c) => a + c, 0);
-};
+const rr = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
 /**
- * Generates a random color as a hex string.
+ * ? Generates a random element from the array.
+ * @returns {unknown} A random element from the array.
+ */
+Array.prototype.random = function () { return this[Math.floor(Math.random() * this.length)]; };
+
+
+/**
+ * ? Sums all elements in the array.
+ * @returns {number} The sum of all elements in the array.
+ */
+Array.prototype.sum = function () {	return this.reduce((a, c) => a + c, 0); };
+
+/**
+ * ? Generates a random color as a hex string.
  * @param {Object} options - Options to generate the color.
  * @param {string} [options.colorspace="oklab"] - The color space of the generated color.
  * @param {Array<number>} [options.l=[0, 100]] - Lightness range.
@@ -36,13 +36,14 @@ Array.prototype.sum = function () {
  * @param {number} [options.precision=1000] - Precision for random generation.
  * @returns {string} A random color as a hex string.
  */
-export const randomColor = ({
+const randomColor = ({
     colorspace = "oklab",
     l = [0, 100],
     c = [0, 100],
     h = [0, 255],
     precision = 1000,
-} = {}) => {
+}
+= {}) => {
     l = rr(...l.map((x) => x * precision)) / (precision * 100);
     c = rr(...c.map((x) => (x * 0.4) * precision)) / (precision * 100);
     h = rr(...h.map((x) => x * precision)) / precision;
@@ -51,6 +52,12 @@ export const randomColor = ({
 };
 
 
+/**
+ * Pauses execution for a given number of milliseconds.
+ * @param {number} [t=1000] - The time to pause in milliseconds.
+ * @returns {Promise<void>} A promise that resolves after the given time.
+ */
+const pause = async (t = 1000) => { await new Promise((resolve) => setTimeout(resolve, t)); };
 
 /**
  * ? Calculate the distance between two coordinates.
@@ -58,9 +65,7 @@ export const randomColor = ({
  * @param {Array<number>} coordB - The second coordinate [x, y].
  * @returns {number} The distance between the two coordinates.
  */
-export const getDistance = (coordA, coordB) => Math.sqrt((coordA[0] - coordB[0]) ** 2 + (coordA[1] - coordB[1]) ** 2);
-
-
+const getDistance = (coordA, coordB) => Math.sqrt((coordA[0] - coordB[0]) ** 2 + (coordA[1] - coordB[1]) ** 2);
 
 /**
  * ? Remove duplicate objects from an array by ID.
@@ -68,7 +73,7 @@ export const getDistance = (coordA, coordB) => Math.sqrt((coordA[0] - coordB[0])
  * @param {Array<Object>} array - The array to remove duplicates from.
  * @returns {Array<Object>} A new array with duplicates removed.
  */
-export const removeDuplicatesByID = (keyname, array) => [...array.reduce((a, c) => { a.set(c[keyname], c); return a; }, new Map()).values()];
+const removeDuplicatesByID = (keyname, array) => [...array.reduce((a, c) => { a.set(c[keyname], c); return a; }, new Map()).values()];
 
 
 
@@ -78,7 +83,7 @@ const values = {};
 /**
  * Analyzes performance by measuring and logging performance entries.
  */
-export const perf = () => {
+const perf = () => {
     const marks = performance.getEntriesByType("mark");
     if (marks.length === 0) { return; }
 
@@ -120,3 +125,5 @@ export const perf = () => {
     performance.clearMeasures();
 };
 
+const obj = { rr, randomColor, pause, getDistance, removeDuplicatesByID, perf };
+export default obj;
