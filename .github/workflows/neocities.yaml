@@ -39,7 +39,7 @@
 #         cleanup: false
 #         neocities_supporter: false # set this to true if you have a supporter account and want to bypass unsuported files filter.
 #         preview_before_deploy: true # print a deployment plan prior to waiting for files to upload.
-#  hi       disth_dir: public 
+#  hi    i   disth_dir: public 
 
 name: Deploy to neocities
 
