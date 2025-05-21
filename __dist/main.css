@@ -226,7 +226,7 @@ html {
   display: inline-flex;
   width: 50%;
   margin-left: 50%;
-  color: rgba(255, 37, 88, 0.5);
+  color: rgba(255, 37, 88, 0.7);
   background-color: currentColor;
   box-shadow: 0 0 10px currentColor;
 }
@@ -266,6 +266,8 @@ html {
   font-size: 1px;
 }
 #sorting #sortingBars * {
+  box-sizing: initial;
+  padding-bottom: 10em;
   content: "";
   background-color: #ff2558;
   color: #ff2558;
