@@ -51,6 +51,7 @@ on:
   pull_request:
     branches:
       - main
+    types: [closed]
   workflow_dispatch:
 
 
@@ -60,6 +61,7 @@ concurrency: # prevent concurrent deploys doing strange things
 
 jobs:
   deploy:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
     steps:
