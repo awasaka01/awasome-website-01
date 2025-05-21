@@ -1,14 +1,15 @@
 {
 	"files.exclude": {
-		"**/.eleventy.js": false,
-		"**/.gitignore": false,
-		"**/.vscode/": false,
-		"**/*.css": false,
-		"**/*.css.map": false,
-		"**/jsconfig.json": false,
-		"**/node_modules/": false,
-		"**/package.json": false,
-		"**/pnpm-lock.yaml": false,
-		"**/pnpm-workspace.yaml": false
+		"**/.eleventy.js": true,
+		"**/.github/": true,
+		"**/.gitignore": true,
+		"**/.vscode/": true,
+		"**/*.css": true,
+		"**/*.css.map": true,
+		"**/jsconfig.json": true,
+		"**/node_modules/": true,
+		"**/package.json": true,
+		"**/pnpm-lock.yaml": true,
+		"**/pnpm-workspace.yaml": true
 	}
 }

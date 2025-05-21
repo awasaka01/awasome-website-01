@@ -27,10 +27,9 @@ document.addEventListener("DOMContentLoaded", async (event) => {
 
 
 
-	unhideRandomElements();
-	barcode();
-
-	sort();
+	// unhideRandomElements();
+	// barcode();
+	// sort();
 }, { once: true });
 
 
@@ -116,6 +115,7 @@ async function barcode () {
 		}
 	}
 }
+const ea = document.getElementsByTagName("2")[0];
 
 // Unhide random elements
 function unhideRandomElements () {

@@ -5,7 +5,7 @@ html {
 	position: relative; // Required for the + corners
 	min-height: 100%; 
 }
-body { @extend %bodyDefaults; }
+body { @extend %bodyDefaults; min-height: 100%; }
 
 
 
@@ -45,7 +45,7 @@ $a: #ff5b81; $b: #ff4375; $c: #ff2558; $d: #ce3bd640; $e: #cd39c821;
 	$depth: 3px;
 
 
-	margin: 50px 35px 100px;
+	margin: 50px 35px 200px;
 	max-width: min-content;
 	min-width: 0px;
 	display: inline-flex;
@@ -139,12 +139,51 @@ $a: #ff5b81; $b: #ff4375; $c: #ff2558; $d: #ce3bd640; $e: #cd39c821;
 }
 
 
+#links svg {
+  height: 100%;
+}
+
+#links {
+	position: absolute;
+	bottom: 0;
+	margin: 20px;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	
+	// // box-sizing: content-box;
+	// // > *:not(:last-child) { padding-left: 10px; border-left: 2px solid rgba(255, 255, 255, 0.175); padding-right: 10px;  }
+	// // > *:last-child { padding-right: 10px; border-right: 2px solid rgba(255, 255, 255, 0.175); }
+	* { 
+		white-space: pre;
+		display: flex;
+		
+	}
+	a:hover, a:active {
+		color: $a;
+	}
+	.divider {
+		background-color: rgba(255, 255, 255, 0.156);
+		width: 2px;
+		margin: 0 10px;
+		height: 10px;
+	}
+	// div {
+
+	// flex-grow: 1;
+	// width: auto;
+	// }
+	// svg, a {
+		
+	// 	height: 100%;
+	// 	flex-grow: 1;
+	// }
+}
 
 
 
 #barcode {
 	display: inline-flex;
-
 	// The actual bars
 	> div {
 		display: inline-flex;

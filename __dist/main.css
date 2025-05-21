@@ -75,6 +75,10 @@ html {
   min-height: 100%;
 }
 
+body {
+  min-height: 100%;
+}
+
 .unhideRandom {
   display: flex;
   flex-direction: row;
@@ -108,7 +112,7 @@ html {
 
 #container {
   background-color: #252126;
-  margin: 50px 35px 100px;
+  margin: 50px 35px 200px;
   max-width: min-content;
   min-width: 0px;
   display: inline-flex;
@@ -212,6 +216,32 @@ html {
 }
 #pageList #logo-text .e {
   color: rgba(205, 57, 200, 0.1294117647);
+}
+
+#links svg {
+  height: 100%;
+}
+
+#links {
+  position: absolute;
+  bottom: 0;
+  margin: 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+#links * {
+  white-space: pre;
+  display: flex;
+}
+#links a:hover, #links a:active {
+  color: #ff5b81;
+}
+#links .divider {
+  background-color: rgba(255, 255, 255, 0.156);
+  width: 2px;
+  margin: 0 10px;
+  height: 10px;
 }
 
 #barcode {
