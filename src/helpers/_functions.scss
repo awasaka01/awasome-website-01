@@ -9,7 +9,7 @@
 // Generate a linear-gradient but with harsh borders between each color instead of being smooth
 
 // [example] background: f_steppedGradient(#f3a7cd #f3a7bd #f3a7af #f3aba7 #f3b9a7, to right) 
-@function f_steppedGradient($colors, $angle: 90deg) {
+@function f_hardGradient($colors, $angle: 90deg) {
 	$list: ();
     $per: math.percentage(math.div(1, list.length($colors)));
 	@for $i from 1 through list.length($colors) {
@@ -22,7 +22,7 @@
 // Stripes
 
 // [example] background: f_stripes(red, blue, 10px, to left);
-@function f_stripes($color1: transparent, $color2: transparent, $linesize: 15px, $angle: 135deg) {
+@function f_stripes($color1: transparent, $color2: transparent, $linesize: 15px, $angle: to bottom) {
 	@return repeating-linear-gradient($angle, $color1 0, $color1 $linesize, $color2 $linesize, $color2 $linesize * 2);
 }
 

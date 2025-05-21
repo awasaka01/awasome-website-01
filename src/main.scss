@@ -39,33 +39,27 @@ $text-color: $fg-1la;
 $a: #ff5b81; $b: #ff4375; $c: #ff2558; $d: #ce3bd640; $e: #cd39c821;
 
 
+// ANCHOR - Main Container (holds all the little screens)
 #container {
-	background-color: $bg-1l1;
-	$width: 30px;
-	$depth: 3px;
-
-
-	margin: 50px 35px 200px;
-	max-width: min-content;
-	min-width: 0px;
 	display: inline-flex;
 	flex-direction: column;
+
+	max-width: min-content;
+	min-width: 0px;
+	margin: 60px 35px 200px;
+
+	background-color: $bg-1l1;
 	
+	$width: 30px; 
+	$depth: 3px;
   	box-shadow: f_98shadow_outer($depth, $width), 50px 50px 100px 0px rgba(0, 0, 0, 0.234);
 
-
-
 	> * {
-		padding: 10px;
 		@include terminalStyle;
-  		box-shadow: f_98shadow_inner($depth) 	, inset 50px 50px 100px 0 rgba(0, 0, 0, 0.34);
-	}
-
-	> *:not(:first-child) {
-		margin-top: $width + $depth*4;
+		padding: 10px;
   		box-shadow: f_98shadow_inner($depth), inset 50px 50px 100px 0 rgba(0, 0, 0, 0.34);
-		
 	}
+	> *:not(:first-child) { margin-top: $width + $depth*4; }
 }
 
 
@@ -139,46 +133,31 @@ $a: #ff5b81; $b: #ff4375; $c: #ff2558; $d: #ce3bd640; $e: #cd39c821;
 }
 
 
-#links svg {
-  height: 100%;
-}
 
+// 
 #links {
 	font-family: "Roboto Mono";
-	position: absolute;
-	bottom: 0;
-	margin: 20px;
+	line-height: 1ch;
+
 	display: flex;
 	flex-direction: row;
 	align-items: center;
-	
-	// // box-sizing: content-box;
-	// // > *:not(:last-child) { padding-left: 10px; border-left: 2px solid rgba(255, 255, 255, 0.175); padding-right: 10px;  }
-	// // > *:last-child { padding-right: 10px; border-right: 2px solid rgba(255, 255, 255, 0.175); }
-	* { 
-		white-space: pre;
-		display: flex;
-		
-	}
-	a:hover, a:active {
-		color: $a;
-	}
+
+	position: absolute;
+	bottom: 0;
+	margin: 20px;
+
+	* { white-space: pre; display: flex; }
+	a:not(.no-underline) { text-decoration: underline; text-decoration-color: rgba($text-color, 0.3); }
+	a:hover, a:focus-within { color: $a; text-decoration-color: #0000; }
 	.divider {
-		background-color: rgba(255, 255, 255, 0.156);
-		width: 2px;
+		$color: #ffffff2f;
+		background: f_hardGradient($color #0000 $color #0000 $color, to bottom);
+
 		margin: 0 10px;
 		height: 10px;
+		width: 2px;
 	}
-	// div {
-
-	// flex-grow: 1;
-	// width: auto;
-	// }
-	// svg, a {
-		
-	// 	height: 100%;
-	// 	flex-grow: 1;
-	// }
 }
 
 
