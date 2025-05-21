@@ -223,6 +223,7 @@ body {
 }
 
 #links {
+  font-family: "Roboto Mono";
   position: absolute;
   bottom: 0;
   margin: 20px;
