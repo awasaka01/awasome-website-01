@@ -124,6 +124,6 @@ const perf = () => {
     performance.clearMarks();
     performance.clearMeasures();
 };
-
+// what
 const obj = { rr, randomColor, pause, getDistance, removeDuplicatesByID, perf };
 export default obj;
