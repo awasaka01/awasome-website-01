@@ -219,7 +219,7 @@ html {
 }
 #barcode > div {
   display: inline-flex;
-  height: 90px;
+  height: 35px;
   flex-grow: 1;
 }
 #barcode > div > div {

@@ -7,10 +7,9 @@ const svgs = [
 
 
 
-import awa from "awa";
+import u from "./helpers/util.js";
 import chroma from "chroma-js";
-console.log(awa);
-chroma;
+
 
 document.addEventListener("DOMContentLoaded", async (event) => {
 	// document.body.style.backgroundColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
@@ -31,7 +30,7 @@ document.addEventListener("DOMContentLoaded", async (event) => {
 	unhideRandomElements();
 	barcode();
 
-	// sort();
+	sort();
 }, { once: true });
 
 
@@ -58,7 +57,7 @@ async function barcode () {
 	});
 	barcodeElement.removeChild(barcodeElement.firstElementChild);
 
-	const colors = ["#ff5b81", "#f87094", "#ff2558", "#ce3bd640", "#cd39c821"]; // #de6a6a, #daa867, #d5d569, #6cd86c, #6767e0, #a767d4, #da64da]
+	const colors = ["#ff5b81", "#f87094", "#ff2558"];// "#ce3bd640", "#cd39c821"]; // #de6a6a, #daa867, #d5d569, #6cd86c, #6767e0, #a767d4, #da64da]
 	// const colors = ["#de6a6a", "#de7a6a", "#dd8869", "#dc9668", "#dba467", "#daaf67", "#d9b968", "#d8c468", "#d6ce69", "#ced569", "#b9d76a", "#a3d76b", "#89d86b", "#6cd86c", "#79be8b", "#7da5a6", "#7a8bbf", "#6d70d8", "#7367de", "#8367db", "#9167d9", "#9f67d6", "#ab67d4", "#b766d6", "#c366d7", "#cf65d9", "#da64da"];
 
 
@@ -83,46 +82,40 @@ async function barcode () {
 	};
 
 	while (true) {
+
 		// for (let i = 0; i < children.length * 2; i++) {
 		// 	const bar = i < children.length ? children.at(i) : children.at(children.length - i - 1);
-		// 	const width = randomInteger(0, 100);
+		// 	const width = u.rr(0, 100);
 		// 	bar.style.width = width + "%";
-		// 	bar.style.marginLeft = Math.min(100 - width, randomInteger(0, 100)) + "%";
+		// 	bar.style.marginLeft = Math.min(100 - width, u.rr(0, 100)) + "%";
 		// 	bar.style.color = colors[Math.floor(Math.random() * colors.length)];
-		// 	await pause(10);
+		// 	await u.pause(10);
 		// }
 		for (let i = 0; i < children.length * 2; i++) {
-			if (Math.random() < (100 - options.skipChance) / 100) {
+			if (Math.random() < (100 - options.skipChance.v) / 100) {
 
-			// Either reverse direction when reaching the end or start from the beginning
-			const bar = options.alternate
-			? i < children.length ? children.at(i) : children.at(children.length - i - 1)
-			: children.at(i % children.length);
+				// Either reverse direction when reaching the end or start from the beginning
+				const bar = options.alternate.v
+				? i < children.length ? children.at(i) : children.at(children.length - i - 1)
+				: children.at(i % children.length);
 
-			// Randomly adjust the values
-			values.color = (values.color + randomInteger(-1, 1)) % colors.length;
+				// Randomly adjust the values
+				values.color = (values.color + u.rr(-1, 1)) % colors.length;
 
-			// Set the element style
-			// bar.style.width = values.width + "%";
-			// bar.style.marginLeft = values.marginLeft + "%";
-const width = randomInteger(0, 100);
-			bar.style.width = width + "%";
-			bar.style.marginLeft = Math.min(100 - width, randomInteger(0, 100)) + "%";
-			bar.style.color = colors.at(values.color);
-			// bar.parentElement.style.maxWidth = Math.random() < 0.9 ? "100%" : "0%";
-		await pause(10);
-}
-await pause(1);
+				// Set the element style
+				// bar.style.width = values.width + "%";
+				// bar.style.marginLeft = values.marginLeft + "%";
+				const width = u.rr(0, 100);
+				bar.style.width = width + "%";
+				bar.style.marginLeft = Math.min(100 - width, u.rr(0, 100)) + "%";
+				bar.style.color = colors.at(values.color);
+				// bar.parentElement.style.maxWidth = Math.random() < 0.9 ? "100%" : "0%";
+				await u.pause(10);
+			}
+			await u.pause(1);
 		}
 	}
-
 }
-
-
-
-
-
-
 
 // Unhide random elements
 function unhideRandomElements () {
@@ -145,7 +138,6 @@ async function generatePageList (params) {
 		</a></div>
 	`).join("\n");
 }
-
 
 async function sort () {
 
@@ -225,7 +217,7 @@ async function sort () {
 					display();
 
 					bars = array;
-					await pause(time);
+					await u.pause(time);
 				}
 			}
 			if (previous) previous.forEach((item) => recolor(item, colors.base));
@@ -235,7 +227,7 @@ async function sort () {
 				const item = array.at(i);
 				recolor(item, i >= 0 ? colors.base : colors.done);
 				displayOrder();
-				await pause(time);
+				await u.pause(time);
 
 			}
 			return array;
@@ -251,5 +243,11 @@ async function sort () {
 
 
 
-			// values.width = Math.min(100, Math.max(0, values.width + randomInteger(-60, 60)));
-			// values.marginLeft = Math.min(100, Math.max(0, values.marginLeft + randomInteger(-60, 60)));
+
+
+
+
+
+// code vault :p
+// values.width = Math.min(100, Math.max(0, values.width + u.rr(-60, 60)));
+// values.marginLeft = Math.min(100, Math.max(0, values.marginLeft + u.rr(-60, 60)));

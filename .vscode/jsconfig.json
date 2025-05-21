@@ -1,3 +1,13 @@
 {
-  "importMap": "importmap.json"
+    "compilerOptions": {
+        "baseUrl": "./",
+        "paths": {
+            "awa": ["**/util.js"]
+        },
+        "target": "es6",
+        "allowSyntheticDefaultImports": true
+    } ,
+	"include": [
+    "**/*.html",
+  ]
 }
