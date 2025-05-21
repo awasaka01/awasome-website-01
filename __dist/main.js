@@ -108,7 +108,7 @@ async function barcode () {
 				const width = u.rr(0, 100);
 				bar.style.width = width + "%";
 				bar.style.marginLeft = Math.min(100 - width, u.rr(0, 100)) + "%";
-				bar.style.color = colors.at(values.color);
+				// bar.style.color = colors.at(values.color);
 				// bar.parentElement.style.maxWidth = Math.random() < 0.9 ? "100%" : "0%";
 				await u.pause(10);
 			}
@@ -170,17 +170,18 @@ async function sort () {
 	}
 
 	const loopCountDisplay = document.getElementById("loopCount");
+	const timeElapsedDisplay = document.getElementById("timeDisplay");
 	let loop = 0;
+	let date = Date.now();
 
 	function display () {
 		displayOrder();
+		timeElapsedDisplay.innerText = ((Date.now() - date) / 1000).toFixed(4);
 		loopCountDisplay.innerText = loop < 100000 ? loop.toString().padStart(5, " ") : "  ERR";
 	}
 
 
 
-	randomizeOrder();
-	displayOrder();
 
 	const colors = {
 		base: "#ff2558",
@@ -193,6 +194,7 @@ async function sort () {
 
 		// Iterate over the array and
 		bubble: async (array, time) => {
+			date = Date.now();
 			loop = 0;
 
 			let previous = false;
@@ -214,8 +216,8 @@ async function sort () {
 					}
 					previous = [item1, item2];
 					loop += 1;
-					display();
 
+					display();
 					bars = array;
 					await u.pause(time);
 				}
@@ -230,12 +232,18 @@ async function sort () {
 				await u.pause(time);
 
 			}
+
+			await u.pause(1000);
 			return array;
 		},
 	};
-
-	await algs.bubble(bars, 5);
-
+	async function loop2 () {
+		randomizeOrder();
+		display();
+		await algs.bubble(bars, 8);
+		loop2();
+	}
+	loop2();
 }
 
 
