@@ -148,7 +148,7 @@ $a: #ff5b81; $b: #ff4375; $c: #ff2558; $d: #ce3bd640; $e: #cd39c821;
 	// The actual bars
 	> div {
 		display: inline-flex;
-		height: 35px;
+		height: 15px;
 		flex-grow: 1;
 		> div {
 		display: inline-flex;
@@ -156,6 +156,7 @@ $a: #ff5b81; $b: #ff4375; $c: #ff2558; $d: #ce3bd640; $e: #cd39c821;
 		width: 50%;
 		margin-left: 50%;
 		
+		color: rgba($c, 0.7);
 		background-color: currentColor;
 		box-shadow: 0 0 10px currentColor;
 		}
@@ -195,12 +196,14 @@ $a: #ff5b81; $b: #ff4375; $c: #ff2558; $d: #ce3bd640; $e: #cd39c821;
 		align-items: end;
 		font-size: 1px;
 		* {
+		box-sizing: initial;
 
-		content: "";
-		background-color: $c;
-		color: $c;
-		box-shadow: 0 0 10px currentColor;
-		flex-grow: 1;
+		padding-bottom: 10em;
+			content: "";
+			background-color: $c;
+			color: $c;
+			box-shadow: 0 0 10px currentColor;
+			flex-grow: 1;
 		}
 	}
 }
