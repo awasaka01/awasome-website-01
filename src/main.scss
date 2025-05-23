@@ -1,18 +1,17 @@
-
 // Imports
 @use "helpers/_bundled.scss" as *;
 
 html {
-	// why the fuck is it copying my comment onto the next line when i save :sob:
+	// Investigate why the comment is being duplicated onto the next line when saving.
 	position: relative;
-	min-height: 100%;
+	min-height: 100%; 
 }
 body { @extend %bodyDefaults; min-height: 100%; }
 
 
 .unhideRandom {
 	display: flex;
-	flex-direction: row;
+	flex-direction:  row;
 }
 
 
@@ -66,6 +65,88 @@ $a: #ff5b81; $b: #ff4375; $c: #ff2558; $d: #ce3bd640; $e: #cd39c821;
 		box-shadow:
 			f_98shadow_inner($depth),
 			inset 50px 50px 100px 0 rgb(0 0 0 / 34%);
+		position: relative;
+		z-index: 0;
+		
+		// Curved glass overlay
+		&::after {
+			content: "";
+			pointer-events: none;
+			position: absolute;
+			inset: 0;
+			z-index: 10;
+			border-radius: 2.5% 2.5% 3.5% 3.5%/5% 5% 7% 7%;
+
+			box-shadow:
+				0 1.5px 12px 0 rgb(255 255 255 / 10%) inset,
+				0 0 32px 0 rgb(0 0 0 / 10%) inset;
+
+			background:
+				/* highlight/glare */
+				linear-gradient(120deg, rgb(255 255 255 / 18%) 10%, rgb(255 255 255 / 8%) 30%, rgb(255 255 255 / 0%) 60%),
+				/* subtle vignette */
+				radial-gradient(ellipse 80% 90% at 50% 60%, rgb(255 255 255 / 10%) 0%, rgb(255 255 255 / 0%) 80%),
+				/* edge shadow */
+				radial-gradient(ellipse 100% 100% at 50% 50%, rgb(0 0 0 / 10%) 60%, rgb(0 0 0 / 18%) 100%);
+			mix-blend-mode: lighten;
+		}
+		// Glass reflection for solid backgrounds
+		&::before {
+			content: "";
+			pointer-events: none;
+			position: absolute;
+			inset: 0;
+			z-index: 9;
+			border-radius: 2.5% 2.5% 3.5% 3.5%/5% 5% 7% 7%;
+			background:
+				linear-gradient(120deg, rgb(255 255 255 / 10%) 10%, rgb(255 255 255 / 4%) 30%, rgb(255 255 255 / 0%) 60%),
+				radial-gradient(ellipse 80% 90% at 50% 60%, rgb(255 255 255 / 5%) 0%, rgb(255 255 255 / 0%) 80%);
+			opacity: 0.7;
+			mix-blend-mode: lighten;
+			filter: blur(1.5px);
+			transition: opacity 0.3s;
+		}
+	}
+	* {
+		position: relative;
+		z-index: 1;
+		color: #fff;
+		text-shadow:
+			0 0 1.5px #fff,
+			0 0 4px #fff,
+			0 0 8px $c,
+			0 0 16px $c,
+			0 0 20px $c;
+
+		// Simulated glass reflection above text
+		&::before {
+			content: attr(data-reflect);
+			display: none;
+		}
+		// Only show reflection for text nodes
+		&:not([data-reflect])::before {
+			content: attr(data-reflect);
+			display: none;
+		}
+		// Show reflection for visible text elements
+		&[data-reflect]::before {
+			display: block;
+			position: absolute;
+			left: 0;
+			right: 0;
+			top: -1.2em;
+			text-align: inherit;
+			color: #fff;
+			opacity: 0.11;
+			filter: blur(7px) brightness(1.2);
+			pointer-events: none;
+			z-index: 11;
+			text-shadow:
+				0 0 8px #fff,
+				0 0 16px $c,
+				0 0 32px $c;
+			white-space: pre;
+		}
 	}
 }
 
@@ -252,13 +333,6 @@ $a: #ff5b81; $b: #ff4375; $c: #ff2558; $d: #ce3bd640; $e: #cd39c821;
 
 
 
-
-
-
-
-
-
-
 #main-container-P {
 	// Generate a zigzag shape using a repeating conic gradient, to be used as a background or mask
 	// note: set background/mask-size to [X% 100%] where X is the desired scale, or if left/right then [100% X%]
@@ -324,534 +398,36 @@ $a: #ff5b81; $b: #ff4375; $c: #ff2558; $d: #ce3bd640; $e: #cd39c821;
 	100% { mask-position: 100% top; }
 }
 
+// Enhanced text glow and glass reflection effect
+.glow-reflect {
+  position: relative;
+  z-index: 1;
+  color: #fff;
+  text-shadow:
+    0 0 2px #fff,
+    0 0 6px #fff,
+    0 0 12px $c,
+    0 0 24px $c,
+    0 0 32px $c;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// saving code for later 😭 (hoarder):
-// saving code for later 😭 (hoarder):
-// saving code for later 😭 (hoarder):
-// saving code for later 😭 (hoarder):
-
-
-// #funbar {
-// 	box-shadow: f_98shadow_full();box-shadowbox-shadow
-// 	padding: 5px;paddingpadding
-// 	display: inline-flex;displaydisplay
-// 	color: red;colorcolor
-// 	max-width: 100%;max-widthmax-width
-// 	position: relative;positionposition
-// 		height: 100px;heightheight
-// 	background: radial-gradient(circle,#1a1825 0%, #070c12 100%);backgroundbackground
-	
-
-// 	// Base rules for effects
-// 	&::after, &::before {
-// 		content: " ";contentcontent
-// 		display: block;displaydisplay
-// 		position: absolute;positionposition
-// 		top: 0;toptop left: 0;left bottom: 0;	right: 0; z-index: 2;
-// 		pointer-events: none;pointer-eventspointer-events
-// 	}
-// 	// Striped Lines effect
-// 	&:before {
-// 		background: linear-gradient(to bottom, #0000 50%, #00000017 50%);backgroundbackground
-// 		background-size: 100% 16px;background-sizebackground-size
-// 	}
-
-
-// 	// Faint RGB Pixelated effect
-// 	&::after {
-// 		background: linear-gradient(to bottom, #1210101c 50%, #00000025 50%), 
-// 					linear-gradient(to right, #ff00000f, #00ff0005, #0000ff0f);backgroundbackground
-// 		background-size: 100% 2px, 3px 100%;background-sizebackground-size
-// 	}
-
-// 	canvas {
-// 	max-width: 100%;max-widthmax-width
-// 		display: inline-flex;displaydisplay
-// 		overflow: hidden;overflowoverflow
-// 		image-rendering: pixelated;image-renderingimage-rendering image-rendering: crisp-edges;image-rendering
-
-// 	}
-// }
-// 	// <div id="funbar" style="font-family: 'Times New Roman', Times, serif; line-height: 2cap;">	
-// 	// 	<canvas width="10000" height="100"></canvas>
-// 	// </div>
-// 	const canvas = document.querySelector("#funbar canvas"); /** @type {HTMLElement} */
-// 	const ctx = canvas.getContext("2d"); /** @type {CanvasRenderingContext2D} */
-
-// 	var rect = canvas.parentNode.getBoundingClientRect();
-// 	canvas.width = rect.width;
-// 	canvas.height = rect.height;
-// // 	ctx.font = "30px Arial";
-// // 	ctx.fillText("Hello World", -10, 50);
-
-// ctx.fillStyle = "#ff2558";
-// ctx.shadowBlur = 10;
-// ctx.shadowColor = "#ff2558";
-// // ctx.fillRect(0, 50, 100, 100);
-
-// setInterval(() => {
-
-// 	ctx.globalCompositeOperation = "copy";
-// 	ctx.drawImage(ctx.canvas, 10, 0);
-// 	// reset back to normal for subsequent operations.
-// 	ctx.globalCompositeOperation = "source-over";
-
-// 	ctx.fillRect(10, 0, 10, randomInteger(0, 100));
-// }, 200);
-
-
-
-/*
-b {
-	font-size: 100%;
+  &::before {
+    content: attr(data-reflect);
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -1.2em;
+    text-align: inherit;
+    color: #fff;
+    opacity: 0.18;
+    filter: blur(6px) brightness(1.5);
+    pointer-events: none;
+    z-index: 11;
+    text-shadow:
+      0 0 8px #fff,
+      0 0 16px $c,
+      0 0 32px $c;
+    white-space: pre;
+  }
 }
-span {
-	outline: 1px solid rgba(255, 255, 255, 0.005);
-}
-
-@keyframes fadeIn {
-	0% {
-		opacity: 0;
-	}
-	100% {
-		opacity: 1;
-	}
-}
-
-span {
-	animation: fadeIn;
-	animation-timing-function: step-end;
-}
-
-.blink::after {
-	content: "|";
-	animation: blink 1s step-end infinite;
-}
-@keyframes blink {
-	50% {
-		opacity: 0;
-	}
-}
-body {
-	font-family: win98;
-	background-color: #1e1c1f;
-	color: rgb(194, 194, 194);
-	display: flex;
-	align-items: center;
-	flex-direction: column;
-	padding: 40px;
-
-	font-size: 10px;
-}
-canvas {
-	display: none;
-	image-rendering: pixelated;
-	width: 100%;
-}
-#output {
-	white-space: pre;
-	line-height: 1ch;
-}
-#main-title {
-	.-header {
-		width: 100%;
-		background-color: gray;
-		display: flex;
-		justify-content: right;
-	}
-	.-text {
-		font-size: 0.5rem;
-
-		white-space: pre;
-		line-height: 1ch;
-		font-family: "Terminal";
-
-		.a {
-			color: #ff305d;
-		}
-		.b {
-			color: #d6103b;
-		}
-		.c {
-			color: #fa1a4b;
-		}
-		.d {
-			color: #b228b940;
-		}
-		.e {
-			color: #b725b221;
-		}
-		padding: 0px;
-		margin-top: 2ch;
-		margin-left: 2ch;
-	}
-
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	height: max-content;
-	background-color: #00000042;
-	border: 2px solid rgb(84, 84, 84);
-	margin-top: 40px;
-}
-
-// Page List
-// #page-list {
-// 	display: flex;
-// 	flex-wrap: wrap;
-// 	gap: 2em;
-
-// 	font-size: smaller;
-// 	padding: 4em;
-// 	width: 100%;
-// 	// max-width: 1000px;
-// 	box-sizing: border-box;
-
-// 	.page {
-// 		position: relative;
-// 		font-family: "Roboto Mono", monospace;
-// 		cursor: pointer;
-
-// 		flex-grow: 1;
-// 		display: flex;
-// 		flex-direction: column;
-// 		box-shadow: 0 0 40px 10px $bg-1;
-
-// 		&::after, &::before, & a {
-// 			transition: ease-in-out 120ms;
-// 			transition-property: height margin-top background-color;
-// 		}
-
-// 		&::after, a {
-// 			outline: 4px solid $hi-1d8;
-// 		}
-
-// 		a {
-
-// 			padding: {
-// 				left: 1.3em;
-// 				right: 1.3em;
-// 				top: 0.8em;
-// 				bottom: 15px;
-// 			}
-
-// 			box-shadow: 0 0 10px 0 #000000eb;
-// 			background-color: $hi-1;
-
-// 			&:hover {
-
-// 				background-color: $hi-1dd;
-// 			}
-// 			&::before {
-// 				transition: top 120ms ease-in-out;
-
-// 				position: absolute;
-// 				top: 0;
-// 				left: 0;
-// 				width: 100%;
-// 				height: calc(100% - 15px);
-
-// 				outline: transparent dashed 3px;
-// 				outline-offset: -0.5em;
-// 				content: "";
-// 				white-space: pre;
-// 			}
-
-// 		}
-
-// 		&::after {
-// 			content: "";
-// 			height: 15px;
-// 			z-index: -1;
-// 			background: stripes($hi-1d8, $hi-1da, 0.5em);
-
-// 		}
-
-// 		&::before {
-// 			content: "";
-// 			height: 0;
-// 		}
-
-// 		&:hover {
-// 			//transform: translateY(15px);
-// 			&::after { margin-top: -15px; }
-// 			&::before { height: 15px;}
-// 			a::before {
-// 				top: 15px;
-// 				outline-color: rgba($fg-1, 0.2);
-// 			}
-// 			color: $fg-1d2;
-
-// 			text-decoration-color: rgba($fg-1d2, 0.5);
-// 			// outline: rgba($fg-3l5, 0.3) 0.2em dashed;
-// 			// transition: all 60ms ease-in-out;
-// 		}
-
-// 		// Zoom in border when clicked
-// 		// outline-offset: -0.8em;
-// 		// transition: all 300ms linear, outline 100ms linear, outline-offset 1000ms linear;
-
-// 		// &:active a::before, &:focus-within a::before {
-// 		// 	transition: outline-offset 1200ms ease-in, outline-width 7000ms ease-in, outline-color 350ms ease-in, border-radius 1200ms ease-in;
-// 		// 	outline-offset: 200vmax;
-// 		// 	outline-width: 1000px;
-// 		// 	outline-color: $fg-1;
-// 		// 	border-radius: 100%;
-// 		// 	cursor: progress;
-// 		// }
-
-// 		color: $fg-1;
-// 		text-decoration-color: rgba($fg-1, 0.5);
-// 		.title {
-// 			font-size: 2em;
-// 			font-weight: bold;
-
-// 			text-decoration-line: underline;
-// 			text-decoration-thickness: 0.15px;
-// 			text-decoration-skip-ink: unset;
-// 			text-decoration-color: inherit;
-// 		}
-
-// 		.desc {
-// 			font-weight: 300;
-// 		}
-// 	}
-
-// }
-
-// Header
-// .title-bar {
-// 	width: 100%;
-// 	padding: 6px;
-// 	box-sizing: border-box;
-
-// 	div {
-// 		@extend %flex-center;
-// 		@include
-
-// 		font-size: x-large;
-// 		font-family: win98;
-
-// 		box-sizing: border-box;
-// 		padding: 15px;
-// 		width: 100%;
-// 		height: 2em;
-
-// 		background: linear-gradient(90deg, rgba(119, 80, 159, 1) 0%, rgba(205, 106, 199, 1) 40%, rgba(243, 213, 180, 1) 100%);
-// 	}
-
-// 	p {
-// 		margin-right: auto;
-// 		margin-left: 15px;
-// 	}
-
-// 	.title-bar-button {
-// 		@extend %flex-center;
-// 		@include raisedEffect();
-
-// 		background-color: $bg-1;
-// 		border: 1.5px solid #0000000d;
-
-// 		height: 100%;
-// 		aspect-ratio: 1 / 1;
-// 		margin-left: 4px;
-
-// 		font-size: 0.5em;
-// 		transition: all 100ms;
-
-// 		&:hover { background-color: $bg-1l1; }
-
-// 		&:active,
-// 		&.active {
-// 			@include raisedEffect();
-
-// 			font-size: 0.5em;
-// 			background-color: $bg-1l2;
-
-// 			min-height: 100%;
-// 			aspect-ratio: 1 / 1;
-
-// 			position: relative;
-// 			transform: translate(0.15px, 0.15px);
-// 			transition: all 5ms;
-
-// 			&:hover { background-color: $bg-1l3; }
-// 		}
-
-// 		&::after {
-// 			@extend %flex-center;
-
-// 			mask-size: 90%;
-// 			mask-position: center;
-// 			mask-repeat: no-repeat;
-// 			content: "";
-
-// 			background-color: $fg-1;
-// 			image-rendering: optimizeSpeed;
-
-// 			width: 70%;
-// 			height: 70%;
-
-// 		}
-// 		&:active::after,
-// 		&.active::after {
-// 			background-color: $fg-1l2;
-// 		}
-// 	}
-// }
-
-/* #region Pages */
-// #page-list {
-// 	width: 100%;widthwidth
-// 	box-sizing: border-box;box-sizingbox-sizing
-// 	padding: 40px;paddingpadding
-// 	align-self: center;align-selfalign-self
-// 	display: flex;displaydisplay
-// 	flex-wrap: wrap;flex-wrapflex-wrap
-
-// 	font-size: 1.15px;font-sizefont-size
-// 	flex-direction: row;flex-directionflex-direction
-
-// 	align-items: stretch;align-itemsalign-items
-// }
-
-// .page-link {
-// 	flex: 1;flexflex
-// 	outline: none !important;outlineoutline
-// }
-
-// .page {
-// 	color: var($fontcolor1);colorcolor
-// 	justify-content: center;justify-contentjustify-content
-// 	padding: 10px 15px;paddingpadding
-// 	margin: 3px;marginmargin
-// 	white-space: nowrap;white-spacewhite-space
-// 	background-color: $bg3;background-colorbackground-color
-// 	border: 4px solid $bg2;borderborder
-// 	transition: border-color 100ms ease-out;transitiontransition
-// 	cursor: pointer;cursorcursor
-// 	flex-direction: column;flex-directionflex-direction
-// 	align-items: center;align-itemsalign-items
-
-// 	display: flex;displaydisplay
-
-// 	box-shadow:
-// 		inset 0px 8px 0px 0px red,
-// 		inset 0px 2px 0px 0px rgba(0, 0, 0, 1),
-// 		inset 0px 2px 0px 0px rgba(0, 0, 0, 1),
-// 		inset 0px 2px 0px 0px rgba(0, 0, 0, 1);box-shadowbox-shadow
-// }
-
-// .page:hover,
-// .page-link:focus-within > .page {
-// 	transition: border-color 10ms ease-out;transitiontransition
-// 	border-color: var($hicolor);border-colorborder-color
-// 	background-color: $bg4;background-colorbackground-color
-// }
-
-// .page-title {
-// 	font-weight: 500;font-weightfont-weight
-// 	font-size: 1.2em;font-sizefont-size
-// }
-
-// .page-link {
-// 	text-decoration: none;text-decorationtext-decoration
-// }
-
-// .page-desc {
-// 	color: var($fontcolor2);colorcolor
-// }
-
-// /* #endregion */
-
-// #heartcontainer {
-// 	font-size: 1.5vmin;font-sizefont-size
-// 	top: 0;toptop
-// 	left: 0;leftleft
-// 	width: 100%;widthwidth
-// 	height: 100vh;heightheight
-// 	position: fixed;positionposition
-// 	z-index: 1;z-indexz-index
-// 	pointer-events: none;pointer-eventspointer-events
-// }
-
-/* #region Falling Hearts */
-/* .heart {
-	position: fixed;
-	font-size: calc(1vw * 1vh);
-	width: 4em;
-	height: 4em;
-	position: fixed;
-	/* top: -2em; /
-	pointer-events: none;
-	display: flex;
-	align-items: center;
-	z-index: 1;
-	justify-content: center;
-}
-svg {
-	padding-left: 1px;
-	padding-right: 1px;
-	padding-top: 1px;
-	padding-bottom: 1px;
-}
-
-.heart,
-.heart * {
-	position: fixed;
-	font-size: inherit;
-	width: 11em;
-	height: 11em;
-}
-
-.heart {
-	top: -10em;
-	left: 0;
-	transition: all 100ms linear;
-}
-.heart * {
-	width: 100%;
-	display: block;
-	height: 100%;
-}
-.heartpath {
-	width: 100%;
-	height: 100%;
-} */
-
-@keyframes Fall {
-	0% {
-		top: -15px;
-	}
-
-	100% {
-		top: 100vh;
-	}
-}
-
-/* #heartcontainer {
-	content: " ";
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100vh;
-	position: fixed;
-	z-index: 1;
-	pointer-events: none;
-} */
-/* #endregion */
+// Usage: <p class="glow-reflect" data-reflect="YOUR TEXT">YOUR TEXT</p>
+// Or add data-reflect dynamically with JS for all .glow-reflect elements

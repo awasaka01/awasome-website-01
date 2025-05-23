@@ -23,9 +23,6 @@ importers:
       npm-run-all:
         specifier: ^4.1.5
         version: 4.1.5
-      postcss-scss:
-        specifier: ^4.0.9
-        version: 4.0.9(postcss@8.5.3)
       rimraf:
         specifier: ^6.0.1
         version: 6.0.1
@@ -42,6 +39,9 @@ importers:
       '@stylistic/stylelint-config':
         specifier: ^2.0.0
         version: 2.0.0(stylelint@16.19.1(typescript@5.8.3))
+      postcss-scss:
+        specifier: ^4.0.9
+        version: 4.0.9(postcss@8.5.3)
       stylelint:
         specifier: ^16.19.1
         version: 16.19.1(typescript@5.8.3)

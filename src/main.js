@@ -10,6 +10,19 @@ document.addEventListener("DOMContentLoaded", async (event) => {
 	// sort();
 }, { once: true });
 
+document.addEventListener("DOMContentLoaded", function () {
+  var container = document.getElementById("main-container-T");
+  if (!container) return;
+  // Select all elements with visible text nodes
+  container.querySelectorAll("*").forEach(function (el) {
+    // Only apply to elements with visible text (not empty, not just whitespace)
+    var text = el.childNodes.length === 1 && el.childNodes[0].nodeType === 3 ? el.textContent.trim() : "";
+    if (text.length > 0 && !el.hasAttribute("data-reflect")) {
+      el.setAttribute("data-reflect", text);
+    }
+  });
+});
+
 
 
 // SECTION - Functions
@@ -32,7 +45,6 @@ async function barcode () {
 	barcodeElement.removeChild(barcodeElement.firstElementChild);
 
 	const colors = ["#ff5b81", "#f87094", "#ff2558"];// "#ce3bd640", "#cd39c821"]; // #de6a6a, #daa867, #d5d569, #6cd86c, #6767e0, #a767d4, #da64da]
-	// const colors = ["#de6a6a", "#de7a6a", "#dd8869", "#dc9668", "#dba467", "#daaf67", "#d9b968", "#d8c468", "#d6ce69", "#ced569", "#b9d76a", "#a3d76b", "#89d86b", "#6cd86c", "#79be8b", "#7da5a6", "#7a8bbf", "#6d70d8", "#7367de", "#8367db", "#9167d9", "#9f67d6", "#ab67d4", "#b766d6", "#c366d7", "#cf65d9", "#da64da"];
 
 
 	const options = {

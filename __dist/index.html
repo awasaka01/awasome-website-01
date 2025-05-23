@@ -27,6 +27,22 @@
  </head>
 <body>
 	<section id="main-container-T">
+		<div id="space-invaders-row" style="display: flex; flex-direction: row; gap: 32px; justify-content: center; align-items: flex-start; margin-bottom: 32px;">
+			<div id="space-invaders-container" style="width: 340px; height: 420px; display: flex; align-items: center; justify-content: center; background: #181c22; border-radius: 18px 18px 28px 28px/24px 24px 18px 18px; box-shadow: 0 0 32px #000a, 0 0 0 2px #333 inset; position: relative; overflow: hidden; border: 2px solid #333;">
+				<canvas id="space-invaders-canvas" width="320" height="400" style="background:#000; display:block; margin:0 auto; border-radius: 12px; box-shadow: 0 0 16px #0ff4, 0 0 2px #fff8;"></canvas>
+				<div id="space-invaders-ui" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:2;"></div>
+			</div>
+			<div id="gta6-container" style="width: 340px; height: 420px; display: flex; align-items: center; justify-content: center; background: #181c22; border-radius: 18px 18px 28px 28px/24px 24px 18px 18px; box-shadow: 0 0 32px #000a, 0 0 0 2px #333 inset; position: relative; overflow: hidden; border: 2px solid #333;">
+				<div id="gta6-screen" style="width: 320px; height: 400px; background: #000; border-radius: 12px; box-shadow: 0 0 16px #0ff4, 0 0 2px #fff8; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; font-family: 'Roboto Mono', monospace; position: relative;">
+					<div style="font-size: 2.2em; font-weight: bold; letter-spacing: 0.1em; color: #ff5b81; text-shadow: 0 0 12px #ff2558, 0 0 32px #fff8; margin-bottom: 0.5em;">GTA VI</div>
+					<div style="font-size: 1.1em; color: #fff; opacity: 0.8; margin-bottom: 1.5em;">Coming Soon</div>
+					<div style="width: 90%; height: 180px; background: linear-gradient(120deg, #ff5b81 10%, #ff2558 90%); border-radius: 10px; box-shadow: 0 0 24px #ff2558a0; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5em;">
+						<span style="font-size: 1.5em; color: #fff; text-shadow: 0 0 8px #fff, 0 0 16px #ff2558;">🚗💨</span>
+					</div>
+					<div style="font-size: 1em; color: #fff; opacity: 0.7; text-align: center;">Experience the next generation of open world chaos.<br>Stay tuned for more info!</div>
+				</div>
+			</div>
+		</div>
 		<div id="pageList" style="--n: 53">
 			<span class="darker">
 				<div class="unhideRandom">
@@ -71,7 +87,7 @@
 			</div> 
 			<br>
 			
-			<p class="blink darker">C:\></p>
+			<p class="blink-darker">C:\></p>
 		</div>
 		<div id="barcode"><div><div></div></div></div>		
 		<div><br><br><br><br><br></div>
@@ -92,7 +108,86 @@
 	</section>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-	<div id="links">
+	<section id="main-container-P" style="min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(30,30,40,0.9); position: relative; z-index: 1;">
+		<div id="cube-container" style="perspective: 800px; width: 200px; height: 200px; display: flex; align-items: center; justify-content: center;">
+			<div id="cube" style="width: 100px; height: 100px; position: relative; transform-style: preserve-3d;">
+				<div class="face" style="background: #e74c3c; transform: rotateY(0deg) translateZ(50px);">1</div>
+				<div class="face" style="background: #3498db; transform: rotateY(180deg) translateZ(50px);">2</div>
+				<div class="face" style="background: #2ecc71; transform: rotateY(90deg) translateZ(50px);">3</div>
+				<div class="face" style="background: #f1c40f; transform: rotateY(-90deg) translateZ(50px);">4</div>
+				<div class="face" style="background: #9b59b6; transform: rotateX(90deg) translateZ(50px);">5</div>
+				<div class="face" style="background: #1abc9c; transform: rotateX(-90deg) translateZ(50px);">6</div>
+			</div>
+		</div>
+		<style>
+			#main-container-P {
+				min-height: 100vh !important;
+				width: 100vw;
+				box-sizing: border-box;
+				background: rgba(30,30,40,0.9);
+				position: relative;
+				z-index: 1;
+			}
+			#cube {
+				width: 100px;
+				height: 100px;
+				position: relative;
+				transform-style: preserve-3d;
+				transition: transform 0.2s;
+			}
+			#cube .face {
+				position: absolute;
+				width: 100px;
+				height: 100px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 2em;
+				color: #fff;
+				opacity: 0.95;
+				border: 2px solid #222;
+				box-shadow: 0 0 10px #0008;
+				user-select: none;
+			}
+			#cube-container {
+				perspective: 800px;
+				width: 200px;
+				height: 200px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+		</style>
+		<script>
+			(function() {
+				const cube = document.getElementById('cube');
+				let targetAngleX = 0, targetAngleY = 0;
+				function lerp(a, b, t) { return a + (b - a) * t; }
+				let currentX = 0, currentY = 0;
+				document.addEventListener('mousemove', function(e) {
+					const rect = cube.getBoundingClientRect();
+					const cx = rect.left + rect.width / 2;
+					const cy = rect.top + rect.height / 2;
+					const dx = e.clientX - cx;
+					const dy = e.clientY - cy;
+					// Calculate angles so face 1 looks at cursor
+					targetAngleY = Math.atan2(dx, 200) * 180 / Math.PI;
+					targetAngleX = -Math.atan2(dy, 200) * 180 / Math.PI;
+				});
+				function animate() {
+					// Smoothly interpolate to target
+					currentX = lerp(currentX, targetAngleX, 0.15);
+					currentY = lerp(currentY, targetAngleY, 0.15);
+					cube.style.transform = `rotateX(${currentX}deg) rotateY(${currentY}deg)`;
+					requestAnimationFrame(animate);
+				}
+				animate();
+			})();
+		</script>
+		<div style="margin-top: 2em; color: #fff;">text (alledgedly)</div>
+	</section>
+
+	<div id="links" style="width:100vw;position:fixed;left:0;bottom:0;z-index:10;background:rgba(30,30,40,0.95);display:flex;align-items:center;justify-content:center;gap:1em;padding:0.5em 0;">
 		<div class="divider"></div>
 		<div>❤︎‬</div>
 		<div class="divider"></div>
@@ -102,14 +197,579 @@
 		<div class="divider"></div>
 	</div>
 
-
-
-
-	<section id="main-container-P">
-		text (alledgedly)
-	</section>
-
-
 	<div id="corners"><p></p><p></p><p></p><p></p></div> <!-- Plus symbol in each corner -->
+	<script>
+		(function() {
+			// CRT power-up animation for each screen
+			const mainT = document.getElementById('main-container-T');
+			if (!mainT) return;
+			const screens = Array.from(mainT.children);
+			screens.forEach((screen, idx) => {
+				screen.style.opacity = '0';
+				// Create CRT flash overlay for each screen
+				const crtFlash = document.createElement('div');
+				crtFlash.className = 'crt-flash';
+				crtFlash.style.position = 'absolute';
+				crtFlash.style.inset = '0';
+				crtFlash.style.zIndex = '999';
+				crtFlash.style.pointerEvents = 'none';
+				crtFlash.style.background = 'radial-gradient(ellipse 80% 30% at 50% 50%, #fff 0%, #fff 60%, #fff0 100%)';
+				crtFlash.style.opacity = '0';
+				crtFlash.style.transition = 'opacity 0.15s cubic-bezier(.7,0,.7,1)';
+				screen.appendChild(crtFlash);
+				// Animate power-up for each screen, slightly staggered
+				setTimeout(() => {
+					crtFlash.style.opacity = '1';
+					setTimeout(() => {
+						crtFlash.style.opacity = '0';
+						setTimeout(() => {
+							screen.style.transition = 'opacity 0.5s cubic-bezier(.7,0,.7,1)';
+							screen.style.opacity = '1';
+							setTimeout(() => {
+								crtFlash.remove();
+							}, 400);
+						}, 180);
+					}, 120);
+				}, 120 + idx * 120);
+			});
+
+			// Fast typewriter effect for all visible text in each screen
+			function typeText(el, speed = 8) {
+				if (!el) return;
+				const nodes = Array.from(el.querySelectorAll('p, span, li, .title, .darker, a, output, b'));
+				nodes.forEach(node => {
+					if (node.dataset.typed) return;
+					const text = node.textContent;
+					node.textContent = '';
+					node.dataset.typed = '1';
+					let i = 0;
+					function type() {
+						node.textContent = text.slice(0, i);
+						if (i < text.length) {
+							i++;
+							setTimeout(type, speed);
+						} else {
+							node.textContent = text;
+						}
+					}
+					setTimeout(type, Math.random() * 120);
+				});
+			}
+			// Stagger typewriter effect for each screen
+			screens.forEach((screen, idx) => {
+				setTimeout(() => {
+					typeText(screen, 8);
+				}, 400 + idx * 120);
+			});
+
+			// === Matrix-style falling red text background (performance improved & silly party mode) ===
+			const streakCanvas = document.createElement('canvas');
+			streakCanvas.id = 'matrix-streaks';
+			streakCanvas.style.position = 'fixed';
+			streakCanvas.style.top = '0';
+			streakCanvas.style.left = '0';
+			streakCanvas.style.width = '100vw';
+			streakCanvas.style.height = '100vh';
+			streakCanvas.style.zIndex = '0';
+			streakCanvas.style.pointerEvents = 'none';
+			streakCanvas.style.opacity = '0.18';
+			streakCanvas.style.mixBlendMode = 'lighten';
+			document.body.prepend(streakCanvas);
+
+			function randomChar() {
+				const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=<>?';
+				return chars[Math.floor(Math.random() * chars.length)];
+			}
+
+			function randomRed() {
+				const reds = ['#ff2558', '#ff5b81', '#ff4375', '#ff0033', '#ff1a4d'];
+				return reds[Math.floor(Math.random() * reds.length)];
+			}
+
+			function startMatrixStreaks() {
+				const ctx = streakCanvas.getContext('2d');
+				let width = window.innerWidth;
+				let height = window.innerHeight;
+				streakCanvas.width = width;
+				streakCanvas.height = height;
+				const fontSize = 18;
+				let columns = Math.floor(width / (fontSize * 2.2)); // fewer columns for perf
+				let streaks = Array(columns).fill(0).map(() => Math.floor(14 + Math.random() * 10));
+				let drops = Array(columns).fill(0).map(() => Math.random() * height / fontSize);
+				// Pre-generate random chars for each streak
+				let charMatrix = Array(columns).fill(0).map(() => Array(32).fill(0).map(randomChar));
+				// Only update every N frames for performance
+				let frame = 0;
+				const UPDATE_EVERY = 7;
+				let running = true;
+				document.addEventListener('visibilitychange', () => {
+					running = !document.hidden;
+				});
+				function draw() {
+					if (!running) return requestAnimationFrame(draw);
+					frame++;
+					if (frame % UPDATE_EVERY === 0) {
+						ctx.clearRect(0, 0, width, height);
+						ctx.font = `bold ${fontSize}px 'Roboto Mono', monospace`;
+						for (let i = 0; i < columns; i++) {
+							let y = drops[i] * fontSize;
+							let streak = streaks[i];
+							for (let j = -streak; j < 0; j++) {
+								const charY = y + j * fontSize;
+								if (charY < 0 || charY > height) continue;
+								ctx.save();
+								let fade = 1;
+								if (j > -3) fade = (j + streak) / 3;
+								if (j < -streak + 3) fade = (streak + j) / 3;
+								fade = Math.max(0, Math.min(1, fade));
+								ctx.globalAlpha = 0.12 + 0.45 * fade;
+								ctx.fillStyle = randomRed();
+								ctx.shadowColor = ctx.fillStyle;
+								ctx.shadowBlur = 8 * fade;
+								// Use pre-generated char
+								ctx.fillText(charMatrix[i][Math.abs(j) % charMatrix[i].length], i * fontSize * 2.2, charY);
+								ctx.restore();
+							}
+							drops[i] += 0.13 + Math.random() * 0.05;
+							if (y > height + streak * fontSize && Math.random() > 0.98) {
+								drops[i] = -streak;
+								streaks[i] = Math.floor(14 + Math.random() * 10);
+								// Regenerate chars for this streak
+								charMatrix[i] = Array(32).fill(0).map(randomChar);
+							}
+						}
+					}
+					requestAnimationFrame(draw);
+				}
+				draw();
+				window.addEventListener('resize', () => {
+					width = window.innerWidth;
+					height = window.innerHeight;
+					streakCanvas.width = width;
+					streakCanvas.height = height;
+					columns = Math.floor(width / (fontSize * 2.2));
+					streaks = Array(columns).fill(0).map(() => Math.floor(14 + Math.random() * 10));
+					drops = Array(columns).fill(0).map(() => Math.random() * height / fontSize);
+					charMatrix = Array(columns).fill(0).map(() => Array(32).fill(0).map(randomChar));
+				});
+			}
+			startMatrixStreaks();
+
+			// --- Silly: Party Mode Button ---
+			const partyBtn = document.createElement('button');
+			partyBtn.textContent = '🎉 PARTY MODE 🎉';
+			partyBtn.style.position = 'fixed';
+			partyBtn.style.top = '12px';
+			partyBtn.style.right = '12px';
+			partyBtn.style.zIndex = '99999';
+			partyBtn.style.fontSize = '1.2em';
+			partyBtn.style.background = '#ff2558';
+			partyBtn.style.color = '#fff';
+			partyBtn.style.border = 'none';
+			partyBtn.style.borderRadius = '12px';
+			partyBtn.style.padding = '0.5em 1.2em';
+			partyBtn.style.boxShadow = '0 0 16px #ff2558a0';
+			partyBtn.style.cursor = 'pointer';
+			partyBtn.style.opacity = '0.85';
+			partyBtn.style.transition = 'opacity 0.2s';
+			partyBtn.onmouseenter = () => partyBtn.style.opacity = '1';
+			partyBtn.onmouseleave = () => partyBtn.style.opacity = '0.85';
+			document.body.appendChild(partyBtn);
+			partyBtn.onclick = () => {
+				let t = 0;
+				const partyInterval = setInterval(() => {
+					document.body.style.background = `linear-gradient(90deg, hsl(${Math.random()*360}deg,90%,60%), hsl(${Math.random()*360}deg,90%,60%))`;
+					document.querySelectorAll('#main-container-T > *').forEach(el => {
+						el.style.background = `hsl(${Math.random()*360}deg,90%,20%)`;
+						el.style.boxShadow = `0 0 32px hsl(${Math.random()*360}deg,90%,60%)`;
+					});
+					t++;
+					if (t > 30) {
+						clearInterval(partyInterval);
+						document.body.style.background = '';
+						document.querySelectorAll('#main-container-T > *').forEach(el => {
+							el.style.background = '';
+							el.style.boxShadow = '';
+						});
+					}
+				}, 80);
+			};
+
+			// --- Silly: Silly Mode Button (ASCII cats bouncing) ---
+			const sillyBtn = document.createElement('button');
+			sillyBtn.textContent = '😺 SILLY MODE 😺';
+			sillyBtn.style.position = 'fixed';
+			sillyBtn.style.top = '56px';
+			sillyBtn.style.right = '12px';
+			sillyBtn.style.zIndex = '99999';
+			sillyBtn.style.fontSize = '1.2em';
+			sillyBtn.style.background = '#0cf';
+			sillyBtn.style.color = '#fff';
+			sillyBtn.style.border = 'none';
+			sillyBtn.style.borderRadius = '12px';
+			sillyBtn.style.padding = '0.5em 1.2em';
+			sillyBtn.style.boxShadow = '0 0 16px #0cf8';
+			sillyBtn.style.cursor = 'pointer';
+			sillyBtn.style.opacity = '0.85';
+			sillyBtn.style.transition = 'opacity 0.2s';
+			sillyBtn.onmouseenter = () => sillyBtn.style.opacity = '1';
+			sillyBtn.onmouseleave = () => sillyBtn.style.opacity = '0.85';
+			document.body.appendChild(sillyBtn);
+
+			sillyBtn.onclick = () => {
+				// Create overlay canvas
+				let sillyCanvas = document.createElement('canvas');
+				sillyCanvas.width = window.innerWidth;
+				sillyCanvas.height = window.innerHeight;
+				sillyCanvas.style.position = 'fixed';
+				sillyCanvas.style.top = '0';
+				sillyCanvas.style.left = '0';
+				sillyCanvas.style.width = '100vw';
+				sillyCanvas.style.height = '100vh';
+				sillyCanvas.style.zIndex = '99998';
+				sillyCanvas.style.pointerEvents = 'none';
+				sillyCanvas.style.opacity = '0.95';
+				document.body.appendChild(sillyCanvas);
+				const ctx = sillyCanvas.getContext('2d');
+				// ASCII cat faces
+				const cats = [
+					'ฅ^•ﻌ•^ฅ',
+					'(=^･ω･^=)',
+					'(=^‥^=)',
+					'(^._.^)ﾉ',
+					'(=①ω①=)',
+					'（=´∇｀=）',
+					'（＾・ω・＾✿）',
+					'(=ＴェＴ=)',
+					'（=・ω・=）',
+					'（=｀ω´=）',
+				];
+				// Cat objects
+				let catObjs = [];
+				for (let i = 0; i < 8 + Math.floor(Math.random()*4); i++) {
+					catObjs.push({
+						x: Math.random() * (sillyCanvas.width - 120) + 40,
+						y: Math.random() * (sillyCanvas.height - 120) + 40,
+						vx: (Math.random() - 0.5) * 7,
+						vy: (Math.random() - 0.5) * 7,
+						face: cats[Math.floor(Math.random()*cats.length)],
+						size: 32 + Math.random()*24,
+						color: `hsl(${Math.random()*360},90%,70%)`
+					});
+				}
+				let running = true;
+				let t = 0;
+				function drawCats() {
+					ctx.clearRect(0,0,sillyCanvas.width,sillyCanvas.height);
+					catObjs.forEach(cat => {
+						ctx.save();
+						ctx.font = `bold ${cat.size}px 'Roboto Mono', monospace`;
+						ctx.textAlign = 'center';
+						ctx.textBaseline = 'middle';
+						ctx.shadowColor = cat.color;
+						ctx.shadowBlur = 16;
+						ctx.fillStyle = cat.color;
+						ctx.fillText(cat.face, cat.x, cat.y);
+						ctx.restore();
+					});
+				}
+				function updateCats() {
+					catObjs.forEach(cat => {
+						cat.x += cat.vx;
+						cat.y += cat.vy;
+						if (cat.x < 30 || cat.x > sillyCanvas.width-30) cat.vx *= -1;
+						if (cat.y < 30 || cat.y > sillyCanvas.height-30) cat.vy *= -1;
+					});
+				}
+				function loop() {
+					if (!running) return;
+					updateCats();
+					drawCats();
+					t++;
+					if (t > 120) { // ~2 seconds
+						running = false;
+						sillyCanvas.remove();
+						return;
+					}
+					requestAnimationFrame(loop);
+				}
+				loop();
+				window.addEventListener('resize', () => {
+					sillyCanvas.width = window.innerWidth;
+					sillyCanvas.height = window.innerHeight;
+				});
+			};
+
+			// --- Stick War Legacy Mini-Game in GTA 6 Screen ---
+			const gta6 = document.getElementById('gta6-screen');
+			if (gta6) {
+				gta6.innerHTML = `<canvas id="stickwar-canvas" width="300" height="220" style="background:#222; border-radius:8px; margin:0 auto; display:block; box-shadow:0 0 12px #0ff8;"></canvas>
+					<div style='font-size:1.1em;color:#ff5b81;margin-top:0.5em;'>Stick War Mini</div>
+					<div style='font-size:0.9em;opacity:0.7;'>Click to spawn stickmen!<br>Red vs Blue</div>`;
+				const canvas = document.getElementById('stickwar-canvas');
+				const ctx = canvas.getContext('2d');
+				const W = canvas.width, H = canvas.height;
+				let stickmen = [];
+				let tick = 0;
+				function spawn(team) {
+					stickmen.push({
+						x: team === 0 ? 20 : W-20,
+						y: H-30,
+						vx: team === 0 ? 1.1+Math.random()*0.3 : -1.1-Math.random()*0.3,
+						team,
+						hp: 3,
+						attack: 0,
+						color: team === 0 ? '#0cf' : '#ff2558',
+						facing: team === 0 ? 1 : -1
+					});
+				}
+				canvas.onclick = function(e) {
+					const x = e.offsetX;
+					spawn(x < W/2 ? 0 : 1);
+				};
+				function drawStickman(s) {
+					ctx.save();
+					ctx.strokeStyle = s.color;
+					ctx.lineWidth = 3;
+					ctx.beginPath();
+					// Head
+					ctx.arc(s.x, s.y-18, 7, 0, Math.PI*2);
+					ctx.moveTo(s.x, s.y-11);
+					ctx.lineTo(s.x, s.y+12);
+					// Arms
+					ctx.moveTo(s.x, s.y-2);
+					ctx.lineTo(s.x-10*s.facing, s.y+6);
+					ctx.moveTo(s.x, s.y-2);
+					ctx.lineTo(s.x+10*s.facing, s.y+6);
+					// Legs
+					ctx.moveTo(s.x, s.y+12);
+					ctx.lineTo(s.x-7, s.y+24);
+					ctx.moveTo(s.x, s.y+12);
+					ctx.lineTo(s.x+7, s.y+24);
+					ctx.stroke();
+					ctx.restore();
+					// HP bar
+					ctx.fillStyle = s.color;
+					ctx.fillRect(s.x-8, s.y-28, 16*s.hp/3, 3);
+				}
+				function update() {
+					// Move
+					stickmen.forEach(s => {
+						s.x += s.vx;
+						// Attack if close
+						stickmen.forEach(o => {
+							if (o === s || o.team === s.team || o.hp <= 0) return;
+							if (Math.abs(o.x-s.x) < 16 && Math.abs(o.y-s.y) < 12 && s.attack <= 0) {
+								o.hp--;
+								s.attack = 30;
+							}
+						});
+						if (s.attack > 0) s.attack--;
+					});
+					// Remove dead
+					stickmen = stickmen.filter(s => s.hp > 0 && s.x > -20 && s.x < W+20);
+				}
+				function draw() {
+					ctx.clearRect(0,0,W,H);
+					// Ground
+					ctx.fillStyle = '#444';
+					ctx.fillRect(0,H-18,W,18);
+					stickmen.forEach(drawStickman);
+				}
+				function loop() {
+					update();
+					draw();
+					tick++;
+					requestAnimationFrame(loop);
+				}
+				loop();
+			}
+
+		})();
+	</script>
+	<script>
+		(function() {
+			// Space Invaders game logic
+			const canvas = document.getElementById('space-invaders-canvas');
+			if (!canvas) return;
+			const ctx = canvas.getContext('2d');
+			const W = canvas.width, H = canvas.height;
+			// Game state
+			let left = false, right = false, space = false, gameOver = false, win = false;
+			let player = { x: W/2-16, y: H-40, w: 32, h: 16, color: '#0ff' };
+			let bullets = [];
+			let invaders = [];
+			let invaderDir = 1;
+			let invaderSpeed = 0.8;
+			let invaderStep = 18;
+			let invaderTimer = 0;
+			let bulletTimer = 0;
+			let score = 0;
+			// Init invaders
+			function resetInvaders() {
+				invaders = [];
+				for (let row = 0; row < 4; row++) {
+					for (let col = 0; col < 8; col++) {
+						invaders.push({
+							x: 32 + col * 32,
+							y: 40 + row * 32,
+							w: 24,
+							h: 18,
+							alive: true,
+							color: ['#f55','#ff5b81','#fff','#ff2558'][row]
+						});
+					}
+				}
+			}
+			resetInvaders();
+			// Controls
+			window.addEventListener('keydown', e => {
+				if (e.code === 'ArrowLeft') left = true;
+				if (e.code === 'ArrowRight') right = true;
+				if (e.code === 'Space') space = true;
+			});
+			window.addEventListener('keyup', e => {
+				if (e.code === 'ArrowLeft') left = false;
+				if (e.code === 'ArrowRight') right = false;
+				if (e.code === 'Space') space = false;
+			});
+			// Game loop
+			function drawPlayer() {
+				ctx.save();
+				ctx.shadowColor = '#0ff';
+				ctx.shadowBlur = 12;
+				ctx.fillStyle = player.color;
+				ctx.fillRect(player.x, player.y, player.w, player.h);
+				ctx.restore();
+				// Draw little "gun"
+				ctx.fillStyle = '#fff';
+				ctx.fillRect(player.x+player.w/2-2, player.y-6, 4, 6);
+			}
+			function drawInvaders() {
+				invaders.forEach(inv => {
+					if (!inv.alive) return;
+					ctx.save();
+					ctx.shadowColor = inv.color;
+					ctx.shadowBlur = 8;
+					ctx.fillStyle = inv.color;
+					ctx.fillRect(inv.x, inv.y, inv.w, inv.h);
+					ctx.restore();
+					// Eyes
+					ctx.fillStyle = '#222';
+					ctx.fillRect(inv.x+5, inv.y+5, 3, 3);
+					ctx.fillRect(inv.x+inv.w-8, inv.y+5, 3, 3);
+				});
+			}
+			function drawBullets() {
+				bullets.forEach(b => {
+					ctx.save();
+					ctx.shadowColor = '#fff';
+					ctx.shadowBlur = 6;
+					ctx.fillStyle = '#fff';
+					ctx.fillRect(b.x, b.y, 3, 10);
+					ctx.restore();
+				});
+			}
+			function drawUI() {
+				ctx.font = 'bold 18px Roboto Mono, monospace';
+				ctx.fillStyle = '#fff';
+				ctx.textAlign = 'left';
+				ctx.fillText('SCORE: ' + score, 12, 24);
+				if (gameOver) {
+					ctx.font = 'bold 32px Roboto Mono, monospace';
+					ctx.fillStyle = '#ff2558';
+					ctx.textAlign = 'center';
+					ctx.fillText('GAME OVER', W/2, H/2);
+					ctx.font = 'bold 18px Roboto Mono, monospace';
+					ctx.fillStyle = '#fff';
+					ctx.fillText('Press R to restart', W/2, H/2+32);
+				}
+				if (win) {
+					ctx.font = 'bold 32px Roboto Mono, monospace';
+					ctx.fillStyle = '#0f8';
+					ctx.textAlign = 'center';
+					ctx.fillText('YOU WIN!', W/2, H/2);
+					ctx.font = 'bold 18px Roboto Mono, monospace';
+					ctx.fillStyle = '#fff';
+					ctx.fillText('Press R to play again', W/2, H/2+32);
+				}
+			}
+			function update() {
+				if (gameOver || win) return;
+				// Player move
+				if (left) player.x -= 4;
+				if (right) player.x += 4;
+				player.x = Math.max(0, Math.min(W-player.w, player.x));
+				// Fire
+				bulletTimer++;
+				if (space && bulletTimer > 10) {
+					bullets.push({ x: player.x+player.w/2-1.5, y: player.y-10 });
+					bulletTimer = 0;
+				}
+				// Bullets move
+				bullets.forEach(b => b.y -= 7);
+				// Remove offscreen
+				bullets = bullets.filter(b => b.y > -12);
+				// Invaders move
+				invaderTimer++;
+				if (invaderTimer > 12) {
+					let edge = false;
+					invaders.forEach(inv => {
+						if (!inv.alive) return;
+						inv.x += invaderDir * invaderSpeed * 8;
+						if (inv.x < 8 || inv.x + inv.w > W-8) edge = true;
+					});
+					if (edge) {
+						invaderDir *= -1;
+						invaders.forEach(inv => {
+							if (!inv.alive) return;
+							inv.y += invaderStep;
+						});
+					}
+					invaderTimer = 0;
+				}
+				// Bullet hits
+				bullets.forEach(b => {
+					invaders.forEach(inv => {
+						if (!inv.alive) return;
+						if (b.x < inv.x+inv.w && b.x+3 > inv.x && b.y < inv.y+inv.h && b.y+10 > inv.y) {
+							inv.alive = false;
+							score += 10;
+							b.y = -99;
+						}
+					});
+				});
+				// Invader reaches player
+				if (invaders.some(inv => inv.alive && inv.y+inv.h > player.y)) {
+					gameOver = true;
+				}
+				// Win
+				if (invaders.every(inv => !inv.alive)) {
+					win = true;
+				}
+			}
+			function loop() {
+				ctx.clearRect(0,0,W,H);
+				drawPlayer();
+				drawInvaders();
+				drawBullets();
+				drawUI();
+				update();
+				requestAnimationFrame(loop);
+			}
+			loop();
+			// Restart
+			window.addEventListener('keydown', e => {
+				if ((gameOver || win) && e.code === 'KeyR') {
+					player.x = W/2-16;
+					bullets = [];
+					resetInvaders();
+					gameOver = false;
+					win = false;
+					score = 0;
+				}
+			});
+		})();
+	</script>
 </body>
 </html>

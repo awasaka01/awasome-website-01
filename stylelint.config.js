@@ -21,6 +21,7 @@ export default defineConfig({
 		"selector-id-pattern": null,
 		"function-name-case": null,
 		"no-invalid-double-slash-comments": null,
+
 		// : stylelint-config-standard-scss
 		"scss/double-slash-comment-empty-line-before": null,
 		"scss/load-no-partial-leading-underscore": null,
