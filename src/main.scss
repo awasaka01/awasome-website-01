@@ -1,12 +1,13 @@
+
 // Imports
 @use "helpers/_bundled.scss" as *;
 
 html {
-	position: relative; // Required for the + corners
-	min-height: 100%; 
+	// why the fuck is it copying my comment onto the next line when i save :sob:
+	position: relative;
+	min-height: 100%;
 }
 body { @extend %bodyDefaults; min-height: 100%; }
-
 
 
 .unhideRandom {
@@ -18,20 +19,22 @@ body { @extend %bodyDefaults; min-height: 100%; }
 
 #corners {
 	* {
-		width: 10px;height: 10px;
-		--gradient: #0000 40%, rgba(255, 255, 255, 0.173) 0 60%, #0000 0;
-
-		margin: 10px;
-		background: linear-gradient(0, var(--gradient)), linear-gradient(90deg, var(--gradient));
-		position: absolute; 
+		--gradient: #0000 40%, rgb(255 255 255 / 17.3%) 0 60%, #0000 0;
+		position: absolute;
 		bottom: 0;
-	}
-	*:nth-child(1) { top: 0; left: 0; }
-	*:nth-child(2) { top: 0; right: 0; }
-	*:nth-child(3) { bottom: 0; left: 0; }
-	*:nth-child(4) { bottom: 0; right: 0; }
 
-	
+		width:  10px; 
+		height: 10px;
+		margin: 10px;
+
+		background: 
+			linear-gradient(0deg, var(--gradient)),
+			linear-gradient(90deg, var(--gradient));
+	}
+	*:nth-child(1) { top:    0; left:   0; }
+	*:nth-child(2) { top:    0; right:  0; }
+	*:nth-child(3) { bottom: 0; left:   0; }
+	*:nth-child(4) { right:  0; bottom: 0; }
 }
 
 
@@ -40,47 +43,58 @@ $a: #ff5b81; $b: #ff4375; $c: #ff2558; $d: #ce3bd640; $e: #cd39c821;
 
 
 // ANCHOR - Main Container (holds all the little screens)
-#container {
+#main-container-T {
+	$width: 30px; 
+	$depth: 3px;
+	
 	display: inline-flex;
 	flex-direction: column;
 
+	min-width: 0;
 	max-width: min-content;
-	min-width: 0px;
 	margin: 60px 35px 200px;
 
 	background-color: $bg-1l1;
-	
-	$width: 30px; 
-	$depth: 3px;
-  	box-shadow: f_98shadow_outer($depth, $width), 50px 50px 100px 0px rgba(0, 0, 0, 0.234);
+	box-shadow: 
+		f_98shadow_outer($depth, $width),
+		50px 50px 100px 0 rgb(0 0 0 / 23.4%);
 
+	> *:not(:first-child) { margin-top: $width + $depth*4; }
 	> * {
 		@include terminalStyle;
 		padding: 10px;
-  		box-shadow: f_98shadow_inner($depth), inset 50px 50px 100px 0 rgba(0, 0, 0, 0.34);
+		box-shadow:
+			f_98shadow_inner($depth),
+			inset 50px 50px 100px 0 rgb(0 0 0 / 34%);
 	}
-	> *:not(:first-child) { margin-top: $width + $depth*4; }
 }
 
 
 @mixin terminalStyle {
-	font-family: Terminal;
-	text-shadow: 0 0 4px; // Glowing text
-	background: radial-gradient(circle,#1a1825 0%, #070c12 100%);
-
 	// Striped Lines + Faint RGB Pixelated overlay effects
 	position: relative;
+	font-family: Terminal;
+	text-shadow: 0 0 4px; // Glowing text
+	background: radial-gradient(circle, #1a1825 0%, #070c12 100%);
 	&::before {
-		content: " ";
-		display: block;
-		position: absolute;
-		top: 0; left: 0; bottom: 0;	right: 0; z-index: 2;
 		pointer-events: none;
+		content: " ";
 
-		background: linear-gradient(to bottom, #1210101c 50%, #00000025 50%), 
-					linear-gradient(to right, #ff00000f, #00ff0005, #0000ff0f),
-					linear-gradient(to bottom, #0000 50%, #00000017 50%);
-		background-size: 100% 2px, 3px 100%, 100% 16px;;
+		position: absolute; z-index: 2;
+		top: 0; bottom: 0; left: 0;
+
+		display: block;
+
+		background:
+			linear-gradient(to bottom, #1210101c 50%, #00000025 50%),
+			linear-gradient(to right, #ff00000f, #00ff0005, #0000ff0f),
+			linear-gradient(to bottom, #0000 50%, #00000017 50%);
+		background-size: 
+			100% 2px,
+ 
+			3px 100%,
+ 
+			100% 16px;
 	}
 }
 
@@ -89,15 +103,15 @@ $a: #ff5b81; $b: #ff4375; $c: #ff2558; $d: #ce3bd640; $e: #cd39c821;
 // Main menu for page selection
 #pageList {
 	@include terminalStyle;
-
-	color: rgba($text-color, 0.3);
-	font-size: 16px;
-
-	padding: 20px;
 	display: flex;	
 	flex-direction: column;
 
-	.title { color: $c }
+	padding: 20px;
+
+	font-size: 16px;
+	color: rgba($text-color, 0.3);
+
+	.title { color: $c; }
 
 
 	// List of page links <p><a href="/">-> <u>Title</u> - Description</a></p>
@@ -107,28 +121,32 @@ $a: #ff5b81; $b: #ff4375; $c: #ff2558; $d: #ce3bd640; $e: #cd39c821;
 		white-space: pre; // Disable the auto-collpase of spaces ' ' in the html (after the ->)
 
 		a {
-			display: flex;
-			width: 100%;
-			color: rgba($text-color, .5);
-			outline: none;
-
 			cursor: pointer;
-			&:hover, &:focus-within, &:focus {  
+
+			display: flex;
+
+			width: 100%;
+
+			color: rgba($text-color, 0.5);
+
+			outline: none;
+			&:hover, &:focus-within, &:focus {
 				background-color: $c;
 				box-shadow: $c 0 0 10px;
 				&, * { color: $bg-1; text-decoration-color: #0000; }
 			}
 		}
 		u {
-			color: $text-color;
-			text-decoration-color: rgba($text-color, .7);
+			color:                     $text-color;
+			text-decoration-color:     rgba($text-color, 0.7);
 			text-decoration-thickness: 1px;
-			text-underline-offset: 2px;
+			text-underline-offset:     2px;
 		}
 	}
 	#logo-text {
-		white-space: pre; line-height: 1ch; // Required to make all characters square
-		.a { color: $a;	} .b { color: $b; } .c { color: $c; } .d { color: $d; } .e { color: $e;	}
+		line-height: 1ch; // Required to make all characters square
+		white-space: pre;
+		.a { color: $a; } .b { color: $b; } .c { color: $c; } .d { color: $d; } .e { color: $e; }
 	}
 }
 
@@ -136,27 +154,27 @@ $a: #ff5b81; $b: #ff4375; $c: #ff2558; $d: #ce3bd640; $e: #cd39c821;
 
 // 
 #links {
-	font-family: "Roboto Mono";
-	line-height: 1ch;
+	position: absolute;
+	bottom: 0;
 
 	display: flex;
 	flex-direction: row;
 	align-items: center;
 
-	position: absolute;
-	bottom: 0;
 	margin: 20px;
 
-	* { white-space: pre; display: flex; }
+	font-family: "Roboto Mono";
+	line-height: 1ch;
+
+	* { display: flex; white-space: pre; }
 	a:not(.no-underline) { text-decoration: underline; text-decoration-color: rgba($text-color, 0.3); }
 	a:hover, a:focus-within { color: $a; text-decoration-color: #0000; }
 	.divider {
 		$color: #ffffff2f;
-		background: f_hardGradient($color #0000 $color #0000 $color, to bottom);
-
-		margin: 0 10px;
-		height: 10px;
 		width: 2px;
+		height: 10px;
+		margin: 0 10px;
+		background: f_hardGradient($color #0000 $color #0000 $color, to bottom);
 	}
 }
 
@@ -167,45 +185,34 @@ $a: #ff5b81; $b: #ff4375; $c: #ff2558; $d: #ce3bd640; $e: #cd39c821;
 	// The actual bars
 	> div {
 		display: inline-flex;
-		height: 15px;
 		flex-grow: 1;
+		height: 15px;
 		> div {
-		display: inline-flex;
+			display: inline-flex;
 
-		width: 50%;
-		margin-left: 50%;
+			width: 50%;
+			margin-left: 50%;
 		
-		color: rgba($c, 0.7);
-		background-color: currentColor;
-		box-shadow: 0 0 10px currentColor;
-		}
+			color: rgba($c, 0.7);
 
+			background-color: currentcolor;
+			box-shadow: 0 0 10px currentcolor;
+		}
 	}
 }
 
 
 
 
-
-
-
-
-
-
-
-
 #sorting {
-	
-	color: rgba($text-color, 0.7);
-	@include terminalStyle;
-	
 	flex-direction: column;
 	padding: 10px;
-  	box-shadow: f_98shadow_full(), inset 50px 50px 100px 0 rgba(0, 0, 0, 0.34), 50px 50px 100px 0px rgba(0, 0, 0, 0.234);
+	color: rgba($text-color, 0.7);
+	// box-shadow: f_98shadow_full(), inset 50px 50px 100px 0 rgb(0 0 0 / 34%), 50px 50px 100px 0 rgb(0 0 0 / 23.4%);box-shadowbox-shadow
+	@include terminalStyle;
 	&, * {
 		display: flex;
-		
-	white-space: pre;
+		white-space: pre;
 	}
 	div {
 		color: rgba($text-color, 0.2);
@@ -215,14 +222,17 @@ $a: #ff5b81; $b: #ff4375; $c: #ff2558; $d: #ce3bd640; $e: #cd39c821;
 		align-items: end;
 		font-size: 1px;
 		* {
-		box-sizing: initial;
-
-		padding-bottom: 10em;
 			content: "";
-			background-color: $c;
-			color: $c;
-			box-shadow: 0 0 10px currentColor;
+
 			flex-grow: 1;
+
+			box-sizing: initial;
+			padding-bottom: 10em;
+
+			color: $c;
+
+			background-color: $c;
+			box-shadow: 0 0 10px currentcolor;
 		}
 	}
 }
@@ -249,7 +259,70 @@ $a: #ff5b81; $b: #ff4375; $c: #ff2558; $d: #ce3bd640; $e: #cd39c821;
 
 
 
+#main-container-P {
+	// Generate a zigzag shape using a repeating conic gradient, to be used as a background or mask
+	// note: set background/mask-size to [X% 100%] where X is the desired scale, or if left/right then [100% X%]
+	@function f-zigzag-conic($side: "top", $background-color: #000000, $outer-color: transparent) {
+		$offset: 0;
 
+		@if $side=="bottom" {
+			$offset: 0.5turn;
+		} @else if $side=="top" {
+			$offset: 0turn; 
+		} @else if $side == "right" {
+			$offset: 0.25turn;
+		} @else if $side == "left" {
+			$offset: 0.75turn;
+		} @else {
+			@error "Unknown side: #{$side}, must be 'top', 'bottom', 'right' or 'left'";
+		}
+		// misalign the center values by 1grad to have a very tiny gradient between the two colors, 
+		// helping elimatinate anti-aliasing
+		@return conic-gradient(
+			from #{$offset}
+			at #{$side},
+			$outer-color 0grad 150grad,
+			$background-color 151grad 249grad, 
+			$outer-color 250grad 50grad,
+		);
+	}
+	z-index: -1;
+
+	width: 100%;
+	height: 600px;
+	padding: 10px;
+	padding-top: 40px;
+	border: none;
+
+	color: black;
+
+	background-color: rgb(154 84 96);
+
+	mask: f-zigzag-conic("top");
+
+	animation: scroll-mask 100s linear infinite;
+
+	mask-position: 0% top;
+	mask-size: 5% 100%;
+	&::before {
+		content: "";
+
+		position: absolute;
+		z-index: -1;
+		top: 0;
+		left: 0;
+
+		width: 100%;
+		height: 100%;
+
+		background-color: $c;
+		filter: drop-shadow(0 0 8 0 $c);
+	}
+}
+@keyframes scroll-mask {
+	0% { mask-position: 0% top; }
+	100% { mask-position: 100% top; }
+}
 
 
 
@@ -274,43 +347,43 @@ $a: #ff5b81; $b: #ff4375; $c: #ff2558; $d: #ce3bd640; $e: #cd39c821;
 
 
 // #funbar {
-// 	box-shadow: f_98shadow_full();
-// 	padding: 5px;
-// 	display: inline-flex;
-// 	color: red;
-// 	max-width: 100%;
-// 	position: relative;
-// 		height: 100px;
-// 	background: radial-gradient(circle,#1a1825 0%, #070c12 100%);
+// 	box-shadow: f_98shadow_full();box-shadowbox-shadow
+// 	padding: 5px;paddingpadding
+// 	display: inline-flex;displaydisplay
+// 	color: red;colorcolor
+// 	max-width: 100%;max-widthmax-width
+// 	position: relative;positionposition
+// 		height: 100px;heightheight
+// 	background: radial-gradient(circle,#1a1825 0%, #070c12 100%);backgroundbackground
 	
 
 // 	// Base rules for effects
 // 	&::after, &::before {
-// 		content: " ";
-// 		display: block;
-// 		position: absolute;
-// 		top: 0; left: 0; bottom: 0;	right: 0; z-index: 2;
-// 		pointer-events: none;
+// 		content: " ";contentcontent
+// 		display: block;displaydisplay
+// 		position: absolute;positionposition
+// 		top: 0;toptop left: 0;left bottom: 0;	right: 0; z-index: 2;
+// 		pointer-events: none;pointer-eventspointer-events
 // 	}
 // 	// Striped Lines effect
 // 	&:before {
-// 		background: linear-gradient(to bottom, #0000 50%, #00000017 50%);
-// 		background-size: 100% 16px;
+// 		background: linear-gradient(to bottom, #0000 50%, #00000017 50%);backgroundbackground
+// 		background-size: 100% 16px;background-sizebackground-size
 // 	}
 
 
 // 	// Faint RGB Pixelated effect
 // 	&::after {
 // 		background: linear-gradient(to bottom, #1210101c 50%, #00000025 50%), 
-// 					linear-gradient(to right, #ff00000f, #00ff0005, #0000ff0f);
-// 		background-size: 100% 2px, 3px 100%;
+// 					linear-gradient(to right, #ff00000f, #00ff0005, #0000ff0f);backgroundbackground
+// 		background-size: 100% 2px, 3px 100%;background-sizebackground-size
 // 	}
 
 // 	canvas {
-// 	max-width: 100%;
-// 		display: inline-flex;
-// 		overflow: hidden;
-// 		image-rendering: pixelated; image-rendering: crisp-edges;
+// 	max-width: 100%;max-widthmax-width
+// 		display: inline-flex;displaydisplay
+// 		overflow: hidden;overflowoverflow
+// 		image-rendering: pixelated;image-renderingimage-rendering image-rendering: crisp-edges;image-rendering
 
 // 	}
 // }
@@ -644,77 +717,77 @@ canvas {
 
 /* #region Pages */
 // #page-list {
-// 	width: 100%;
-// 	box-sizing: border-box;
-// 	padding: 40px;
-// 	align-self: center;
-// 	display: flex;
-// 	flex-wrap: wrap;
+// 	width: 100%;widthwidth
+// 	box-sizing: border-box;box-sizingbox-sizing
+// 	padding: 40px;paddingpadding
+// 	align-self: center;align-selfalign-self
+// 	display: flex;displaydisplay
+// 	flex-wrap: wrap;flex-wrapflex-wrap
 
-// 	font-size: 1.15px;
-// 	flex-direction: row;
+// 	font-size: 1.15px;font-sizefont-size
+// 	flex-direction: row;flex-directionflex-direction
 
-// 	align-items: stretch;
+// 	align-items: stretch;align-itemsalign-items
 // }
 
 // .page-link {
-// 	flex: 1;
-// 	outline: none !important;
+// 	flex: 1;flexflex
+// 	outline: none !important;outlineoutline
 // }
 
 // .page {
-// 	color: var($fontcolor1);
-// 	justify-content: center;
-// 	padding: 10px 15px;
-// 	margin: 3px;
-// 	white-space: nowrap;
-// 	background-color: $bg3;
-// 	border: 4px solid $bg2;
-// 	transition: border-color 100ms ease-out;
-// 	cursor: pointer;
-// 	flex-direction: column;
-// 	align-items: center;
+// 	color: var($fontcolor1);colorcolor
+// 	justify-content: center;justify-contentjustify-content
+// 	padding: 10px 15px;paddingpadding
+// 	margin: 3px;marginmargin
+// 	white-space: nowrap;white-spacewhite-space
+// 	background-color: $bg3;background-colorbackground-color
+// 	border: 4px solid $bg2;borderborder
+// 	transition: border-color 100ms ease-out;transitiontransition
+// 	cursor: pointer;cursorcursor
+// 	flex-direction: column;flex-directionflex-direction
+// 	align-items: center;align-itemsalign-items
 
-// 	display: flex;
+// 	display: flex;displaydisplay
 
 // 	box-shadow:
 // 		inset 0px 8px 0px 0px red,
 // 		inset 0px 2px 0px 0px rgba(0, 0, 0, 1),
 // 		inset 0px 2px 0px 0px rgba(0, 0, 0, 1),
-// 		inset 0px 2px 0px 0px rgba(0, 0, 0, 1);
+// 		inset 0px 2px 0px 0px rgba(0, 0, 0, 1);box-shadowbox-shadow
 // }
 
 // .page:hover,
 // .page-link:focus-within > .page {
-// 	transition: border-color 10ms ease-out;
-// 	border-color: var($hicolor);
-// 	background-color: $bg4;
+// 	transition: border-color 10ms ease-out;transitiontransition
+// 	border-color: var($hicolor);border-colorborder-color
+// 	background-color: $bg4;background-colorbackground-color
 // }
 
 // .page-title {
-// 	font-weight: 500;
-// 	font-size: 1.2em;
+// 	font-weight: 500;font-weightfont-weight
+// 	font-size: 1.2em;font-sizefont-size
 // }
 
 // .page-link {
-// 	text-decoration: none;
+// 	text-decoration: none;text-decorationtext-decoration
 // }
 
 // .page-desc {
-// 	color: var($fontcolor2);
+// 	color: var($fontcolor2);colorcolor
 // }
 
 // /* #endregion */
 
 // #heartcontainer {
-// 	font-size: 1.5vmin;
-// 	top: 0;
-// 	left: 0;
-// 	width: 100%;
-// 	height: 100vh;
-// 	position: fixed;
-// 	z-index: 1;
-// 	pointer-events: none;
+// 	font-size: 1.5vmin;font-sizefont-size
+// 	top: 0;toptop
+// 	left: 0;leftleft
+// 	width: 100%;widthwidth
+// 	height: 100vh;heightheight
+// 	position: fixed;positionposition
+// 	z-index: 1;z-indexz-index
+// 	pointer-events: none;pointer-eventspointer-events
 // }
 
 /* #region Falling Hearts */

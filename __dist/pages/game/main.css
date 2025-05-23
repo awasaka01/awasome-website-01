@@ -1,1 +1,1 @@
-canvas{width:100px;height:auto;image-rendering:pixelated;image-rendering:crisp-edges;display:flex;align-self:center;justify-self:center;zoom:1000%;border:1px solid var(--bgcolor2);padding:2px}
+canvas{width:100px;height:auto;image-rendering:pixelated;image-rendering:crisp-edges;zoom:1000%;border:1px solid var(--bgcolor2);place-self:center;padding:2px;display:flex}

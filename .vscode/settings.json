@@ -1,15 +1,48 @@
 {
+	// To be used with the 'Toggle Exclude Files' extension
 	"files.exclude": {
 		"**/.eleventy.js": true,
 		"**/.github/": true,
 		"**/.gitignore": true,
 		"**/.vscode/": true,
-		"**/*.css": true,
 		"**/*.css.map": true,
 		"**/jsconfig.json": true,
 		"**/node_modules/": true,
 		"**/package.json": true,
 		"**/pnpm-lock.yaml": true,
 		"**/pnpm-workspace.yaml": true
-	}
+	},
+
+	// Disable default validation since stylelint is used
+	"css.validate": false,
+	"less.validate": false,
+	"scss.validate": false,
+	"editor.codeActionsOnSave": {
+		"source.fixAll.stylelint": "explicit"
+	},
+
+	// Buttons to run the commands easier 
+	"actionButtons": {
+		"commands": [
+			{
+				"name": "$(tools) Build",
+				"command": "pnpm run build"
+			},
+			{
+				"name": "$(eye) Watch",
+				"command": "pnpm run watch"
+			},
+			{
+				"name": "$(symbol-ruler) Find New Rules",
+				"command": "pnpm run findrules"
+			},
+		],
+		"defaultColor": "none",
+		"reloadButton": "↻",
+		"loadNpmCommands": false
+	},
+	"commentAnchors.workspace.lazyLoad": true,
+	"commentAnchors.workspace.excludeFiles": "**/{__dist,node_modules,.git,.idea,target,out,build,bin,obj,dist,vendor}/**/*",
+	"commentAnchors.workspace.pathFormat": "full",
+	"editor.wordSeparators": "`~!@#$%^&*()=+[{]}\\|;:'\",.<>/?", // remove '-' from the list to allow double clicking on words to copy them
 }

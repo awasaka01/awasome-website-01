@@ -1,6 +1,6 @@
-//--------------------------------\\
+// --------------------------------\\
 // ~ forwarded in _bundled.scss ~ \\
-//--------------------------------\\
+// --------------------------------\\
 
 @use "./colors.scss" as *;
 @use "sass:list";
@@ -49,7 +49,7 @@
 	$sc1: color.mix($base-color, $shadow-color1, $opacity * 100);
 	$sc2: color.mix($base-color, $shadow-color2, $opacity * 100);
 
-	@if ($inverted == false) {
+	@if $inverted == false {
 		@return
 		inset _corner("tl-in", $offsets) 0 0 rgba($hc1, 1),
 		inset _corner("tl-ou", $offsets) 0 0 rgba($hc2, 1),
@@ -99,18 +99,18 @@
 
 
 @mixin terminalStyle {
-	font-family: Terminal;
-	text-shadow: 0 0 4px; // Glowing text
-	background: radial-gradient(circle,#1a1825 0%, #070c12 100%);
 
 	// Striped Lines + Faint RGB Pixelated overlay effects
 	position: relative;
+	font-family: Terminal;
+	text-shadow: 0 0 4px; // Glowing text
+	background: radial-gradient(circle,#1a1825 0%, #070c12 100%);
 	&::before {
-		content: " ";
-		display: block;
 		position: absolute;
-		top: 0; left: 0; bottom: 0;	right: 0; z-index: 2;
+		inset: 0 0 0 0; z-index: 2;
+		display: block;
 		pointer-events: none;
+		content: " ";
 
 		background: linear-gradient(to bottom, #1210101c 50%, #00000025 50%), 
 					linear-gradient(to right, #ff00000f, #00ff0005, #0000ff0f),

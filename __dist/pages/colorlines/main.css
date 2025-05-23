@@ -1,17 +1,1 @@
-/* Error: Undefined variable.
- *    ,
- * 18 |     background: radial-gradient(circle, transparent 0%, $bg-1 40%);
- *    |                                                         ^^^^^
- *    '
- *   src\pages\colorlines\main.scss 18:54  root stylesheet */
-
-body::before {
-  font-family: "Source Code Pro", "SF Mono", Monaco, Inconsolata, "Fira Mono",
-      "Droid Sans Mono", monospace, monospace;
-  white-space: pre;
-  display: block;
-  padding: 1em;
-  margin-bottom: 1em;
-  border-bottom: 2px solid black;
-  content: "Error: Undefined variable.\a    \2577 \a 18 \2502      background: radial-gradient(circle, transparent 0%, $bg-1 40%);\d\a    \2502                                                          ^^^^^\a    \2575 \a   src\\pages\\colorlines\\main.scss 18:54  root stylesheet";
-}
+@font-face{font-family:Roboto Mono;font-weight:1 999;font-display:block;src:url(/media/fonts/RobotoMono.ttf)format("truetype-variations")}@font-face{font-family:Roboto;font-weight:1 999;font-display:block;src:url(/media/fonts/RobotoFlex.ttf)}@font-face{font-family:win98;font-weight:400;font-display:block;src:url("/media/fonts/Windows Regular.ttf")}@font-face{font-family:Terminal;font-weight:400;font-display:block;src:url(./media/fonts/gohufont-11.ttf)}*,:before,:after{box-sizing:border-box;margin:0;padding:0}a{font-style:unset;color:inherit;-webkit-text-decoration:inherit;text-decoration:inherit}::selection{color:#fff;background:red}.blink:after{content:"|";animation:1s step-end infinite blink}@keyframes blink{50%{opacity:0}}#page-bg-cover{content:"";z-index:-9001;opacity:0;background:radial-gradient(circle,#0000 0%,#1e1c1f 40%) 50%/50%;width:201vw;height:201%;position:fixed;top:0;left:0;transform:translate(-50%,-50%)}#page-bg-canvas{z-index:-9003;opacity:.8;position:absolute;top:0;left:0}#page-bg-points{z-index:-9002;position:absolute;top:0;left:0}#page-bg-image{content:"";z-index:-9004;opacity:.5;filter:brightness(0)saturate()invert(53%)sepia(36%)saturate(6217%)hue-rotate(239deg)brightness(102%)contrast(85%);background-image:url(/media/images/site_background.png);width:100vw;height:100vh;position:fixed;top:0;left:0}

@@ -1,52 +1,58 @@
 // @import "../../helpers/bundled.scss";
-
+@use "../../helpers/_bundled.scss" as *;
 
 
 #page-bg-cover {
-	position: fixed;
-	z-index: -9001;
-	top: 0;
-	left: 0;
-	width: 201vw;
-	height: 201%;
 	// mask-image: radial-gradient(circle, rgb(255, 255, 255) 0%, transparent 90%);
 	// mask-size:20% 20% ;
 	// mask-repeat: no-repeat;
 	// mask-position: center center;
 	content: "";
-	// background-color: red;
-	background: radial-gradient(circle, transparent 0%, $bg-1 40%);
-	background-size: 50%;
-	background-position: center;
-	opacity: 0;
-	
-	transform: translate(-50%, -50%);
-}
-#page-bg-canvas { 
-	position: absolute;
-	opacity: 0.8;
+
+	position: fixed;
+	z-index: -9001;
 	top: 0;
 	left: 0;
+	transform: translate(-50%, -50%);
+
+	width: 201vw;
+	height: 201%;
+
+	opacity: 0;
+	// background-color: red;
+	background: radial-gradient(circle, transparent 0%, $bg-1 40%);
+	background-position: center;
+	background-size: 50%;
+	
+}
+#page-bg-canvas {
+	position: absolute;
 	z-index: -9003;
+	top: 0;
+	left: 0;
+
+	opacity: 0.8;
 }
 #page-bg-points {
 	position: absolute;
+	z-index: -9002;
 	top: 0;
 	left: 0;
-	z-index: -9002;
 }
 
 
 #page-bg-image {
 	content: "";
+
 	position: fixed;
+	z-index: -9004;
 	top: 0;
 	left: 0;
+
 	width: 100vw;
-	z-index: -9004;
 	height: 100vh;
 
-	background-image: url(/media/images/site_background.png);
+	opacity: 0.5;
+	background-image: url("/media/images/site_background.png");
 	filter: brightness(0) saturate(100%) invert(53%) sepia(36%) saturate(6217%) hue-rotate(239deg) brightness(102%) contrast(85%);
-	opacity: 50%;
 }

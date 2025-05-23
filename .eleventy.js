@@ -1,30 +1,14 @@
-const { feedPlugin } = require("@11ty/eleventy-plugin-rss");
+import eleventySass from "@11tyrocks/eleventy-plugin-sass-lightningcss";
 
-module.exports = function (eleventyConfig) {
+
+export default function (eleventyConfig) {
 
 eleventyConfig.addPassthroughCopy("src/**/!(_)*.{js,json,txt}");
 eleventyConfig.addPassthroughCopy("src/media/**");
-
 eleventyConfig.setQuietMode(true);
+eleventyConfig.addPlugin(eleventySass);
 
-// eleventyConfig.addPlugin(feedPlugin, {
-// 	type: "atom", // or "rss", "json"
-// 	outputPath: "/feed.xml",
-// 	collection: {
-// 		name: "posts", // iterate over `collections.posts`
-// 		limit: 10, // 0 means no limit
-// 	},
-// 	metadata: {
-// 		language: "en",
-// 		title: "Blog Title",
-// 		subtitle: "This is a longer description about your blog.",
-// 		base: "https://example.com/",
-// 		author: {
-// 			name: "Your Name",
-// 			email: "", // Optional
-// 		},
-// 	},
-// });
+// https://github.com/5t3ph/eleventy-plugin-sass-lightningcss?tab=readme-ov-file#usage
 
 eleventyConfig.setServerOptions({
 	// Default values are shown:
@@ -62,4 +46,27 @@ return {
 			output: "__dist",
 		},
 	};
-};
+}
+
+
+
+
+
+// eleventyConfig.addPlugin(feedPlugin, {
+// 	type: "atom", // or "rss", "json"
+// 	outputPath: "/feed.xml",
+// 	collection: {
+// 		name: "posts", // iterate over `collections.posts`
+// 		limit: 10, // 0 means no limit
+// 	},
+// 	metadata: {
+// 		language: "en",
+// 		title: "Blog Title",
+// 		subtitle: "This is a longer description about your blog.",
+// 		base: "https://example.com/",
+// 		author: {
+// 			name: "Your Name",
+// 			email: "", // Optional
+// 		},
+// 	},
+// });

@@ -209,10 +209,15 @@ async function sort () {
 	loop2();
 }
 
-// !SECTION
+// !SECTION - Functions
+
+
+
+
 
 
 // code vault :p
+
 // values.width = Math.min(100, Math.max(0, values.width + u.rr(-60, 60)));
 // values.marginLeft = Math.min(100, Math.max(0, values.marginLeft + u.rr(-60, 60)));
 // Generate list of pages from file://./pages/pages.json
