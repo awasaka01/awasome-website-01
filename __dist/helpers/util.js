@@ -1,6 +1,7 @@
 import chroma from "https://unpkg.com/chroma-js@3.0.0/index.js";
 
 
+
 /**
  * ? Generates a random element from the array.
  * @returns {unknown} A random element from the array.
@@ -120,7 +121,15 @@ const perf = () => {
     performance.clearMeasures();
 };
 
+const characters = {
+	lower: "abcdefghijklmnopqrstuvwxyz",
+	upper: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+	numbers: "0123456789",
+	symbols: "`~!@#$%^&*()-_=+{[]}\\|;:'\",<.>/?",
+	all: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`~!@#$%^&*()-_=+{[]}\\|;:'\",<.>/?",
+	gohuSupported: "!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ￿",
+};
 
 
-const obj = { rr, randomColor, pause, getDistance, removeDuplicatesByID };
+const obj = { rr, randomColor, pause, getDistance, removeDuplicatesByID, characters };
 export default obj;

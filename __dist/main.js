@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", async (event) => {
 	// unhideRandomElements();
 	// barcode();
 	// sort();
+	fallingText();
 }, { once: true });
 
 
@@ -48,7 +49,19 @@ async function barcode () {
 
 
 
-
+// ASCII cat faces
+const cats = [
+	"ฅ^•ﻌ•^ฅ",
+	"(=^･ω･^=)",
+	"(=^‥^=)",
+	"(^._.^)ﾉ",
+	"(=①ω①=)",
+	"（=´∇｀=）",
+	"（＾・ω・＾✿）",
+	"(=ＴェＴ=)",
+	"（=・ω・=）",
+	"（=｀ω´=）",
+];
 	const values = {
 		color: 0,
 		width: 0,
@@ -208,6 +221,17 @@ async function sort () {
 	}
 	loop2();
 }
+
+
+// ANCHOR -
+async function fallingText () {
+	// const all = Array.from({ length: 1000 }, (_, i) => String.fromCharCode(i));
+	const random = Array.from({ length: 850 }, () => u.characters.gohuSupported.split("").random());
+
+	// console.log(random.join(""));
+	document.getElementById("uwu").innerText = random.join("");
+}
+
 
 // !SECTION - Functions
 

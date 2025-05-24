@@ -1,0 +1,60 @@
+{
+	"recommendations": [
+
+		// Swap parameters, lines, even complicated expressions from current cursor.
+		"wolray.any-swap",
+
+		// Atom Sass Snippet for Visual Studio Code.
+		"gluons.vscode-atom-sass-snippet",
+
+		// Highlight web colors in your editor, optimized for hsl and hwb formats. CSS Color Module Level 4 compliant.
+		"yunduo.color-highlight-css-color-4",
+
+		// Place anchor tags within comments for easy file and workspace navigation.
+		"exodiusstudios.comment-anchors",
+
+		// Autocomplete CSS Variable support CSS, SCSS, LESS, PostCSS, VueJS, ReactJS and more
+		"vunguyentuan.vscode-css-variables",
+
+		// Integrates ESLint JavaScript into VS Code.
+		"dbaeumer.vscode-eslint",
+
+		// '.class' and '#id' completion for HTML, Svelte, Latte, Slim, Liquid, TSX/JSX, Haml, Elixir, Smarty, PHP, ERB, Javascript, CSS and SCSS. Just declare class in your template or CSS/SCSS and see it in everywhere. (Both directions)
+		"gencer.html-slim-scss-css-class-completion",
+
+		// Advanced autocompletion and refactoring support for SCSS
+		"mrmlnc.vscode-scss",
+
+		// An extension for fast coding of SCSS codes
+		"miladfathy.scss-snippet",
+
+		// Official Stylelint extension for Visual Studio Code
+		"stylelint.vscode-stylelint",
+
+		// Quickly toggles excluded (hidden) files visibility in the file explorer
+		"amodio.toggle-excluded-files",
+
+		// Add customizable buttons to the status bar to execute actions or tasks
+		"seunlanlege.action-buttons",
+
+		// Visual Studio Code plugin that autocompletes npm modules in import statements
+		"christian-kohler.npm-intellisense",
+
+		// YAML Language Support by Red Hat, with built-in Kubernetes syntax support
+		"redhat.vscode-yaml",
+
+		// CSS Intellisense for HTML
+		"ecmel.vscode-html-css",
+
+		// "",
+
+		// "",
+
+		// "",
+
+		// "",
+
+		// "",
+
+	]
+}

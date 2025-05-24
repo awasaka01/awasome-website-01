@@ -1,6 +1,6 @@
-// --------------------------------\\
-// ~ forwarded in _bundled.scss ~ \\
-// --------------------------------\\
+// ------------------------------\\
+// ~ included in _bundled.scss ~ \\
+// ------------------------------\\
 
 @use "./colors.scss" as *;
 @use "sass:list";
@@ -11,7 +11,7 @@
 // [example] background: f_steppedGradient(#f3a7cd #f3a7bd #f3a7af #f3aba7 #f3b9a7, to right) 
 @function f_hardGradient($colors, $angle: 90deg) {
 	$list: ();
-    $per: math.percentage(math.div(1, list.length($colors)));
+	$per: math.percentage(math.div(1, list.length($colors)));
 	@for $i from 1 through list.length($colors) {
 		$list: list.append($list, list.nth($colors, $i) #{($i - 1) * $per $i * $per}, comma);
 	}
@@ -51,17 +51,16 @@
 
 	@if $inverted == false {
 		@return
-		inset _corner("tl-in", $offsets) 0 0 rgba($hc1, 1),
-		inset _corner("tl-ou", $offsets) 0 0 rgba($hc2, 1),
-		inset _corner("br-in", $offsets) 0 0 rgba($sc1, 1),
-		inset _corner("br-ou", $offsets) 0 0 rgba($sc2, 1);
-		
+			inset _corner("tl-in", $offsets) 0 0 rgba($hc1, 1),
+			inset _corner("tl-ou", $offsets) 0 0 rgba($hc2, 1),
+			inset _corner("br-in", $offsets) 0 0 rgba($sc1, 1),
+			inset _corner("br-ou", $offsets) 0 0 rgba($sc2, 1);
 	} @else {
 		@return
-		inset _corner("br-in", $offsets) 0 0 rgba($sc1, 1),
-		inset _corner("br-ou", $offsets) 0 0 rgba($sc2, 1),
-		inset _corner("tl-in", $offsets) 0 0 rgba($hc2, 1),
-		inset _corner("tl-ou", $offsets) 0 0 rgba($hc1, 1);
+			inset _corner("br-in", $offsets) 0 0 rgba($sc1, 1),
+			inset _corner("br-ou", $offsets) 0 0 rgba($sc2, 1),
+			inset _corner("tl-in", $offsets) 0 0 rgba($hc2, 1),
+			inset _corner("tl-ou", $offsets) 0 0 rgba($hc1, 1);
 	}
 }
 
@@ -72,19 +71,19 @@
 
 @function f_98shadow_inner($depth: 1.5px, $main: $bg-1l1, $light1: $bg-1l2, $dark1: $bg-1d2) {
 	@return 		
-	$depth $depth 0 $depth $light1,
-	0 0 0 			2*$depth $dark1;
+		$depth $depth 0 $depth $light1,
+		0 0 0 			2*$depth $dark1;
 }
 
 @function f_98shadow_outer($depth: 1.5px, $width: 20px, $main: $bg-1l1, $light2: $bg-1l2, $dark2: $bg-1d2, $light3: $bg-1l4, $dark3: $bg-1d4) {
 	@return 		
-	0 0 0 			2*$depth+$width $main,
+		0 0 0 			2*$depth+$width $main,
 
-	$depth $depth 0 $width+ 3*$depth $dark3,
-	0 0 0 			$width+ 4*$depth $light3,
+		$depth $depth 0 $width+ 3*$depth $dark3,
+		0 0 0 			$width+ 4*$depth $light3,
 	
-	$depth $depth 0 $width+ 5*$depth $dark2,
-	0 0 0 			$width+ 6*$depth $light2;
+		$depth $depth 0 $width+ 5*$depth $dark2,
+		0 0 0 			$width+ 6*$depth $light2;
 }
 
 
@@ -98,23 +97,23 @@
 
 
 
-@mixin terminalStyle {
+// @mixin terminalStyle {
 
-	// Striped Lines + Faint RGB Pixelated overlay effects
-	position: relative;
-	font-family: Terminal;
-	text-shadow: 0 0 4px; // Glowing text
-	background: radial-gradient(circle,#1a1825 0%, #070c12 100%);
-	&::before {
-		position: absolute;
-		inset: 0 0 0 0; z-index: 2;
-		display: block;
-		pointer-events: none;
-		content: " ";
+// 	// Striped Lines + Faint RGB Pixelated overlay effects
+// 	position: relative;
+// 	font-family: Terminal;
+// 	text-shadow: 0 0 4px; // Glowing text
+// 	background: radial-gradient(circle,#1a1825 0%, #070c12 100%);
+// 	&::before {
+// 		position: absolute;
+// 		inset: 0 0 0 0; z-index: 2;
+// 		display: block;
+// 		pointer-events: none;
+// 		content: " ";
 
-		background: linear-gradient(to bottom, #1210101c 50%, #00000025 50%), 
-					linear-gradient(to right, #ff00000f, #00ff0005, #0000ff0f),
-					linear-gradient(to bottom, #0000 50%, #00000017 50%);
-		background-size: 100% 2px, 3px 100%, 100% 16px;;
-	}
-}
+// 		background: linear-gradient(to bottom, #1210101c 50%, #00000025 50%), 
+// 					linear-gradient(to right, #ff00000f, #00ff0005, #0000ff0f),
+// 					linear-gradient(to bottom, #0000 50%, #00000017 50%);
+// 		background-size: 100% 2px, 3px 100%, 100% 16px;;
+// 	}
+// }

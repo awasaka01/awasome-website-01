@@ -1,11 +1,12 @@
-//--------------------------------\\
-// ~ forwarded in _bundled.scss ~ \\
-//--------------------------------\\
-$selection-bg: #ff0000;
-$selection-fg: #ffffff;
+// ------------------------------\\
+// ~ included in _bundled.scss ~ \\
+// ------------------------------\\
 
-$shadow-color1   : #000000;
-$shadow-color2   : #393939;
+$selection-bg: #f00;
+$selection-fg: #fff;
+
+$shadow-color1: #000;
+$shadow-color2: #393939;
 $highlight-color1: #717171;
 $highlight-color2: #a0a0a0;
 
@@ -37,14 +38,14 @@ $hi-1: #7a4593 !default;
 
 
 // Secondary Background Colors:
-$bg-1df: #000000 !default;  $bg-2df: #230835 !default;
-$bg-1de: #000000 !default;  $bg-2de: #2a0e3d !default;
-$bg-1dd: #000000 !default;  $bg-2dd: #311345 !default;
-$bg-1dc: #000000 !default;  $bg-2dc: #38194c !default;
-$bg-1db: #000000 !default;  $bg-2db: #3f1f54 !default;
-$bg-1da: #000000 !default;  $bg-2da: #47245c !default;
-$bg-1d9: #000000 !default;  $bg-2d9: #4e2a64 !default;
-$bg-1d8: #000000 !default;  $bg-2d8: #56306d !default;
+$bg-1df: #000 !default;  $bg-2df: #230835 !default;
+$bg-1de: #000 !default;  $bg-2de: #2a0e3d !default;
+$bg-1dd: #000 !default;  $bg-2dd: #311345 !default;
+$bg-1dc: #000 !default;  $bg-2dc: #38194c !default;
+$bg-1db: #000 !default;  $bg-2db: #3f1f54 !default;
+$bg-1da: #000 !default;  $bg-2da: #47245c !default;
+$bg-1d9: #000 !default;  $bg-2d9: #4e2a64 !default;
+$bg-1d8: #000 !default;  $bg-2d8: #56306d !default;
 $bg-1d7: #000100 !default;  $bg-2d7: #5e3675 !default;
 $bg-1d6: #010201 !default;  $bg-2d6: #663c7d !default;
 $bg-1d5: #030402 !default;  $bg-2d5: #6e4286 !default;
@@ -64,7 +65,7 @@ $bg-1l9: #5f5163 !default;  $bg-2l9: #eb9fff !default;
 $bg-1la: #67576b !default;  $bg-2la: #f5a6ff !default;
 $bg-1lb: #6f5e73 !default;  $bg-2lb: #feadff !default;
 $bg-1lc: #77647b !default;  $bg-2lc: #ffb4ff !default;
-$bg-1ld: #7f6b84 !default;  $bg-2ld: #ffbbff !default;
+$bg-1ld: #7f6b84 !default;  $bg-2ld: #fbf !default;
 $bg-1le: #88718c !default;  $bg-2le: #ffc2ff !default;
 $bg-1lf: #907895 !default;  $bg-2lf: #ffc9ff !default;
 
@@ -89,18 +90,18 @@ $fg-1d1: #d9d8d5 !default;  $fg-2d1: #f5b9f6 !default;  $fg-3d1: #d93c94 !defaul
 $fg-1l1: #ebe8e1 !default;  $fg-2l1: #ffc7ff !default;  $fg-3l1: #ed4aa2 !default;
 $fg-1l2: #f4f1e7 !default;  $fg-2l2: #ffceff !default;  $fg-3l2: #f851a9 !default;
 $fg-1l3: #fdf9ed !default;  $fg-2l3: #ffd6ff !default;  $fg-3l3: #ff58b0 !default;
-$fg-1l4: #fffff3 !default;  $fg-2l4: #ffddff !default;  $fg-3l4: #ff5fb7 !default;
+$fg-1l4: #fffff3 !default;  $fg-2l4: #fdf !default;  $fg-3l4: #ff5fb7 !default;
 $fg-1l5: #fffff9 !default;  $fg-2l5: #ffe4ff !default;  $fg-3l5: #ff66be !default;
-$fg-1l6: #ffffff !default;  $fg-2l6: #ffecff !default;  $fg-3l6: #ff6dc5 !default;
-$fg-1l7: #ffffff !default;  $fg-2l7: #fff3ff !default;  $fg-3l7: #ff74cd !default;
-$fg-1l8: #ffffff !default;  $fg-2l8: #fffbff !default;  $fg-3l8: #ff7bd4 !default;
-$fg-1l9: #ffffff !default;  $fg-2l9: #ffffff !default;  $fg-3l9: #ff82db !default;
-$fg-1la: #ffffff !default;  $fg-2la: #ffffff !default;  $fg-3la: #ff89e2 !default;
-$fg-1lb: #ffffff !default;  $fg-2lb: #ffffff !default;  $fg-3lb: #ff90e9 !default;
-$fg-1lc: #ffffff !default;  $fg-2lc: #ffffff !default;  $fg-3lc: #ff97f0 !default;
-$fg-1ld: #ffffff !default;  $fg-2ld: #ffffff !default;  $fg-3ld: #ff9ef8 !default;
-$fg-1le: #ffffff !default;  $fg-2le: #ffffff !default;  $fg-3le: #ffa6ff !default;
-$fg-1lf: #ffffff !default;  $fg-2lf: #ffffff !default;  $fg-3lf: #ffadff !default;
+$fg-1l6: #fff !default;  $fg-2l6: #ffecff !default;  $fg-3l6: #ff6dc5 !default;
+$fg-1l7: #fff !default;  $fg-2l7: #fff3ff !default;  $fg-3l7: #ff74cd !default;
+$fg-1l8: #fff !default;  $fg-2l8: #fffbff !default;  $fg-3l8: #ff7bd4 !default;
+$fg-1l9: #fff !default;  $fg-2l9: #fff !default;  $fg-3l9: #ff82db !default;
+$fg-1la: #fff !default;  $fg-2la: #fff !default;  $fg-3la: #ff89e2 !default;
+$fg-1lb: #fff !default;  $fg-2lb: #fff !default;  $fg-3lb: #ff90e9 !default;
+$fg-1lc: #fff !default;  $fg-2lc: #fff !default;  $fg-3lc: #ff97f0 !default;
+$fg-1ld: #fff !default;  $fg-2ld: #fff !default;  $fg-3ld: #ff9ef8 !default;
+$fg-1le: #fff !default;  $fg-2le: #fff !default;  $fg-3le: #ffa6ff !default;
+$fg-1lf: #fff !default;  $fg-2lf: #fff !default;  $fg-3lf: #ffadff !default;
 
 
 

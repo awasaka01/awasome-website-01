@@ -5,11 +5,12 @@ import defineConfig from "stylelint-define-config"; // Adds intelliSense display
 export default defineConfig({
 	customSyntax: "postcss-scss",
 	plugins: ["stylelint-plugin-logical-css"], // TODO have to manually implement the rules
-	extends: ["stylelint-config-standard-scss", "stylelint-config-clean-order", "@stylistic/stylelint-config"],
+	extends: ["stylelint-config-standard-scss", "@stylistic/stylelint-config", "stylelint-config-clean-order"],
 	rules: {
 
 		// : stylelint-config-standard
 		"declaration-block-single-line-max-declarations": null,
+		"no-invalid-double-slash-comments": null,
 		"declaration-empty-line-before": null,
 		"color-function-alias-notation": null,
 		"comment-empty-line-before": null,
@@ -20,12 +21,13 @@ export default defineConfig({
 		"keyframes-name-pattern": null,
 		"selector-id-pattern": null,
 		"function-name-case": null,
-		"no-invalid-double-slash-comments": null,
+
 		// : stylelint-config-standard-scss
 		"scss/double-slash-comment-empty-line-before": null,
 		"scss/load-no-partial-leading-underscore": null,
 		"scss/dollar-variable-empty-line-before": null,
 		"scss/percent-placeholder-pattern": null,
+		"scss/dollar-variable-pattern": null,
 		"scss/operator-no-unspaced": null,
 		"scss/at-function-pattern": null,
 		"scss/at-mixin-pattern": null,
