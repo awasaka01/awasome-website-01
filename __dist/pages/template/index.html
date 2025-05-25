@@ -15,14 +15,26 @@
 
 <!-- Helpers + External Modules -->
 <script type="importmap">{ "imports": {
-	"awa": "/helpers/util.js",
+	"awa": "/helpers/util.js", 
 	"chroma-js": "https://unpkg.com/chroma-js@3.0.0/index.js"
 }}</script>
+<!-- [?] chroma.js - Color Helper [https://gka.github.io/chroma.js/] -->
+<!-- How to use: Add <import chroma from "chroma-js"> to your file (gsap is special and doesn't export actually)-->
+<!--  	
+	For autocompletion: Install the module's types locally (@types/chroma-js, (gsap has it built in))
+	Add /// <reference types="chroma-js"/> to the top of your file
+-->
 
- 
+
+
 <!-- Local CSS and JS -->
 <link rel="stylesheet" href="main.css"/>
 <script src="main.js" type="module"></script>
+
+
+<!-- GSAP - Animation Library [https://gsap.com/docs/] -->
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
 </head>
 <body><link rel="stylesheet" href="/helpers/navbar.css">
 <div class="title-bar-container"><header class="title-bar">

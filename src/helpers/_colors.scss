@@ -1,138 +1,230 @@
+/* stylelint-disable scss/dollar-variable-colon-space-after */
 // ------------------------------\\
 // ~ included in _bundled.scss ~ \\
 // ------------------------------\\
 
-$selection-bg: #f00;
-$selection-fg: #fff;
+$selection-bg: rgb(213 170 170);
+$selection-fg: #9e8c8c;
+// $shadow-color1: #000;
+// $shadow-color2: #393939;
+// $highlight-color1: #717171;
+// $highlight-color2: #332828;
 
-$shadow-color1: #000;
-$shadow-color2: #393939;
-$highlight-color1: #717171;
-$highlight-color2: #a0a0a0;
+// Start with '$-auto_' to automatically generate color pallette below based on them
+$-auto_bg-1: #49223b;
+$-auto_bg-2: #a778bc;
 
+// Primary Foreground Colors:	
+$-auto_fg-1: #856d2e;
+$-auto_fg-2: #b569b5;
+$-auto_fg-3: #ea94c3;
 
-
+// Primary Highlight Colors:
+$-auto_hi-1: #7a4593;
 
 /* 
 ┌─────────────────────────────────────────────────────────────────────────────────────────────────────────┐
 !                                                                                                         !
 !   WARNING: Code beyond this point has been generated via script, anything changed will be overwritten   !
-?   [generate-colors.js]                                                                                  ?
 !                                                                                                         !
 └─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
-617761 */
+REPLACE_AFTER_THIS_LINE */
 
+// Expanded colors for bg-1:
+$bg-1df: #000000;
+$bg-1de: #000000;
+$bg-1dd: #000000;
+$bg-1dc: #000000;
+$bg-1db: #010001;
+$bg-1da: #040002;
+$bg-1d9: #080005;
+$bg-1d8: #0f010a;
+$bg-1d7: #15020f;
+$bg-1d6: #1c0515;
+$bg-1d5: #23081b;
+$bg-1d4: #2a0d21;
+$bg-1d3: #321227;
+$bg-1d2: #39172e;
+$bg-1d1: #411d34;
+$bg-1:   #49223b;
+$bg-1l1: #512742;
+$bg-1l2: #592d49;
+$bg-1l3: #62334f;
+$bg-1l4: #6a3956;
+$bg-1l5: #733e5d;
+$bg-1l6: #7c4465;
+$bg-1l7: #844a6c;
+$bg-1l8: #8d5073;
+$bg-1l9: #97577a;
+$bg-1la: #a05d82;
+$bg-1lb: #a96389;
+$bg-1lc: #b36a90;
+$bg-1ld: #bc7098;
+$bg-1le: #c6779f;
+$bg-1lf: #d07da7;
 
-// Primary Background Colors:
-$bg-1: #1e1c1f !default;
-$bg-2: #9862b1 !default;
+// Expanded colors for bg-2:
+$bg-2df: #301c3f;
+$bg-2de: #372146;
+$bg-2dd: #3e274e;
+$bg-2dc: #452d56;
+$bg-2db: #4d335e;
+$bg-2da: #543966;
+$bg-2d9: #5c3f6e;
+$bg-2d8: #644577;
+$bg-2d7: #6c4b7f;
+$bg-2d6: #745188;
+$bg-2d5: #7c5790;
+$bg-2d4: #845e99;
+$bg-2d3: #8d64a1;
+$bg-2d2: #966baa;
+$bg-2d1: #9e71b3;
+$bg-2:   #a778bc;
+$bg-2l1: #b07fc5;
+$bg-2l2: #b985ce;
+$bg-2l3: #c28cd7;
+$bg-2l4: #cb93e0;
+$bg-2l5: #d59ae9;
+$bg-2l6: #dea1f2;
+$bg-2l7: #e7a8fc;
+$bg-2l8: #f1afff;
+$bg-2l9: #fbb6ff;
+$bg-2la: #ffbdff;
+$bg-2lb: #ffc5ff;
+$bg-2lc: #ffccff;
+$bg-2ld: #ffd3ff;
+$bg-2le: #ffdaff;
+$bg-2lf: #ffe2ff;
 
-// Primary Foreground Colors:
-$fg-1: #e2e0db !default;
-$fg-2: #ffc0ff !default;
-$fg-3: #e3439b !default;
+// Expanded colors for fg-1:
+$fg-1df: #180d00;
+$fg-1de: #1f1200;
+$fg-1dd: #251800;
+$fg-1dc: #2c1e00;
+$fg-1db: #332401;
+$fg-1da: #3a2a04;
+$fg-1d9: #413007;
+$fg-1d8: #48360b;
+$fg-1d7: #4f3d0f;
+$fg-1d6: #574314;
+$fg-1d5: #5e4a18;
+$fg-1d4: #66511c;
+$fg-1d3: #6e5821;
+$fg-1d2: #755f25;
+$fg-1d1: #7d662a;
+$fg-1:   #856d2e;
+$fg-1l1: #8d7433;
+$fg-1l2: #957c37;
+$fg-1l3: #9d833c;
+$fg-1l4: #a58b40;
+$fg-1l5: #ad9245;
+$fg-1l6: #b59a4a;
+$fg-1l7: #bea24f;
+$fg-1l8: #c6aa54;
+$fg-1l9: #ceb259;
+$fg-1la: #d7ba5e;
+$fg-1lb: #dfc263;
+$fg-1lc: #e8ca68;
+$fg-1ld: #f0d36d;
+$fg-1le: #f8db72;
+$fg-1lf: #ffe377;
 
-// Primary Highlight Colors:
-$hi-1: #7a4593 !default;
+// Expanded colors for fg-2:
+$fg-2df: #370f3e;
+$fg-2de: #3e1445;
+$fg-2dd: #461a4d;
+$fg-2dc: #4d2054;
+$fg-2db: #55255c;
+$fg-2da: #5d2b64;
+$fg-2d9: #66316c;
+$fg-2d8: #6e3773;
+$fg-2d7: #763d7b;
+$fg-2d6: #7f4383;
+$fg-2d5: #88498c;
+$fg-2d4: #915094;
+$fg-2d3: #9a569c;
+$fg-2d2: #a35ca4;
+$fg-2d1: #ac63ad;
+$fg-2:   #b569b5;
+$fg-2l1: #be70bd;
+$fg-2l2: #c876c6;
+$fg-2l3: #d17dce;
+$fg-2l4: #db83d7;
+$fg-2l5: #e58ae0;
+$fg-2l6: #ef91e8;
+$fg-2l7: #f998f1;
+$fg-2l8: #ff9ff9;
+$fg-2l9: #ffa6ff;
+$fg-2la: #ffadff;
+$fg-2lb: #ffb4ff;
+$fg-2lc: #ffbbff;
+$fg-2ld: #ffc2ff;
+$fg-2le: #ffc9ff;
+$fg-2lf: #ffd0ff;
 
+// Expanded colors for fg-3:
+$fg-3df: #603552;
+$fg-3de: #683b59;
+$fg-3dd: #714160;
+$fg-3dc: #794767;
+$fg-3db: #824d6f;
+$fg-3da: #8b5376;
+$fg-3d9: #94597e;
+$fg-3d8: #9d5f85;
+$fg-3d7: #a6668d;
+$fg-3d6: #b06c94;
+$fg-3d5: #b9739c;
+$fg-3d4: #c379a4;
+$fg-3d3: #cc80ac;
+$fg-3d2: #d687b3;
+$fg-3d1: #e08dbb;
+$fg-3:   #ea94c3;
+$fg-3l1: #f49bcb;
+$fg-3l2: #fea2d3;
+$fg-3l3: #ffa9db;
+$fg-3l4: #ffb0e3;
+$fg-3l5: #ffb7eb;
+$fg-3l6: #ffbef3;
+$fg-3l7: #ffc5fb;
+$fg-3l8: #ffccff;
+$fg-3l9: #ffd3ff;
+$fg-3la: #ffdbff;
+$fg-3lb: #ffe2ff;
+$fg-3lc: #ffe9ff;
+$fg-3ld: #fff1ff;
+$fg-3le: #fff8ff;
+$fg-3lf: #ffffff;
 
+// Expanded colors for hi-1:
+$hi-1df: #0d001c;
+$hi-1de: #130023;
+$hi-1dd: #19002b;
+$hi-1dc: #200032;
+$hi-1db: #26033a;
+$hi-1da: #2d0841;
+$hi-1d9: #340f49;
+$hi-1d8: #3b1551;
+$hi-1d7: #431b59;
+$hi-1d6: #4a2161;
+$hi-1d5: #522769;
+$hi-1d4: #592d71;
+$hi-1d3: #61337a;
+$hi-1d2: #693982;
+$hi-1d1: #723f8a;
+$hi-1:   #7a4593;
+$hi-1l1: #824b9c;
+$hi-1l2: #8b52a4;
+$hi-1l3: #9458ad;
+$hi-1l4: #9c5eb6;
+$hi-1l5: #a565bf;
+$hi-1l6: #ae6bc7;
+$hi-1l7: #b872d0;
+$hi-1l8: #c179d9;
+$hi-1l9: #ca7fe2;
+$hi-1la: #d386eb;
+$hi-1lb: #dd8df4;
+$hi-1lc: #e794fe;
+$hi-1ld: #f09bff;
+$hi-1le: #faa2ff;
+$hi-1lf: #ffa9ff;
 
-// Secondary Background Colors:
-$bg-1df: #000 !default;  $bg-2df: #230835 !default;
-$bg-1de: #000 !default;  $bg-2de: #2a0e3d !default;
-$bg-1dd: #000 !default;  $bg-2dd: #311345 !default;
-$bg-1dc: #000 !default;  $bg-2dc: #38194c !default;
-$bg-1db: #000 !default;  $bg-2db: #3f1f54 !default;
-$bg-1da: #000 !default;  $bg-2da: #47245c !default;
-$bg-1d9: #000 !default;  $bg-2d9: #4e2a64 !default;
-$bg-1d8: #000 !default;  $bg-2d8: #56306d !default;
-$bg-1d7: #000100 !default;  $bg-2d7: #5e3675 !default;
-$bg-1d6: #010201 !default;  $bg-2d6: #663c7d !default;
-$bg-1d5: #030402 !default;  $bg-2d5: #6e4286 !default;
-$bg-1d4: #070806 !default;  $bg-2d4: #76498e !default;
-$bg-1d3: #0c0c0b !default;  $bg-2d3: #7e4f97 !default;
-$bg-1d2: #121112 !default;  $bg-2d2: #87559f !default;
-$bg-1d1: #181718 !default;  $bg-2d1: #8f5ca8 !default;
-$bg-1l1: #252126 !default;  $bg-2l1: #a169ba !default;
-$bg-1l2: #2b272d !default;  $bg-2l2: #aa6fc3 !default;
-$bg-1l3: #322d34 !default;  $bg-2l3: #b376cc !default;
-$bg-1l4: #39333c !default;  $bg-2l4: #bc7cd5 !default;
-$bg-1l5: #403843 !default;  $bg-2l5: #c583de !default;
-$bg-1l6: #483e4b !default;  $bg-2l6: #ce8ae7 !default;
-$bg-1l7: #4f4553 !default;  $bg-2l7: #d891f0 !default;
-$bg-1l8: #574b5b !default;  $bg-2l8: #e198f9 !default;
-$bg-1l9: #5f5163 !default;  $bg-2l9: #eb9fff !default;
-$bg-1la: #67576b !default;  $bg-2la: #f5a6ff !default;
-$bg-1lb: #6f5e73 !default;  $bg-2lb: #feadff !default;
-$bg-1lc: #77647b !default;  $bg-2lc: #ffb4ff !default;
-$bg-1ld: #7f6b84 !default;  $bg-2ld: #fbf !default;
-$bg-1le: #88718c !default;  $bg-2le: #ffc2ff !default;
-$bg-1lf: #907895 !default;  $bg-2lf: #ffc9ff !default;
-
-
-
-// Secondary Foreground Colors:
-$fg-1df: #616d83 !default;  $fg-2df: #765a7c !default;  $fg-3df: #530036 !default;
-$fg-1de: #697489 !default;  $fg-2de: #7f6085 !default;  $fg-3de: #5c003d !default;
-$fg-1dd: #717b8e !default;  $fg-2dd: #87678d !default;  $fg-3dd: #650043 !default;
-$fg-1dc: #798294 !default;  $fg-2dc: #906d95 !default;  $fg-3dc: #6e0049 !default;
-$fg-1db: #828a9a !default;  $fg-2db: #99749e !default;  $fg-3db: #770050 !default;
-$fg-1da: #8a91a0 !default;  $fg-2da: #a17ba7 !default;  $fg-3da: #800057 !default;
-$fg-1d9: #9399a6 !default;  $fg-2d9: #aa81af !default;  $fg-3d9: #8a005d !default;
-$fg-1d8: #9ba1ab !default;  $fg-2d8: #b388b8 !default;  $fg-3d8: #930064 !default;
-$fg-1d7: #a4a8b1 !default;  $fg-2d7: #bc8fc1 !default;  $fg-3d7: #9d076b !default;
-$fg-1d6: #adb0b7 !default;  $fg-2d6: #c696c9 !default;  $fg-3d6: #a71471 !default;
-$fg-1d5: #b5b8bd !default;  $fg-2d5: #cf9dd2 !default;  $fg-3d5: #b11d78 !default;
-$fg-1d4: #bec0c3 !default;  $fg-2d4: #d8a4db !default;  $fg-3d4: #ba257f !default;
-$fg-1d3: #c7c8c9 !default;  $fg-2d3: #e2abe4 !default;  $fg-3d3: #c42d86 !default;
-$fg-1d2: #d0d0cf !default;  $fg-2d2: #ecb2ed !default;  $fg-3d2: #cf358d !default;
-$fg-1d1: #d9d8d5 !default;  $fg-2d1: #f5b9f6 !default;  $fg-3d1: #d93c94 !default;
-$fg-1l1: #ebe8e1 !default;  $fg-2l1: #ffc7ff !default;  $fg-3l1: #ed4aa2 !default;
-$fg-1l2: #f4f1e7 !default;  $fg-2l2: #ffceff !default;  $fg-3l2: #f851a9 !default;
-$fg-1l3: #fdf9ed !default;  $fg-2l3: #ffd6ff !default;  $fg-3l3: #ff58b0 !default;
-$fg-1l4: #fffff3 !default;  $fg-2l4: #fdf !default;  $fg-3l4: #ff5fb7 !default;
-$fg-1l5: #fffff9 !default;  $fg-2l5: #ffe4ff !default;  $fg-3l5: #ff66be !default;
-$fg-1l6: #fff !default;  $fg-2l6: #ffecff !default;  $fg-3l6: #ff6dc5 !default;
-$fg-1l7: #fff !default;  $fg-2l7: #fff3ff !default;  $fg-3l7: #ff74cd !default;
-$fg-1l8: #fff !default;  $fg-2l8: #fffbff !default;  $fg-3l8: #ff7bd4 !default;
-$fg-1l9: #fff !default;  $fg-2l9: #fff !default;  $fg-3l9: #ff82db !default;
-$fg-1la: #fff !default;  $fg-2la: #fff !default;  $fg-3la: #ff89e2 !default;
-$fg-1lb: #fff !default;  $fg-2lb: #fff !default;  $fg-3lb: #ff90e9 !default;
-$fg-1lc: #fff !default;  $fg-2lc: #fff !default;  $fg-3lc: #ff97f0 !default;
-$fg-1ld: #fff !default;  $fg-2ld: #fff !default;  $fg-3ld: #ff9ef8 !default;
-$fg-1le: #fff !default;  $fg-2le: #fff !default;  $fg-3le: #ffa6ff !default;
-$fg-1lf: #fff !default;  $fg-2lf: #fff !default;  $fg-3lf: #ffadff !default;
-
-
-
-// Secondary Highlight Colors:
-$hi-1df: #0d001c !default;
-$hi-1de: #130023 !default;
-$hi-1dd: #19002b !default;
-$hi-1dc: #200032 !default;
-$hi-1db: #26033a !default;
-$hi-1da: #2d0841 !default;
-$hi-1d9: #340f49 !default;
-$hi-1d8: #3b1551 !default;
-$hi-1d7: #431b59 !default;
-$hi-1d6: #4a2161 !default;
-$hi-1d5: #522769 !default;
-$hi-1d4: #592d71 !default;
-$hi-1d3: #61337a !default;
-$hi-1d2: #693982 !default;
-$hi-1d1: #723f8a !default;
-$hi-1l1: #824b9c !default;
-$hi-1l2: #8b52a4 !default;
-$hi-1l3: #9458ad !default;
-$hi-1l4: #9c5eb6 !default;
-$hi-1l5: #a565bf !default;
-$hi-1l6: #ae6bc7 !default;
-$hi-1l7: #b872d0 !default;
-$hi-1l8: #c179d9 !default;
-$hi-1l9: #ca7fe2 !default;
-$hi-1la: #d386eb !default;
-$hi-1lb: #dd8df4 !default;
-$hi-1lc: #e794fe !default;
-$hi-1ld: #f09bff !default;
-$hi-1le: #faa2ff !default;
-$hi-1lf: #ffa9ff !default;

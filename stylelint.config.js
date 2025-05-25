@@ -4,8 +4,12 @@ import defineConfig from "stylelint-define-config"; // Adds intelliSense display
 
 export default defineConfig({
 	customSyntax: "postcss-scss",
-	plugins: ["stylelint-plugin-logical-css"], // TODO have to manually implement the rules
-	extends: ["stylelint-config-standard-scss", "@stylistic/stylelint-config", "stylelint-config-clean-order"],
+	extends: [
+		"stylelint-config-standard-scss",
+		"@stylistic/stylelint-config",
+		"stylelint-config-clean-order",
+		"stylelint-config-sass-guidelines",
+	],
 	rules: {
 
 		// : stylelint-config-standard
@@ -46,19 +50,26 @@ export default defineConfig({
 		"@stylistic/max-empty-lines": null,
 		"@stylistic/max-line-length": null,
 		"@stylistic/indentation": "tab",
+		"@stylistic/string-quotes": "double",
 
-		// Litteraly wrong rules:
+		// : styelint-config-sass-guidelines
+		"selector-max-compound-selectors": null,
+		"max-nesting-depth": null,
+		"selector-max-id": null,
+		"color-named": null,
+		"at-rule-allowed-list": null,
+		"color-hex-length": null,
+
+		// Broken rules:
 		"shorthand-property-no-redundant-values": null, // (top: 0; left: 0; bottom: 0;	right: 0;) is not redundant
-		"font-family-no-missing-generic-family-keyword": null, // the fontface has the defaults anyway???  <- this is incorrect
-
+		"font-family-no-missing-generic-family-keyword": null, // [possibly untrue:] the fontface has the defaults anyway???
 	},
 });
 
-/// <reference types="@stylelint-types/stylelint-scss" />
-// export default {
-// 	extends: ["stylelint-config-standard-scss", "stylelint-config-clean-order", "@stylistic/stylelint-config"],
-// 	rules: {
 
-// 	},
-// };
-
+		// acutally idrn logical properties...
+		// "plugin/use-logical-properties-and-values": [true, {
+		// 	"severity": "error",
+		// }],
+		// "plugin/use-logical-units": [true, { "severity": "error" }],
+		// plugins: ["stylelint-plugin-logical-css"],

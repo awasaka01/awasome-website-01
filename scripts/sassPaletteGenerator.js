@@ -28,7 +28,7 @@ function adjust (color, iteration) {
 	return chroma.oklch(l, c, h).hex();
 }
 
-function toSass (value, label) { return `$${label}: ${value} !default;`; };
+function toSass (value, label) { return `$${label}: ${value} !default;`; }
 
 
 // Format the base palette into an array of objects instead
@@ -66,10 +66,10 @@ let output = "\n";
 
 
 // Main varz
-output += basePalette.map((obj) => {
-	return `\n\n// Primary ${obj.title}:\n`
-	+ obj.main.map(({ sass }) => sass).join("\n");
-}).join("");
+output += basePalette.map((obj) =>
+	`\n\n// Primary ${obj.title}:\n`
+	+ obj.main.map(({ sass }) => sass).join("\n"),
+).join("");
 
 
 // Secondary varz

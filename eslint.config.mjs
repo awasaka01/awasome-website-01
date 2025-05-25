@@ -59,7 +59,7 @@ export default [
 	"valid-typeof": "error",
 
 	// Suggestions
-	"arrow-body-style": ["error", "as-needed"],
+	// "arrow-body-style": ["error", ""],
 	"dot-notation": "error",
 	"eqeqeq": "error",
 	"logical-assignment-operators": "error",
@@ -101,7 +101,7 @@ export default [
 
 	// Brackets
 	"@stylistic/arrow-parens": "error",
-	"@stylistic/brace-style": ["error", "stroustrup", { "allowSingleLine": true }],
+	// "@stylistic/brace-style": ["error", "1tbs", { "allowSingleLine": true }],
 	"@stylistic/new-parens": "error",
 	"@stylistic/no-extra-parens": "off",
 	"@stylistic/wrap-iife": "error",

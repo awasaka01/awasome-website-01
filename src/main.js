@@ -1,17 +1,17 @@
-import u from "./helpers/util.js";
-// import chroma from "chroma-js";
+/// <reference types="gsap"/>
+/// <reference types="chroma-js"/>
 
+import u from "./helpers/util.js";
+import chroma from "chroma-js";
 
 
 // ANCHOR - Main event
 document.addEventListener("DOMContentLoaded", async (event) => {
-	// unhideRandomElements();
-	// barcode();
+	unhideRandomElements();
+	barcode();
 	// sort();
 	fallingText();
 }, { once: true });
-
-
 
 // SECTION - Functions
 // ANCHOR - Barcode Display
@@ -225,11 +225,16 @@ async function sort () {
 
 // ANCHOR -
 async function fallingText () {
+var tl = gsap.timeline();
+
+
 	// const all = Array.from({ length: 1000 }, (_, i) => String.fromCharCode(i));
 	const random = Array.from({ length: 850 }, () => u.characters.gohuSupported.split("").random());
-
+		tl.to("#uwu", { duration: 2, x: 100 }) // notice that there's no semicolon!
+		.to("#uwu", { duration: 1, y: 200 })
+		.to("#uwu", { duration: 3, rotation: 360 });
 	// console.log(random.join(""));
-	document.getElementById("uwu").innerText = random.join("");
+	// document.getElementById("uwu").innerText = random.join("");
 }
 
 

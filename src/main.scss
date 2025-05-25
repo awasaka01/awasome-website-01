@@ -1,27 +1,67 @@
 
 // Imports
 @use "helpers/bundled.scss" as *;
-
+@use "sass:list";
+@use "sass:color";
 html {
-	// why the fuck is it copying my comment onto the next line when i save :sob:
 	position: relative;
 	min-height: 100%;
 }
-body { @extend %bodyDefaults; min-height: 100%; }
+body {
+	@extend %bodyDefaults; 
+	min-height: 100%;
+	background-color: rgb(63 52 95);
+}
+
+
+
+
+// #cursor {
+// 	display: flex;
+// 	flex-wrap: wrap;
+// 	gap: 20px;
+
+// 	max-width: 100dvw;
+// 	@include cursor("e");
+// 	font-size: 600%;
+// 	color: rgb(255 255 255 / 5%);
+// 	* {
+// 		margin: 10px;
+// 		padding: 2px;
+// 		// border: 1px red dashed;
+// 		background-color: rgb(255 255 255 / 6.3%);
+// 	}
+// 	@each $type in $valid-cursor-types {
+// 		$i: list.index($valid-cursor-types, $type);
+// 		*:nth-child(#{$i}) { @include cursor($type); } // 
+// 	}
+// 	// &:nth-child(#{$i}) { @include cursor("default"); $i: $i + 1; } // 
+// 	// &:nth-child(#{$i}) { @include cursor("help"); $i: $i + 1; } // 
+// 	// &:nth-child(#{$i}) { @include cursor("progress"); $i: $i + 1; } // 
+// 	// &:nth-child(#{$i}) { @include cursor("wait"); $i: $i + 1; } // 
+// 	// &:nth-child(#{$i}) { @include cursor("cell"); $i: $i + 1; } // 
+// 	// &:nth-child(#{$i}) { @include cursor("crosshair"); $i: $i + 1; } // 
+// 	// &:nth-child(#{$i}) { @include cursor("text"); $i: $i + 1; } // 
+// 	// &:nth-child(#{$i}) { @include cursor("vertical-text"); $i: $i + 1; } // 
+// 	// &:nth-child(#{$i}) { @include cursor("move"); $i: $i + 1; } // 
+// 	// &:nth-child(#{$i}) { @include cursor("not-allowed"); $i: $i + 1; } // 
+// 	// &:nth-child(#{$i}) { @include cursor("grab"); $i: $i + 1; } // 
+// 	// &:nth-child(#{$i}) { @include cursor("pointer"); $i: $i + 1; } // 
+// 	// &:nth-child(#{$i}) { @include cursor("pointer"); $i: $i + 1; } // 
+// }
 
 
 .unhideRandom {
 	display: flex;
 	flex-direction: row;
 }
-
+ 
 @mixin glow($color: null, $background: false) {
 	@if $background == true {
 		box-shadow: 
-			0 0 20px 0 $color,
-			0 0 90px 40px $color;
+			0 0 20px 1px $color; 
 	} @else {
-		text-shadow: 2px 20px 0 red, -2px 0 1px currentcolor;	
+		text-shadow: 0 0 15px, 0 0 2px;	
 	}
 }
 
@@ -39,7 +79,7 @@ body { @extend %bodyDefaults; min-height: 100%; }
 		content: " ";
 
 		position: absolute; z-index: 2;
-		top: 0; bottom: 0; left: 0;
+		inset: 0 0 0 0;
 
 		display: block;
 
@@ -83,23 +123,23 @@ $a: #ff5b81; $b: #ff4375; $c: #ff2558; $d: #ce3bd640; $e: #cd39c821;
 
 // ANCHOR - Main Container (holds all the little screens)
 #main-container-T {
-	$width: 30px; 
-	$depth: 3px;
+	$width: 20px; 
+	$depth: 2px;
 	
 	display: inline-flex;
 	flex-direction: column;
 
 	min-width: 0;
 	max-width: min-content;
-	margin: 60px 35px 200px;
+	margin: 200px 35px 200px;
 
 	background-color: $bg-1l1;
 	box-shadow: 
 		f_98shadow_outer($depth, $width),
 		50px 50px 100px 0 rgb(0 0 0 / 23.4%);
 
-	> *:not(:first-child) { margin-top: $width + $depth*4; }
-	> * {
+	> div:not(:last-child) { margin-bottom: $width + $depth*4; }
+	> div {
 		@include terminalStyle;
 		padding: 10px;
 		box-shadow:
@@ -109,6 +149,36 @@ $a: #ff5b81; $b: #ff4375; $c: #ff2558; $d: #ce3bd640; $e: #cd39c821;
 }
 
 
+#chains {
+	position: relative;
+
+	display: flex;
+	justify-content: flex-end;
+
+	width: 100%;
+	height: 100%;
+	* {
+		position: absolute;
+		z-index: - 1;
+		translate: 0 -100%;
+		
+		overflow: hidden;
+
+		width: 40px;
+		height: 100vh;
+		border: 16px solid $bg-1l1;
+
+		background-color: rgb(255 81 81 / 0%);
+		box-shadow: 
+			f_98shadow_outer(3px, 0, $bg-1l1, transparent, transparent, $bg-1l2, $bg-1),;
+		&:first-child {
+			left: 0;
+		}
+		&:last-child {
+			right: 0;
+		}
+	}
+}
 
 // Main menu for page selection
 #pageList {
@@ -197,15 +267,16 @@ $a: #ff5b81; $b: #ff4375; $c: #ff2558; $d: #ce3bd640; $e: #cd39c821;
 		flex-grow: 1;
 		height: 15px;
 		> div {
-			@include glow(currentcolor, true);
 			display: inline-flex;
 
 			width: 50%;
 			margin-left: 50%;
-		
+
 			color: rgba($c, 0.7);
+		
 
 			background-color: currentcolor;
+			@include glow(currentcolor, true);
 		}
 	}
 }
@@ -290,7 +361,7 @@ $a: #ff5b81; $b: #ff4375; $c: #ff2558; $d: #ce3bd640; $e: #cd39c821;
 	padding-top: 40px;
 
 	font-family: cursive;
-	color:#f8f7dc;
+	color:#f4f3d7;
 	text-align: left;
 
 	background-color: #302b2e;

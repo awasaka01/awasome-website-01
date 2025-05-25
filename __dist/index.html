@@ -1,3 +1,4 @@
+<!-- /\ this is called front matter https://www.11ty.dev/docs/data-frontmatter/ -->
 
 <!DOCTYPE html>
 <html lang="en">
@@ -16,17 +17,35 @@
 
 <!-- Helpers + External Modules -->
 <script type="importmap">{ "imports": {
-	"awa": "/helpers/util.js",
+	"awa": "/helpers/util.js", 
 	"chroma-js": "https://unpkg.com/chroma-js@3.0.0/index.js"
 }}</script>
+<!-- [?] chroma.js - Color Helper [https://gka.github.io/chroma.js/] -->
+<!-- How to use: Add <import chroma from "chroma-js"> to your file (gsap is special and doesn't export actually)-->
+<!--  	
+	For autocompletion: Install the module's types locally (@types/chroma-js, (gsap has it built in))
+	Add /// <reference types="chroma-js"/> to the top of your file
+-->
 
- 
+
+
 <!-- Local CSS and JS -->
 <link rel="stylesheet" href="main.css"/>
 <script src="main.js" type="module"></script>
+
+
+<!-- GSAP - Animation Library [https://gsap.com/docs/] -->
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
  </head>
 <body>
+
+	<!-- <div id="cursor">
+		<div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+	</div> -->
+
 	<section id="main-container-T">
+		<span id="chains"><div></div><div></div></span>
 		<div id="pageList" style="--n: 53">
 			<span class="darker">
 				<div class="unhideRandom">
@@ -101,7 +120,6 @@
 		<div><a aria-label="GitHub link" href="https://github.com/awasaka01/awasome-website-01" class="no-underline"><i class="fa fa-github" style="font-size:20px"></i></a></div>
 		<div class="divider"></div>
 	</div>
-
 
 
 

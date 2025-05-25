@@ -10,7 +10,9 @@
 		"**/node_modules/": false,
 		"**/package.json": false,
 		"**/pnpm-lock.yaml": false,
-		"**/pnpm-workspace.yaml": false
+		"**/pnpm-workspace.yaml": false,
+		"**/eslint.config.mjs": false,
+		"**/stylelint.config.js": false
 	},
 
 	// Disable default validation since stylelint is used

@@ -1,0 +1,16 @@
+// ------------------------------\\
+// ~ included in _bundled.scss ~ \\
+// ------------------------------\\
+
+@use "sass:list";
+
+// "auto", "inherit",
+$_valid-cursor-types: "crosshair", "default", "help", "move", "pointer", "progress", "text", "wait", "e-resize", "ne-resize", "nw-resize", "n-resize", "se-resize", "sw-resize", "s-resize", "w-resize", "none", "context-menu", "cell", "vertical-text", "alias", "copy", "no-drop", "not-allowed", "ew-resize", "ns-resize", "nesw-resize", "nwse-resize", "col-resize", "row-resize", "all-scroll", "grab", "grabbing", "zoom-in", "zoom-out";
+$valid-cursor-types: $_valid-cursor-types;
+
+@mixin cursor($type: default) {
+	@if not list.index($_valid-cursor-types, $type) { @warn "!! Invalid cursor type `#{$type}` !!"; }
+	cursor: url("../media/images/cursors/#{$type}.ico"), #{$type};
+	&::before { content: "#{$type}"; }
+}
+
