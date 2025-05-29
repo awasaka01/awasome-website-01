@@ -1,3 +1,1 @@
-onmessage = (time) => {
-	setTimeout(() => { return postMessage(Date.now()); }, time.data);
-};
+onmessage=e=>{setTimeout(()=>postMessage(Date.now()),e.data)};

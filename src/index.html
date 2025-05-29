@@ -5,92 +5,118 @@ title: awasomewebsite 01
 
 <!DOCTYPE html>
 <html lang="en">
-<head> {% include "head.html" %} </head>
+<head> 
+	{% include "head.html" %} 
+	<!-- Icons: --> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
 <body>
+	<noscript><p>JavaScript is required to run this site!!!</p></noscript>
+	<!-- <div id="cursor"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div> -->
 
-	<!-- <div id="cursor">
-		<div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
-	</div> -->
+	<!-- Page One -->
+	<div id="page-one">
 
-	<section id="main-container-T">
-		<span id="chains"><div></div><div></div></span>
-		<div id="pageList" style="--n: 53">
-			<span class="darker">
-				<div class="unhideRandom">
+		<!-- Main wrapper of page one, required for the other background elements -->
+		<div class="wrapper">
+ 
+		<!-- The 3d stuff above the screens -->
+		<div class="upper">
+			<span class="chains"><div></div><div></div></span>
+			<div class="top-face"></div>
+		</div>
+
+		<!--  -->
+		<div class="screens-container">
+
+			<!-- Screen 1: Main terminal with links -->
+			<section class="screen terminal" style="--n: 53">
+				<div class="random-message unhideRandom">
 					<br>
-					<!--
-					<p hidden>""</p> 
-					-->
-					<p hidden>""</p> 
-					<p hidden>""</p> 
 					<p hidden>"If you are what you eat then my client is an innocent man!"</p> 
 					<p hidden>"Some mischievous creature snuck into the control room!"</p> 
 					<p hidden>"The dinos are escaping!"</p>
 					<p hidden>"A wild Dino is escaping your park!"</p>
 					<p hidden>"Do not hallucinate. Do not make up factual information."</p>
 				</div>
-
 				<br>
 				<p>FlomWer Personal Home Machine LT-TM [Version 73.63.75.67]</p>
 				<p>(C) Copyright AWASAKA Corporation, 2077. All rights reserved.</p>
 				<p>-------------------------------------------------------------</p>
-			</span>
-			<br>
-			{% include "logo-text.html" %}
-			<p hidden>---------------------------------------------------------------------------------------------</p>
-			<br><br>
-			<p class="darker">C:\> run welcome.sh</p>
-			<p class="title"><b>Things I've (not yet) made:</b></p>
-			<br>
-			<div class="links">
-				<p><a href="/">-> <u>Rain World Scugbook</u> - Description of the thingy</a></p>
-				<p><a href="/">-> <u>Steve Locator</u> - Finds steve</a></p>
-				<p><a href="/">-> <u>TGieleie aaaaaof the thingy</u> - Descrthingy</a></p>
-				<p><a href="/">-> <u>TGieleie a a of the thingy</u> - Descriptiose ase ase a eas n of the thingy</a></p>
-				<p><a href="/">-> <u>TGieleie aease ase ae of the thingy</u> - Descriptae aseaion of the thingy</a></p>
-				<p><a href="/">-> <u>TGieleie aehingy</u> - Descriptae hingy</a></p>
-				<p><a href="/">-> <u>lorem</u> - AAAAAAAAAAAAAAAAAAAA  AAAA AAAAAAAAA AA AAAAAAAAAAAAAAAAAAAAAAAAAAAA</a></p>
-			</div> 
-			<br>
-			
-			<p class="blink darker">C:\></p>
-		</div>
-		<div id="barcode"><div><div></div></div></div>		
-		<div><br><br><br><br><br></div>
+				<br>
+				<div class="logo-text">{% include "logo-text.html" %}</div>
+				<br><br>
+				<p>C:\> run welcome.sh</p>
+				<p class="title"><b>Things I've (not yet) made:</b></p>
+				<br>
+				<nav class="links">
+					<p><a href="/">-> <u>Rain World Scugbook</u> - Description of the thingy</a></p>
+					<p><a href="/">-> <u>Steve Locator</u> - Finds steve</a></p>
+					<p><a href="/">-> <u>TGieleie aaaaaof the thingy</u> - Descrthingy</a></p>
+					<p><a href="/">-> <u>TGieleie a a of the thingy</u> - Descriptiose ase ase a eas n of the thingy</a></p>
+					<p><a href="/">-> <u>TGieleie aease ase ae of the thingy</u> - Descriptae aseaion of the thingy</a></p>
+					<p><a href="/">-> <u>TGieleie aehingy</u> - Descriptae hingy</a></p>
+					<p><a href="/">-> <u>lorem</u> - AAAAAAAAAAAAAAAAAAAA  AAAA AAAAAAAAA AA AAAAAAAAAAAAAAAAAAAAAAAAAAAA</a></p>
+				</nav> 
+				<br> 
+				<p class="blinkAfter">C:\></p>
+			</section>
 
-		<div id="sorting">
-			<span><p id="random">click to start</p> <p></p> </span>
-			<span>
-				<div>| </div><p>Loop: <output id="loopCount">   </output></p>
-				<div> | </div><p>Time: <output id="timeDisplay">   </output>s</p>
-				<div> | </div><p>Delay: 8ms</p>
-				<div> | </div><p>Bars: 60</p>
-				<div> |</div>
-			</span>
-			<span id="sortingBars">
-				<div style="height: 60em;"></div>
-			</span>
-		</div>
-	</section>
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+			<!--  -->
+			<section class="screen" id="barcode" style="height: 20px;"><div><div></div></div></section>	
 
-	<div id="links">
-		<div class="divider"></div>
-		<div>❤︎‬</div>
-		<div class="divider"></div>
-		<div><p>hosted on <a aria-label="Neocities link" href="https://neocities.org/">neocities.org</a></p></div>
-		<div class="divider"></div>
-		<div><a aria-label="GitHub link" href="https://github.com/awasaka01/awasome-website-01" class="no-underline"><i class="fa fa-github" style="font-size:20px"></i></a></div>
-		<div class="divider"></div>
+			<!--  -->
+			<section class="screen"><br><br><br><br><br></section>
+
+			<!--  -->
+			<section class="screen" id="sorting">
+				<span><p id="random">click to start</p> <p></p> </span>
+				<span>
+					<div>| </div><p>Loop: <output id="loopCount">   </output></p>
+					<div> | </div><p>Time: <output id="timeDisplay">   </output>s</p>
+					<div> | </div><p>Delay: 8ms</p>
+					<div> | </div><p>Bars: 60</p>
+					<div> |</div>
+				</span>
+				<span id="sortingBars">
+					<div style="height: 60em;"></div>
+				</span>
+			</section>
+		</div>
+		</div>
+
+		<!-- Background images for page one -->
+		<span class="background-image">
+			<div></div>
+		</span>
 	</div>
 
 
-
-	<section id="main-container-P">
+	<!-- Page Two -->
+	<div id="page-two">
 		<p id="uwu">text (alledgedly)</p>
-	</section>
+	</div>
 
+
+	
+	
+<!-- 
+	<span id="background-layers">
+		<img src="media/images/background-layer-1.png">
+		<img src="media/images/background-layer-2.png">
+		<img src="media/images/background-layer-3.png">
+	</span> -->
+	<!-- Elements that are out of the normal flow: -->
 
 	<div id="corners"><p></p><p></p><p></p><p></p></div> <!-- Plus symbol in each corner -->
+	
+	<div id="links">
+		<div class="dividing-vertical-line"></div>
+		<div>❤︎‬</div>
+		<div class="dividing-vertical-line"></div>
+		<div><p>hosted on <a aria-label="Neocities link" href="https://neocities.org/">neocities.org</a></p></div>
+		<div class="dividing-vertical-line"></div>
+		<div><a aria-label="GitHub link" href="https://github.com/awasaka01/awasome-website-01" class="no-underline"><i class="fa fa-github" style="font-size:20px"></i></a></div>
+		<div class="dividing-vertical-line"></div>
+	</div>
 </body>
 </html>

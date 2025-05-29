@@ -22,7 +22,7 @@
 	"editor.codeActionsOnSave": {
 		"source.fixAll.stylelint": "explicit"
 	},
-
+	
 	// Buttons to run the commands easier 
 	"actionButtons": {
 		"commands": [

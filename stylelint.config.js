@@ -7,7 +7,7 @@ export default defineConfig({
 	extends: [
 		"stylelint-config-standard-scss",
 		"@stylistic/stylelint-config",
-		"stylelint-config-clean-order",
+		// "stylelint-config-clean-order",
 		"stylelint-config-sass-guidelines",
 	],
 	rules: {
@@ -51,6 +51,9 @@ export default defineConfig({
 		"@stylistic/max-line-length": null,
 		"@stylistic/indentation": "tab",
 		"@stylistic/string-quotes": "double",
+		"@stylistic/function-parentheses-newline-inside": null,
+		"@stylistic/function-parentheses-space-inside": null,
+		"font-family-name-quotes": null,
 
 		// : styelint-config-sass-guidelines
 		"selector-max-compound-selectors": null,

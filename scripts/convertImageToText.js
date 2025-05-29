@@ -65,10 +65,10 @@ const colors = [
 		char: (x, y) => awawa(x, y),
 	},
 ];
-//function awawa (x, y) { return ["a", "w"][awawaCounter++ % 2]; }
-function awawa (x, y) { 
-	const chars = "aw".split("")
-	return chars[awawaCounter++ % chars.length]; 
+// function awawa (x, y) { return ["a", "w"][awawaCounter++ % 2]; }
+function awawa (x, y) {
+	const chars = "aw".split("");
+	return chars[awawaCounter++ % chars.length];
 }
 
 
@@ -96,7 +96,7 @@ window.addEventListener("load", () => {
 			const rgba = Array.from(imageData.data.slice(i, i + 4));
 			const hex = `#${rgba.map((x) => x.toString(16).padStart(2, "0")).join("")}`;
 			const obj = colors.find((x) => x.original === hex);
-			string += obj === undefined ? " " : obj.id;
+			string += obj === undefined ? "-" : obj.id;
 		}
 
 		// Convert the currently 1d string to a 2d array by splitting it into chunks of {image.width}
@@ -112,7 +112,7 @@ window.addEventListener("load", () => {
 			.map((group) => {
 				const obj = colors.find((x) => x.id === group[0]);
 				return obj === undefined ? group
-				: `<span class="${obj.letter}" style="animation-duration: ${Math.random() * 4000}ms">${[...Array(group.length)].map(() => obj.char()).join("")}</span>`;
+				: `<span class="${obj.letter}">${[...Array(group.length)].map(() => obj.char()).join("")}</span>`;
 			}).join("");
 		}).join("<br>");
 		// Color the string

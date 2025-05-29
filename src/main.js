@@ -226,7 +226,7 @@ async function sort () {
 // ANCHOR -
 async function fallingText () {
 var tl = gsap.timeline();
-
+return;
 
 	// const all = Array.from({ length: 1000 }, (_, i) => String.fromCharCode(i));
 	const random = Array.from({ length: 850 }, () => u.characters.gohuSupported.split("").random());

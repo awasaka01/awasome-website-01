@@ -1,387 +1,182 @@
-
 // Imports
 @use "helpers/bundled.scss" as *;
 @use "sass:list";
 @use "sass:color";
-html {
+body { @extend %bodyDefaults; }
+
+// Make page full height even if content too short
+html, body { min-height: 100%; }
+
+// Standarize glow effects so all equal
+@mixin glow { text-shadow: 0 0 10px; }
+@function glow-bg($color) { @return 0 0 20px -2px $color; }
+
+
+
+
+// ANCHOR - Page One
+#page-one {
+	$screen-background: radial-gradient(circle, #1a1825 0%, #070c12 100%);
 	position: relative;
-	min-height: 100%;
-}
-body {
-	@extend %bodyDefaults; 
-	min-height: 100%;
-	background-color: rgb(63 52 95);
-}
-
-
-
-
-// #cursor {
-// 	display: flex;
-// 	flex-wrap: wrap;
-// 	gap: 20px;
-
-// 	max-width: 100dvw;
-// 	@include cursor("e");
-// 	font-size: 600%;
-// 	color: rgb(255 255 255 / 5%);
-// 	* {
-// 		margin: 10px;
-// 		padding: 2px;
-// 		// border: 1px red dashed;
-// 		background-color: rgb(255 255 255 / 6.3%);
-// 	}
-// 	@each $type in $valid-cursor-types {
-// 		$i: list.index($valid-cursor-types, $type);
-// 		*:nth-child(#{$i}) { @include cursor($type); } // 
-// 	}
-// 	// &:nth-child(#{$i}) { @include cursor("default"); $i: $i + 1; } // 
-// 	// &:nth-child(#{$i}) { @include cursor("help"); $i: $i + 1; } // 
-// 	// &:nth-child(#{$i}) { @include cursor("progress"); $i: $i + 1; } // 
-// 	// &:nth-child(#{$i}) { @include cursor("wait"); $i: $i + 1; } // 
-// 	// &:nth-child(#{$i}) { @include cursor("cell"); $i: $i + 1; } // 
-// 	// &:nth-child(#{$i}) { @include cursor("crosshair"); $i: $i + 1; } // 
-// 	// &:nth-child(#{$i}) { @include cursor("text"); $i: $i + 1; } // 
-// 	// &:nth-child(#{$i}) { @include cursor("vertical-text"); $i: $i + 1; } // 
-// 	// &:nth-child(#{$i}) { @include cursor("move"); $i: $i + 1; } // 
-// 	// &:nth-child(#{$i}) { @include cursor("not-allowed"); $i: $i + 1; } // 
-// 	// &:nth-child(#{$i}) { @include cursor("grab"); $i: $i + 1; } // 
-// 	// &:nth-child(#{$i}) { @include cursor("pointer"); $i: $i + 1; } // 
-// 	// &:nth-child(#{$i}) { @include cursor("pointer"); $i: $i + 1; } // 
-// }
-
-
-.unhideRandom {
 	display: flex;
-	flex-direction: row;
-}
- 
-@mixin glow($color: null, $background: false) {
-	@if $background == true {
-		box-shadow: 
-			0 0 20px 1px $color; 
-	} @else {
-		text-shadow: 0 0 15px, 0 0 2px;	
-	}
-}
+	justify-content: center;
 
-
-@mixin terminalStyle {
-	@include glow;
-
-	position: relative;
-	font-family: Terminal;
-	background: radial-gradient(circle, #1a1825 0%, #070c12 100%);
-
-	// Striped Lines + Faint RGB Pixelated overlay effects
-	&::before {
-		pointer-events: none;
-		content: " ";
-
-		position: absolute; z-index: 2;
-		inset: 0 0 0 0;
-
-		display: block;
-
-		background:
-			linear-gradient(to bottom, #1210101c 50%, #00000025 50%),
-			linear-gradient(to right, #ff00000f, #00ff0005, #0000ff0f),
-			linear-gradient(to bottom, #0000 50%, #00000017 50%);
-		background-size: 
-			100% 2px,
- 
-			3px 100%,
- 
-			100% 16px;
-	}
-}
-
-#corners {
-	* {
-		--gradient: #0000 40%, rgb(255 255 255 / 17.3%) 0 60%, #0000 0;
-		position: absolute;
-		bottom: 0;
-
-		width:  10px; 
-		height: 10px;
-		margin: 10px;
-
-		background: 
-			linear-gradient(0deg, var(--gradient)),
-			linear-gradient(90deg, var(--gradient));
-	}
-	*:nth-child(1) { top:    0; left:   0; }
-	*:nth-child(2) { top:    0; right:  0; }
-	*:nth-child(3) { bottom: 0; left:   0; }
-	*:nth-child(4) { right:  0; bottom: 0; }
-}
-
-
-$text-color: $fg-1la;
-$a: #ff5b81; $b: #ff4375; $c: #ff2558; $d: #ce3bd640; $e: #cd39c821;
-
-
-// ANCHOR - Main Container (holds all the little screens)
-#main-container-T {
-	$width: 20px; 
-	$depth: 2px;
+	min-width: max-content;
+	perspective: 2500px;
+	color: $fg1d9;
 	
-	display: inline-flex;
-	flex-direction: column;
-
-	min-width: 0;
-	max-width: min-content;
-	margin: 200px 35px 200px;
-
-	background-color: $bg-1l1;
-	box-shadow: 
-		f_98shadow_outer($depth, $width),
-		50px 50px 100px 0 rgb(0 0 0 / 23.4%);
-
-	> div:not(:last-child) { margin-bottom: $width + $depth*4; }
-	> div {
-		@include terminalStyle;
-		padding: 10px;
-		box-shadow:
-			f_98shadow_inner($depth),
-			inset 50px 50px 100px 0 rgb(0 0 0 / 34%);
-	}
-}
-
-
-#chains {
-	position: relative;
-
-	display: flex;
-	justify-content: flex-end;
-
-	width: 100%;
-	height: 100%;
-	* {
+	// Background image for page one
+	> .background-image {
 		position: absolute;
-		z-index: - 1;
-		translate: 0 -100%;
-		
-		overflow: hidden;
-
-		width: 40px;
-		height: 100vh;
-		border: 16px solid $bg-1l1;
-
-		background-color: rgb(255 81 81 / 0%);
-		box-shadow: 
-			f_98shadow_outer(3px, 0, $bg-1l1, transparent, transparent, $bg-1l2, $bg-1),;
-		&:first-child {
-			left: 0;
-		}
-		&:last-child {
-			right: 0;
-		}
+		width: 100%;
+		height: 100%;
+		z-index: -9999;
+		background-image:linear-gradient( #000000dd, #000000dd ), url("./media/images/background2.png");
+		background-size: cover;
 	}
-}
 
-// Main menu for page selection
-#pageList {
-	display: flex;	
-	flex-direction: column;
-
-	padding: 20px;
-
-	font-size: 16px;
-	color: rgba($text-color, 0.3);
-
-	.title { color: $c; }
-
-
-	// List of page links <p><a href="/">-> <u>Title</u> - Description</a></p>
-	.links {
+	// Contains all the screens
+	> .wrapper {
 		display: flex;
 		flex-direction: column;
-		white-space: pre; // Disable the auto-collpase of spaces ' ' in the html (after the ->)
+		margin: 100px;
+		margin-top: 0;
+		> .screens-container {
+			$border-width: 20px;
+			$border-depth: 5px;
 
-		a {
-			cursor: pointer;
+			// Make the size of the box include the size of the border shadow too
+			margin: $border-depth*2 + $border-width; 
 
 			display: flex;
+			flex-direction: column;
+			background-color: $bg1;
+			box-shadow: f_98shadow_outer($border-depth, $border-width);
 
-			width: 100%;
+			> .screen {
+				background: $screen-background;
+				margin: $border-depth;
+				padding: 20px;	
+				box-shadow: f_98shadow_inner($border-depth);
+				&:not(:last-child) { margin-bottom: $border-width + $border-depth; }
 
-			color: rgba($text-color, 0.5);
+				position: relative;
+				&::after {
+					pointer-events: none;
+					content: " ";
 
-			outline: none;
-			&:hover, &:focus-within, &:focus {
-				@include glow($c, true);
-				background-color: $c;
-				&, * { color: $bg-1; text-decoration-color: #0000; }
+					position: absolute; z-index: 2;
+					inset: 0 0 0 0;
+
+					display: block;
+
+					background:
+						linear-gradient(to bottom, #1210101c 50%, #00000025 50%),
+						linear-gradient(to right, #ff00000f, #00ff0005, #0000ff0f),
+						linear-gradient(to bottom, #0000 50%, #00000017 50%);
+					background-size: 
+						100% 2px,
+						4px 100%,
+						100% 30px;
+				}
+				@include glow;
+			}
+			.title {
+				color: $hi1;
+				font-weight: bolder;
+			}
+			.logo-text {
+				line-height: 1ch;
+				white-space: pre;
+				.a { color: $hi1l3; }
+				.b { color: $hi1; }
+				.c { color: $hi1d3; }
+				.d { color: #ce3bd640; }
+				.e { color: #cd39c821; }
+			}
+			.links {
+				a { display: block; } // Make links full width, to click anywhere
+				u {
+					color: $fg1;
+					text-decoration-color: rgba($fg1, 0.3);
+				}
+				p:hover, p:hover * {
+					color: #000;
+					font-weight: bold;
+
+					text-decoration: none;
+					text-shadow: none;
+
+					background-color: $hi1;
+					box-shadow: glow-bg($hi1);
+				}
 			}
 		}
-		u {
-			color:                     $text-color;
-			text-decoration-color:     rgba($text-color, 0.7);
-			text-decoration-thickness: 1px;
-			text-underline-offset:     2px;
-		}
-	}
-	#logo-text {
-		line-height: 1ch; // Required to make all characters square
-		white-space: pre;
-		.a { color: $a; } .b { color: $b; } .c { color: $c; } .d { color: $d; } .e { color: $e; }
-	}
-}
-
-
-
-// 
-#links {
-	position: absolute;
-	bottom: 0;
-
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-
-	margin: 20px;
-
-	font-family: "Roboto Mono";
-	line-height: 1ch;
-
-	* { display: flex; white-space: pre; }
-	a:not(.no-underline) { text-decoration: underline; text-decoration-color: rgba($text-color, 0.3); }
-	a:hover, a:focus-within { color: $a; text-decoration-color: #0000; }
-	.divider {
-		$_color: #ffffff2f;
-		width: 2px;
-		height: 10px;
-		margin: 0 10px;
-		background: f_hardGradient($_color #0000 $_color #0000 $_color, to bottom);
-	}
-}
-
-
-
-#barcode {
-	display: inline-flex;
-	// The actual bars
-	> div {
-		display: inline-flex;
-		flex-grow: 1;
-		height: 15px;
-		> div {
-			display: inline-flex;
-
-			width: 50%;
-			margin-left: 50%;
-
-			color: rgba($c, 0.7);
 		
+		// 3D Animation rules
+		transform-origin: center top;
+		transform-style: preserve-3d;
+		transform: rotateX(-130deg); // Start rotated up and rotate down when load
 
-			background-color: currentcolor;
-			@include glow(currentcolor, true);
+		animation: flipDown 1s cubic-bezier(0.13, 0.66, 0.85, 0.96) forwards;
+		animation-delay: 200ms;
+		@keyframes flipDown {
+			100% { transform: rotateX(0) rotateY(0); }
+		}
+		
+		// The 3D stuff above the screens
+		> .upper {
+			margin-top: -100px; // Lift container up to compensate for the chains reduced height caused by perspective
+			height: 250px;
+			transform-style: preserve-3d;
+
+			// Flat face visable on the top of the screens while flipping down
+			.top-face {
+				width: 100%;
+				height: 100%;
+				transform-origin: center top;
+				transform: rotateX(-90deg);
+				background-color: $bg1d1;
+			}
+
+			// The "chains" holding up the box
+			.chains {
+				display: flex;
+				justify-content: space-between;
+				height: 100%;
+				z-index: -50;
+
+				backface-visibility: hidden;
+				transform-style: preserve-3d;
+				transform: translateZ(-75px);
+
+				* {
+					display: flex;
+					position: relative;
+					width: 100px;
+					margin: 0 90px;
+					background: f_stripesRepeat(to top, [[#0000, 30px], [$bg1d2, 8px], [$bg1d1, 8px], [$bg1, 8px]]);
+		
+					&::after, &::before {
+						content: " ";
+						position: absolute;
+						width: 30px;
+						height: 100%;
+						background-color: $bg1d1;
+						box-shadow: f_98shadow_outer(3px, 0, $bg1d1, $bg1l1, $bg1d2, $bg1, $bg1d3),;
+					}
+					&::after { left: 100%; }
+					&::before { right: 100%; }
+				}
+			}
 		}
 	}
 }
 
+// Non-specific rules for page one	
+.random-message { display: flex; } // To put on one line
 
-
-
-#sorting {
-	flex-direction: column;
-	padding: 10px;
-	color: rgba($text-color, 0.7);
-	// box-shadow: f_98shadow_full(), inset 50px 50px 100px 0 rgb(0 0 0 / 34%), 50px 50px 100px 0 rgb(0 0 0 / 23.4%);box-shadowbox-shadowbox-shadowbox-shadowbox-shadowbox-shadow
-	@include terminalStyle;
-	&, * {
-		display: flex;
-		white-space: pre;
-	}
-	div {
-		color: rgba($text-color, 0.2);
-	}
-
-	#sortingBars {
-		align-items: end;
-		font-size: 1px;
-		* {
-			content: "";
-
-			flex-grow: 1;
-
-			box-sizing: initial;
-			padding-bottom: 10em;
-
-			color: $c;
-
-			background-color: $c;
-			@include glow(currentcolor, true);
-		}
-	}
-}
-
-
-
-
-
-#main-container-P {
-	// Generate a zigzag shape using a repeating conic gradient, to be used as a background or mask
-	// note: set background/mask-size to [X% 100%] where X is the desired scale, or if left/right then [100% X%]
-	@function f-zigzag-conic($side: "top", $background-color: #000000, $outer-color: transparent) {
-		$offset: 0;
-
-		@if $side=="bottom" {
-			$offset: 0.5turn;
-		} @else if $side=="top" {
-			$offset: 0turn; 
-		} @else if $side == "right" {
-			$offset: 0.25turn;
-		} @else if $side == "left" {
-			$offset: 0.75turn;
-		} @else {
-			@error "Unknown side: #{$side}, must be 'top', 'bottom', 'right' or 'left'";
-		}
-		// misalign the center values by 1grad to have a very tiny gradient between the two colors, 
-		// helping elimatinate anti-aliasing
-		@return conic-gradient(
-			from #{$offset}
-			at #{$side},
-			$outer-color 0grad 150grad,
-			$background-color 151grad 249grad, 
-			$outer-color 250grad 50grad,
-		);
-	}
-	bottom: 0;
-
-	display: flex;
-	flex-direction: column;
-	place-content: center;
-	place-items: center;
-
-	width: 100%;
-	height: 600px;
-	padding: 10px;
-	padding-top: 40px;
-
-	font-family: cursive;
-	color:#f4f3d7;
-	text-align: left;
-
-	background-color: #302b2e;
-
-	mask: f-zigzag-conic("top");
-	
-
-	mask-position: 0% top;
-	mask-size: 5% 100%;
-}
-@keyframes scroll-mask {
-	0% { mask-position: 0% top; }
-	100% { mask-position: 100% top; }
-}
-#uwu {
-	width: 100%;
-	max-height: 100%;
-
-	writing-mode: vertical-lr;
-	font-family: Terminal;
-	text-orientation: upright;
-	word-wrap: break-word;
+// ANCHOR - Page Two
+#page-two {
+	background-color: palevioletred;
 }
