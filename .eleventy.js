@@ -7,306 +7,161 @@
 
 
 // Color generator imports
-import chokidar from "chokidar"; // Because fs is bad
-import { readFileSync, writeFileSync } from "node:fs";
-import chroma from "chroma-js";
-import { hex } from "ansis";
-import { minify } from "html-minifier";
-import UglifyJS from "uglify-js";
-
-// Plugins
 import lightningSass from "@11tyrocks/eleventy-plugin-sass-lightningcss";
+import { minify } from "html-minifier-terser";
+import UglifyJS from "uglify-js";
+import { hex } from "ansis";
+import JSONminify from "jsonminify";
+import Image, { eleventyImageTransformPlugin } from "@11ty/eleventy-img";
+import generateSCSScolors from "./scripts/scssPaletteGenerator.js";
 
 
 
+// A named config export, instead of returning inside the eleventyConfig function
+// because it's "preferred for order-of-operations reasons" https://www.11ty.dev/docs/config-shapes/#optional-return-object
+export const config = {
+	dir: {
+		input: "src",
+		output: "__dist",
+		data: "_data",
+		includes: "_includes",
+		layouts: "_layouts",
+	},
+};
 
+
+
+// ANCHOR: Redrunner Two
+// > -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+/** [Intellisense Support] @param {import("@11ty/eleventy").UserConfig} eleventyConfig */
 export default function (eleventyConfig) {
 	const startBuildTime = Date.now();
-
+	eleventyConfig.addPlugin(lightningSass); // Sass compiler, minifier, and backwards-compatibility-ier
 	eleventyConfig.setQuietMode(true);
-	eleventyConfig.addPassthroughCopy("src/**/!(_)*.{json,txt}");
-	eleventyConfig.addPassthroughCopy("src/media/");
-	eleventyConfig.addPlugin(lightningSass);
 	eleventyConfig.setServerOptions({
 		port: 8080,
-		htmlTemplateEngine: "njk",
+		htmlTemplateEngine: "njk", // Allows writing njk in .html files (i think)
 		// watch: ["./__dist/**/*.css"],
 		showVersion: false, domDiff: false, liveReload: true,
 	});
-	console.log(process.argv); // add support to watch with all build features enabled
-/*
-{
-  inputPath: './src/pages/template/index.html',
-  outputPath: './__dist/pages/template/index.html',
-  url: '/pages/template/',
-  page: {
-    inputPath: './src/pages/template/index.html',
-    fileSlug: 'template',
-    filePathStem: '/pages/template/index',
-    outputFileExtension: 'html',
-    templateSyntax: 'liquid',
-    date: 2025-01-28T05:52:52.864Z,
-    rawInput: '\r\n' +
-      '<!DOCTYPE html><html lang="en">\r\n' +
-      '<head>{% include "head.html" %}</head>\r\n' +
-      '<body>{% include "navbar.html" %}\r\n' +
-      '\r\n' +
-      '\r\n' +
-      '\t<p>hai :3</p>\r\n' +
-      '\r\n' +
-      '\r\n' +
-      '</body>\r\n' +
-      '</html>',
-    url: '/pages/template/',
-    outputPath: './__dist/pages/template/index.html'
-  },
-  baseHref: undefined
-}
-*/
 
-	//
-	eleventyConfig.addTransform("minify-html", async function (content) {
-		if (process.env.RUN_MODE !== "build") return content;
-		if (this.page.outputFileExtension !== "html") return content;
+	// https://www.11ty.dev/docs/plugins/image/
+	eleventyConfig.addPlugin(eleventyImageTransformPlugin, { formats: ["avif", "webp"] });
+
+	// Directly copy files from src/ to __dist/ with no changes
+	eleventyConfig.addPassthroughCopy("src/assets/");
+	eleventyConfig.addPassthroughCopy("src/**/!(_)*.{txt,xml}");
+
+
+
+
+	// To add a new formatter; create a function that formats inputted text, add it to the object below along with the filetype
+	// If not already in setTemplateFormats, add your file extension there too
+
+	eleventyConfig.setTemplateFormats(["html", "njk", "txt", "js", "css", "xml", "json"/* , "png"*/]);
+
+	const formatters = { "js": minifyJS, "json": minifyJSON/* , "png": compressImage*/ };
+
+
+	// Register addExtension for each file type specified, that runs the listed function on each file and logs how long it took
+	Object.entries(formatters).forEach(([ext, fn]) => { eleventyConfig.addExtension(ext, {
+		outputFileExtension: ext,
+		compile: (content, inputPath) => (() => runFuncAndTime(fn, content, inputPath)),
+	}); });
+
+	// HTML Will work with addExtension, but https://www.11ty.dev/docs/languages/custom/ reccomends using addTransform for whatever reason >:/
+	eleventyConfig.addTransform("minify-html", function (content) {
+		if (this.page.outputFileExtension !== "html") { return content; }
+		return runFuncAndTime(minifyHTML, content, this.page.inputPath);
+	});
+
+
+	// Runs given formatter function, returns the output, and logs how long it took
+	async function runFuncAndTime (fn, content, inputPath) {
+
+		// Only minify when in build mode, or if --forcemin is set
+		if (process.env.RUN_MODE !== "build" && !process.argv.includes("--forcemin")) { return content; }
+
 		const start = Date.now();
+		const output = await fn(content, inputPath);
 
-		// https://www.npmjs.com/package/html-minifier#options-quick-reference
-		const output = minify(content, { collapseBooleanAttributes: true, minifyCSS: true, minifyJS: true, removeComments: true, removeOptionalTags: true, removeRedundantAttributes: true, removeScriptTypeAttributes: true, removeTagWhitespace: true, minifyURLs: true, collapseWhitespace: true, conservativeCollapse: true });
-
-		const time = (Date.now() - start).toString().padStart(3, " ");
-		console.log(hex("#c83dff")`[${time}ms]  ☆  Minified: ${this.page.filePathStem}.${this.page.outputFileExtension}`);
+		console.log(
+			hex("#8478ff")`[ ${(Date.now() - start).toString().padStart(4, " ")}ms ] ${hex("#16194bff")`-`} ${
+			hex("#e197ff")`Formatted: /__dist${inputPath.slice(5)}`}`);
 		return output;
-	});
+	}
 
-	//
-	eleventyConfig.addTemplateFormats("js");
-	eleventyConfig.addExtension("js", {
-		outputFileExtension: "js",
-		compile: async (input, path) => {
-			if (process.env.RUN_MODE !== "build") return async () => { return input; };
-
-			const start = Date.now();
-			let output = UglifyJS.minify(input, { toplevel: true }).code;
-
-			const time = (Date.now() - start).toString().padStart(3, " ");
-			console.log(hex("#c83dff")`[${time}ms]  ☆  Minified: ${path.replace("./src", "")}`);
-			return async () => { return output; };
-		},
-	});
 
 
 
 	// Automatically watch autocolors.json and generate autocolors.scss on change
 	eleventyConfig.on("eleventy.before", async ({ directories, runMode }) => {
 
-		// Make sure we only ever run once
 		if (process.env.RUN_MODE !== undefined) return;
 		process.env.RUN_MODE = runMode;
-		process.env.START_TIME = Date.now();
 
-		// Recompile colors once on build
-		if (runMode === "build") { await updateColors();	}
-
-		// When live-testing, watch the colors file for any changes and recompile
-		else if (runMode === "serve" || runMode === "watch") {
-			console.log(hex("#3dffef")`☆  Watching for color changes...`);
-
-			let debounce = false;
-			chokidar.watch("src/helpers/_autocolors.json").on("change", (event, path) => {
-				if (debounce) return;
-				debounce = true;
-				setTimeout(() => { debounce = false; }, 100);
-				updateColors();
-			});
-		}
+		if (runMode === "build") { await generateSCSScolors();	}
 	});
 
 
 
-	function colorAdjust (iteration, color) {
-		let [l, c, h] = chroma(color).oklch().map((x) => x || 0);
-		l += iteration * 0.025;
-		c += iteration * 0.003;
-		h += iteration * 0.2;
-		return chroma.oklch(l, c, h).hex();
-	}
-
-	async function updateColors () {
-
-
-		// Extract the variable name and hex values from the json file
-		const bases = JSON.parse(readFileSync("src/helpers/_autocolors.json"));
-
-		// Configurable ways to expand each base color
-		const expandedTypes = [
-			{ amount: 15, id: (i) => `d${(16 - i).toString(16)}`, f: (i, hex) => colorAdjust(-(16 - i), hex) }, // Darken:    (i is inverted; only for a visually better order in the file)
-			{ amount: 1, id: (i) => "", f: (i, hex) => "  " + hex }, // Base without auto tag:
-			{ amount: 15, id: (i) => `l${i.toString(16)}`, f: (i, hex) => colorAdjust(i, hex) }, // Lighten:
-		];
-
-
-		// Generate the expanded colors
-		let output = "/* stylelint-disable */\n\n\n";
-		bases.forEach((base) => {
-
-			// Generate all the expanded colors for the current base, in scss variable form
-			const vars = [];
-			expandedTypes.forEach((e) => {
-				for (let i = 1; i <= e.amount; i++) {
-					vars.push(`$${base.name}${e.id(i)}: ${e.f(i, base.color)};`);
-			} });
-
-			// Merge all expanded variables for the current base into lines
-			output += `// Expanded colors for ${base.name}:\n${vars.join("\n")}\n\n`;
-		});
-
-		// Update the scss file, replacing all after the identifier 617761
-		writeFileSync("src/helpers/_autocolors.scss", output);
-	}
+	// Print build time
 	eleventyConfig.on("eleventy.after", async ({ directories, results, runMode, outputMode }) => {
 		if (runMode !== "build") return;
-
-		const time = ((Date.now() - startBuildTime) / 1000);
-		console.log(hex("#c5ff3d")`\n         ☆  Built in ${time}s!\n`);
+		console.log(hex("#c5ff3d")`\n           ☆  Built in ${((Date.now() - startBuildTime) / 1000)}s?\n`);
 	});
-
-
-	return {
-		dir: {
-			input: "src",
-			data: "_data",
-			includes: "_includes",
-			layouts: "_layouts",
-			output: "__dist",
-		},
-	};
-}
-// eleventyConfig.addPlugin(feedPlugin, {
-// 	type: "atom", // or "rss", "json"
-// 	outputPath: "/feed.xml",
-// 	collection: {
-// 		name: "posts", // iterate over `collections.posts`
-// 		limit: 10, // 0 means no limit
-// 	},
-// 	metadata: {
-// 		language: "en",
-// 		title: "Blog Title",
-// 		subtitle: "This is a longer description about your blog.",
-// 		base: "https://example.com/",
-// 		author: {
-// 			name: "Your Name",
-// 			email: "", // Optional
-// 		},
-// 	},
-// });
-
-
-/*
-
-{
-  eleventy: {
-    version: '3.1.0',
-    generator: 'Eleventy v3.1.0',
-    env: {
-      source: 'cli',
-      runMode: 'build',
-      config: 'C:/Users/awa/Documents/coding/awasomewebsite/.eleventy.js',
-      root: 'C:/Users/awa/Documents/coding/awasomewebsite'
-    },
-    directories: {
-      input: './src/',
-      inputFile: undefined,
-      inputGlob: undefined,
-      data: './src/_data/',
-      includes: './src/_includes/',
-      layouts: './src/_layouts/',
-      output: './__dist/'
-    }
-  },
-  pkg: {
-    name: 'awasomewebsite',
-    description: 'yes',
-    version: '1.0.0',
-    license: 'https://docs.npmjs.com/cli/v11/configuring-npm/package-json#license',
-    keywords: [],
-    main: 'index.js',
-    type: 'module',
-    homepage: 'https://github.com/awasaka01/awasome-website-01#readme',
-    repository: {
-      type: 'git',
-      url: 'git+https://github.com/awasaka01/awasome-website-01.git'
-    },
-    scripts: {
-      watch: 'eleventy --serve --incremental --quiet',
-      build: 'rimraf __dist/ && eleventy --quiet',
-      findrules: 'stylelint-find-new-rules'
-    },
-    dependencies: {
-      '@11ty/eleventy': '^3.1.0',
-      '@11ty/eleventy-plugin-rss': '^2.0.4',
-      '@11tyrocks/eleventy-plugin-sass-lightningcss': '^1.3.0',
-      ansis: '^4.1.0',
-      'chroma-js': '^3.1.2',
-      eleventy: '^1.0.7',
-      'html-minifier': '^4.0.0',
-      'npm-run-all': '^4.1.5',
-      postcss: '^8.5.3',
-      rimraf: '^6.0.1',
-      sass: '^1.89.0',
-      'stylelint-config-sass-guidelines': '^12.1.0',
-      typescript: '^5.8.3',
-      'uglify-js': '^3.19.3'
-    },
-    devDependencies: {
-      '@stylistic/eslint-plugin': '^4.4.0',
-      '@stylistic/stylelint-config': '^2.0.0',
-      '@types/chroma-js': '^3.1.1',
-      chokidar: '^4.0.3',
-      gsap: '^3.13.0',
-      'postcss-scss': '^4.0.9',
-      'query-ast': '^1.0.5',
-      'scss-parser': '^1.0.6',
-      stylelint: '^16.19.1',
-      'stylelint-config-clean-order': '^7.0.0',
-      'stylelint-config-recess-order': '^6.0.0',
-      'stylelint-config-standard-scss': '^15.0.1',
-      'stylelint-define-config': '^16.19.0',
-      'stylelint-find-new-rules': '^5.0.0',
-      'stylelint-plugin-logical-css': '^1.2.3'
-    }
-  },
-  page: {
-    inputPath: './src/pages/template/main.js',
-    fileSlug: 'main',
-    filePathStem: '/pages/template/main',
-    outputFileExtension: 'html',
-    templateSyntax: 'js',
-    date: 2025-01-28T05:52:52.878Z,
-    rawInput: 'import {} from "awa";\r\n' +
-      '\r\n' +
-      'window.addEventListener("load", () => {\r\n' +
-      '\r\n' +
-      '\t//\r\n' +
-      '\r\n' +
-      '});\r\n',
-    url: '/pages/template/main/',
-    outputPath: './__dist/pages/template/main/index.html'
-  },
-  collections: {
-    all: [
-      [Object], [Object], [Object],
-      [Object], [Object], [Object],
-      [Object], [Object], [Object],
-      [Object], [Object], [Object],
-      [Object], [Object], [Object],
-      [Object], [Object], [Object],
-      [Object], [Object], [Object],
-      [Object], [Object], [Object],
-      [Object], [Object], [Object],
-      [Object], [Object], [Object],
-      [Object], [Object]
-    ]
-  }
 }
 
-*/
+
+
+
+
+
+
+
+//
+// ANCHOR: File formatter functions
+//
+async function compressImage (input, inputPath) {
+	const stats = await Image(inputPath);
+	console.log(stats);
+
+}
+function minifyJSON (input) { return JSONminify(input); }
+function minifyJS (input) { return UglifyJS.minify(input, { toplevel: true }).code; }
+function minifyHTML (input) {
+	return minify(input, { // https://www.npmjs.com/package/html-minifier#options-quick-reference <!-- htmlmin:ignore -->?
+		removeScriptTypeAttributes: true,
+		collapseBooleanAttributes: true,
+		removeRedundantAttributes: true,
+		conservativeCollapse: true,
+		removeTagWhitespace: true,
+		collapseWhitespace: true,
+		removeOptionalTags: true,
+		useShortDoctype: true,
+		removeComments: true,
+		minifyURLs: true,
+		minifyCSS: true,
+		minifyJS: true,
+	});
+}
+
+
+
+
+
+
+
+//
+// ANCHOR: autocolors updater
+//
+
+// Settings
+
+
+
+
+
+
+

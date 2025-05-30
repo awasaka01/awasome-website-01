@@ -1,10 +1,12 @@
+// docs for global config https://eslint.org/docs/latest/use/configure/configuration-files#configuration-file-resolution
 
 //  THIS FILE IS LINKED TO %USERPROFILE%\eslint.config.mjs
 
 //	To hardlink your global eslint config to the current project, to be tracked with git too
-//		1. Have a global eslint config, in your home directory
-//		2. Run in Command Prompt NOT PowerShell:
-// 	  	   mklink /h "C:\currentprojectpath\eslint.config.mjs" "%USERPROFILE%\eslint.config.mjs"
+//		1. Have a global eslint config, in your user profile
+//		2. Run in Command Prompt with your real path (NOT PowerShell):
+// 	  	   mklink /h "C:\CURRENT_PROJECT_PATH_HERE\eslint.config.mjs" "%USERPROFILE%\eslint.config.mjs"
+//
 //	Note: /h makes it a hard link, pointing to the actual file on disk not a symlink which is a link to the other file pointer
 
 

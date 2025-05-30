@@ -10,7 +10,7 @@ html {
 body {
 	@extend %bodyDefaults; 
 	min-height: 100%;
-	background-image:linear-gradient( rgb(255 255 255 / 50%), rgb(255 255 255 / 50%) ), url("./media/images/background2.png");
+	background-image:linear-gradient( rgb(255 255 255 / 50%), rgb(255 255 255 / 50%) ), url("./assets/images/background2.png");
 	background-size: cover;
 }
 

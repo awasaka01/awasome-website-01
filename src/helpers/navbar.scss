@@ -9,7 +9,7 @@
 
 // // Set specific icons for each button
 // $buttons: "home", "heart", "oneko";
-// @each $b in $buttons { #button-#{$b}::after { mask-image: url(/media/images/icon_#{$b}.png); } }
+// @each $b in $buttons { #button-#{$b}::after { mask-image: url(/assets/images/icon_#{$b}.png); } }
 
 
 // // Title bar container

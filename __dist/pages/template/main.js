@@ -1,1 +1,7 @@
-import"awa";window.addEventListener("load",()=>{});
+import {} from "awa";
+
+window.addEventListener("load", () => {
+
+	//
+
+});

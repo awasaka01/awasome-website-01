@@ -10,7 +10,7 @@ $valid-cursor-types: $_valid-cursor-types;
 
 @mixin cursor($type: default) {
 	@if not list.index($_valid-cursor-types, $type) { @warn "!! Invalid cursor type `#{$type}` !!"; }
-	cursor: url("../media/images/cursors/#{$type}.ico"), #{$type};
+	cursor: url("../assets/images/cursors/#{$type}.ico"), #{$type};
 	&::before { content: "#{$type}"; }
 }
 
