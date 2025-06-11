@@ -5,17 +5,19 @@ import { hex } from "ansis";
 
 
 const expandedTypes = [
-	{ amount: 15, id: (i) => `d${(16 - i).toString(16)}`, f: (i, hex) => colorAdjust(-(16 - i), hex) }, // Darken (i is inverted; only for a visually better order in the file)
+	{ amount: 9, id: (i) => `d${(10 - i).toString(16)}`, f: (i, hex) => colorAdjust(-(9 - i), hex) }, // Darken (i is inverted; only for a visually better order in the file)
 	{ amount: 1, id: (i) => "", f: (i, hex) => "  " + hex }, // Base
-	{ amount: 15, id: (i) => `l${i.toString(16)}`, f: (i, hex) => colorAdjust(i, hex) }, // Lighten
+	{ amount: 9, id: (i) => `l${i.toString(16)}`, f: (i, hex) => colorAdjust(i, hex) }, // Lighten
 ];
 
 
 function colorAdjust (iteration, color) {
 	let [l, c, h] = chroma(color).oklch().map((x) => x || 0);
-	l += iteration * 2.025;
-	c += iteration * 1.003;
-	h += iteration * 20.01;
+
+	l += iteration * 0.03;
+	c += iteration * 0.001;
+	h += -iteration * 2;
+
 	return chroma.oklch(l, c, h).hex();
 }
 
@@ -49,7 +51,4 @@ async function generateSCSScolors () {
 
 
 export default generateSCSScolors;
-setInterval(() => {
-	generateSCSScolors();
-
-}, 1000);
+generateSCSScolors();

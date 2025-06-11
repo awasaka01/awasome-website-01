@@ -1,0 +1,20 @@
+[
+	{
+		"key": "alt+x", // whatever keybinding you want
+		"command": "extension.multiCommand.execute",
+		"args": {
+			"sequence": [
+				// you may be able to use this command instead of the sendSquence command, see below
+				// "workbench.action.terminal.runRecentCommand",
+				{
+					"command": "workbench.action.terminal.sendSequence",
+					// send an uparrow to the terminal shell
+					"args": {
+						"text": "\u001b[A\u000D"
+					}
+				},
+				"workbench.action.focusActiveEditorGroup" // return focus to last active editor
+			]
+		}
+	}
+]

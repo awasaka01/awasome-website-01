@@ -1,0 +1,3 @@
+onlyBuiltDependencies:
+  - canvas
+  - ttf2woff2

@@ -31,7 +31,7 @@ html, body { min-height: 100%; }
 
 	min-width: max-content;
 	perspective: 2500px;
-	color: $fg1d9;
+	color: rgba($fg1, 0.6);
 	
 	// Background image for page one
 	> .background-image {
@@ -94,12 +94,12 @@ html, body { min-height: 100%; }
 			}
 			.title {
 				color: $hi1;
-				font-weight: bolder;
+				font-weight: 99999;
 			}
 			.logo-text {
 				line-height: 1ch;
 				white-space: pre;
-				.a { color: $hi1l3; }
+				.a { color: $hi1l2; }
 				.b { color: $hi1; }
 				.c { color: $hi1d3; }
 				.d { color: #ce3bd640; }

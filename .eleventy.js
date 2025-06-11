@@ -49,9 +49,9 @@ export default function (eleventyConfig) {
 	// https://www.11ty.dev/docs/plugins/image/
 	eleventyConfig.addPlugin(eleventyImageTransformPlugin, { formats: ["avif", "webp"] });
 
-	// Directly copy files from src/ to __dist/ with no changes
-	eleventyConfig.addPassthroughCopy("src/assets/");
-	eleventyConfig.addPassthroughCopy("src/**/!(_)*.{txt,xml}");
+	// Directly copy files from src/ to __dist/ with no changes **/!(_)*.{txt,xml}
+	eleventyConfig.addPassthroughCopy("src/assets/**/!(_)*");
+	eleventyConfig.ignores.add("**/_*");
 
 
 
@@ -59,7 +59,7 @@ export default function (eleventyConfig) {
 	// To add a new formatter; create a function that formats inputted text, add it to the object below along with the filetype
 	// If not already in setTemplateFormats, add your file extension there too
 
-	eleventyConfig.setTemplateFormats(["html", "njk", "txt", "js", "css", "xml", "json"/* , "png"*/]);
+	eleventyConfig.setTemplateFormats(["html", "js", "css", "xml", "json"/* , "png"*/]);
 
 	const formatters = { "js": minifyJS, "json": minifyJSON/* , "png": compressImage*/ };
 
@@ -80,8 +80,10 @@ export default function (eleventyConfig) {
 	// Runs given formatter function, returns the output, and logs how long it took
 	async function runFuncAndTime (fn, content, inputPath) {
 
-		// Only minify when in build mode, or if --forcemin is set
+		// Only format when in build mode, or if --forcemin is set
 		if (process.env.RUN_MODE !== "build" && !process.argv.includes("--forcemin")) { return content; }
+		if (inputPath.split("/").pop().startsWith("_")) { return content; }
+
 
 		const start = Date.now();
 		const output = await fn(content, inputPath);

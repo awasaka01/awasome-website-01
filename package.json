@@ -25,12 +25,15 @@
 		"@stylistic/stylelint-config": "^2.0.0",
 		"@types/chroma-js": "^3.1.1",
 		"ansis": "^4.1.0",
+		"canvas": "^3.1.0",
 		"chokidar": "^4.0.3",
 		"chroma-js": "^3.1.2",
 		"eleventy": "^1.0.7",
+		"fantasticon": "^3.0.0",
 		"gsap": "^3.13.0",
 		"html-minifier-terser": "^7.2.0",
 		"jsonminify": "^0.4.2",
+		"nodemon": "^3.1.10",
 		"npm-run-all": "^4.1.5",
 		"postcss": "^8.5.3",
 		"postcss-scss": "^4.0.9",
@@ -46,6 +49,7 @@
 		"stylelint-define-config": "^16.19.0",
 		"stylelint-find-new-rules": "^5.0.0",
 		"stylelint-plugin-logical-css": "^1.2.3",
+		"svgtofont": "^6.3.2",
 		"typescript": "^5.8.3",
 		"uglify-js": "^3.19.3"
 	}

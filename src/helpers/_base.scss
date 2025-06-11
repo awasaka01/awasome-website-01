@@ -9,6 +9,8 @@
 
 
 // Custom Fonts
+// https://www.files-conversion.com/font/bdf
+// https://hellogreg.github.io/glytter/
 @font-face {
 	font-family: "win98";
 	font-weight: 400;
@@ -20,7 +22,7 @@
 	font-family: "gohufont";
 	font-weight: 400;
 	font-display: block;
-	src: url("./assets/fonts/gohufont-11.ttf");
+	src: url("./assets/fonts/gohufont-uni-11.ttf");
 }
 
 %flex-center {
