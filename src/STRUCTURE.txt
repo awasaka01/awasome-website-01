@@ -1,0 +1,11 @@
+# what the folders mean
+
+_modules : any reusable componenets/modules
+	/_includes : html snippets, in liquid format by default
+	/styles    : sass modules, mostly forwarded in _bundled.scss
+
+assets
+	/data
+	/images
+	/fonts
+
