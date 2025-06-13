@@ -1,9 +1,9 @@
 /// <reference types="chroma-js"/>
 import chroma from "chroma-js";
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
 
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
 
 // ANCHOR - Main event
 document.addEventListener("DOMContentLoaded", async (event) => {

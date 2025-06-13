@@ -12,28 +12,31 @@
 		"url": "git+https://github.com/awasaka01/awasome-website-01.git"
 	},
 	"scripts": {
-		"start": "eleventy --serve --incremental --quiet",
-		"build": "set DEBUG=Eleventy:Benchmark* && eleventy",
-		"findrules": "stylelint-find-new-rules"
+		"start": "eleventy --serve --quiet",
+		"build": "set DEBUG=Eleventy:Benchmark* && eleventy --output=__dist && node scripts/print-dist-tree.js",
+		"findrules": "stylelint-find-new-rules",
+		"fontconvert": "node scripts/font-converter/index.js"
 	},
-	"browserslist": [
-		"partially supports css-grid"
-	],
 	"dependencies": {
 		"@11ty/eleventy": "^3.1.0",
 		"@11ty/eleventy-img": "^6.0.4",
 		"@11ty/eleventy-plugin-rss": "^2.0.4",
 		"@11ty/eleventy-plugin-vite": "^6.0.0",
 		"@11tyrocks/eleventy-plugin-sass-lightningcss": "^1.3.0",
+		"@jgarber/eleventy-plugin-sass": "^2.1.0",
 		"@stylistic/eslint-plugin": "^4.4.0",
 		"@stylistic/stylelint-config": "^2.0.0",
 		"@types/chroma-js": "^3.1.1",
+		"ansi-colors": "^4.1.3",
 		"ansis": "^4.1.0",
+		"browserslist": "^4.25.0",
 		"canvas": "^3.1.0",
 		"chokidar": "^4.0.3",
 		"chroma-js": "^3.1.2",
 		"eleventy": "^1.0.7",
+		"eleventy-sass": "^2.2.6",
 		"fantasticon": "^3.0.0",
+		"fontverter": "^2.0.0",
 		"gsap": "^3.13.0",
 		"html-minifier-terser": "^7.2.0",
 		"jsonminify": "^0.4.2",
@@ -58,7 +61,8 @@
 		"stylelint-plugin-logical-css": "^1.2.3",
 		"svgtofont": "^6.3.2",
 		"typescript": "^5.8.3",
-		"uglify-js": "^3.19.3"
+		"uglify-js": "^3.19.3",
+		"vite-plugin-font": "^5.1.2"
 	},
 	"devDependencies": {
 		"sass": "^1.89.0"

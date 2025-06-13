@@ -8,13 +8,15 @@ icon: null
 <!DOCTYPE html>
 <html lang="en">
 <head> 
-	{% include "head.html" %} 
+	{% include "head.html" %} <!-- Use same head for all pages by including the same file -->
 	<!-- Icons: --> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
-	<noscript><h1>JavaScript is required to run this site!!!</h1></noscript>
+	{% include "noscript.html" %} <!-- Warning shown when JavaScript is disabled -->
+
+	<a href="./color-preview/">Color Preview Page</a>
+	<a href="./template/">Template Page</a>
 	
-	hi!!!!!!
 	<div id="app"></div>
 	{% include "hello.html" %}
 </body>

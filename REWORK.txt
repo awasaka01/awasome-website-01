@@ -8,21 +8,25 @@ ISSUES ENCOUNTERED:
 
 
 # current abilities
-automatically with vite:
-- sass compiling, need sass module
-- js minification
+vite adds:
+- minification
 - removal of unneeded files
-- automatic conversion of local modules to be built into the js
-- react!
+- react
+
 others:
+- scss compiling with 11ty
 - html templates with 11ty
- 
+-  
+
+scripts to run manually when needed:
+- font conversion script
+
+
 
 todo:
 - ability to use typescript OR javascript anywhere (with react)
 - precompile react into static-ish html, https://create-react-app.dev/docs/pre-rendering-into-static-html-files/
 - dark mode theme
-- font and image compression
 - rss feed
 
 

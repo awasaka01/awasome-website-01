@@ -1,6 +1,10 @@
 // Imports
-@use "_modules/bundled.scss" as *;
+@use "bundled" as *;
 
 body {
-	font-family: "gohufont";
+	color: red;
+	@extend %bodyDefaults;
+	text-decoration: dashed;
+	text-decoration-color: red;
+	text-decoration-thickness: 2px;
 }

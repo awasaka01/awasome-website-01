@@ -1,0 +1,85 @@
+@use "sass:color";
+@use "sass:math";
+@use "sass:map";
+@use "sass:string";
+@use "sass:meta";
+@use "sass:list";
+
+// Color parameter map: variable name (no $) => config
+
+
+// Default parameter object
+$cl-defaults: (
+	l: 0.0015,
+	c: 0.0002,
+	h: 0.12,
+	lmin: 0,
+	lmax: 1,
+	cmin: 0,
+	cmax: 0.37,
+	hmin: -360,
+	hmax: 360
+);
+
+/* start */
+$fg: #ed7093;
+$hi: #06d4d4;
+$bg: #4a425e;
+/* end */
+$color-params: (
+	fg: (l: 0.00155, c: 0.0002, h: 0.12),
+	hi: (l: 0.001, c: 0.0003, h: -0.01, lmin: 0),
+	bg: (l: 0.0007, c: -0.000004, h: 0.12)
+);
+
+body { background-color: cl($bg, 500); }
+
+// Helper: get value from param map or fallback to default
+@function cl-param($params, $key) {
+	@if map.has-key($params, $key) {
+		@return map.get($params, $key);
+	}
+	@return map.get($cl-defaults, $key);
+}
+
+// Main cl function: pass color variable (e.g. $bg), number
+@function cl($color, $number) {
+	// Get variable name as string (remove $)
+	$name: string.slice(meta.inspect($color), 2);
+	$params: if(map.has-key($color-params, $name), map.get($color-params, $name), ());
+	$l: cl-param($params, l);
+	$c: cl-param($params, c);
+	$h: cl-param($params, h);
+	$lmin: cl-param($params, lmin);
+	$lmax: cl-param($params, lmax);
+	$cmin: cl-param($params, cmin);
+	$cmax: cl-param($params, cmax);
+	$hmin: cl-param($params, hmin);
+	$hmax: cl-param($params, hmax);
+
+	$oklch: color.oklch($color);
+	$L: list.nth($oklch, 1);
+	$C: list.nth($oklch, 2);
+	$H: list.nth($oklch, 3);
+
+	$L: math.clamp($L + (($number - 500) * $l), $lmin, $lmax);
+	$C: math.clamp($C + ((500 - $number) * $c), $cmin, $cmax);
+	$H: math.clamp($H + (($number - 500) * $h), $hmin, $hmax);
+
+	@return color.oklch($L, $C, $H);
+}
+
+
+
+
+// ┌─────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+// !                                                                                                         !
+// !   WARNING: Code beyond this point has been generated via script, anything changed will be overwritten   !
+// !                                                                                                         !
+// └─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+/* REPLACE_AFTER_THIS_LINE */
+
+// Updated at 2025-06-11T14:48:22.964Z
+
+
+
