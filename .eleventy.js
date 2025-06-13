@@ -22,7 +22,7 @@ export const config = {
 		output: "__dev", // the npm build command overrides this to '__dist'
 		includes: "modules/_includes",
 		// data: "_data",
-		// layouts: "_layouts",
+		layouts: "modules/_layouts",
 	},
 };
 

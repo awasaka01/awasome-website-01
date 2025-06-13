@@ -50,4 +50,7 @@
             }
         ]
     },
+	"files.associations": {
+		"*.html": "liquid",
+	}
 }

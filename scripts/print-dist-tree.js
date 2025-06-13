@@ -36,7 +36,15 @@ function printTree (startDir, colors = {}, symbols = {}) {
 	}
 
 	const scanDirectory = (currentPath, prefix = []) => {
-		const files = readdirSync(currentPath);
+		let files = readdirSync(currentPath);
+		// Sort: files first, then directories, both alphabetically
+		files = files.sort((a, b) => {
+			const aIsDir = statSync(join(currentPath, a)).isDirectory();
+			const bIsDir = statSync(join(currentPath, b)).isDirectory();
+			if (aIsDir === bIsDir) return a.localeCompare(b);
+			return aIsDir ? 1 : -1; // files first
+		});
+
 		const folderSize = getFolderSize(currentPath);
 		output += colors.fileSize(ansis.gray(` [${(folderSize / 1024).toFixed(2)} KB]`));
 
