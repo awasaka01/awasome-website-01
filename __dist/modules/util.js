@@ -1,5 +1,8 @@
+//
+// AWA'S AWESEOEME UTILS!!!
+//
 
-
+import fsp from "fs/promises";
 /**
  * ? Generates a random element from the array.
  * @returns {unknown} A random element from the array.
@@ -23,6 +26,7 @@ Array.prototype.sum = function () {	return this.reduce((a, c) => a + c, 0); };
  * @returns {number} A random integer between min and max.
  */
 const rr = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
 
 /**
  * ? Generates a random color as a hex string.
@@ -50,7 +54,7 @@ const randomColor = ({
 };
 
 /**
- * Pauses execution for a given number of milliseconds.
+ * Returns a promise that resolves after the given time.
  * @param {number} [t=1000] - The time to pause in milliseconds.
  * @returns {Promise<void>} A promise that resolves after the given time.
  */
@@ -71,6 +75,9 @@ const getDistance = (coordA, coordB) => Math.sqrt((coordA[0] - coordB[0]) ** 2 +
  * @returns {Array<Object>} A new array with duplicates removed.
  */
 const removeDuplicatesByID = (keyname, array) => [...array.reduce((a, c) => { a.set(c[keyname], c); return a; }, new Map()).values()];
+
+
+
 
 // Performance Analyzer
 const values = {};
@@ -128,6 +135,156 @@ const characters = {
 	gohuSupported: "!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ￿",
 };
 
+function longestIn (array) {
+	let longest = { length: 0 };
+	for (let x of array) if (longest.length < x.length) longest = x;
+	return longest;
+}
 
-const obj = { rr, randomColor, pause, getDistance, removeDuplicatesByID, characters };
+class Matrix {
+	constructor (array) {
+		this.array = array;
+		return this;
+	}
+
+
+	transpose () { this.array = Matrix.transpose(this.array); return this; }
+	static transpose (matrix) {
+		Matrix.validate(matrix);
+
+		const output = [];
+		const longestRowLength = longestIn(matrix).length;
+
+		for(let i = 0; i < matrix.length; i++) {
+			for(var j = 0; j < longestRowLength; j++) {
+				if (output[j] === undefined) output[j] = [];
+				output[j][i] = matrix[i][j] ?? "";
+			}
+		}
+		return output;
+	}
+
+
+	reverseRows () { this.array = Matrix.reverseRows(this.array); return this; }
+	static reverseRows (matrix) {
+		Matrix.validate(matrix);
+		for(let i = 0; i < matrix.length; i++) { matrix[i].reverse(); }
+		return matrix;
+	}
+
+
+	// longestRow () { this.array = Matrix.validate(this.array); return this; }
+	// static longestRow (matrix) { if (!Array.isArray(matrix) || matrix.some((row) => !Array.isArray(row))) { throw new Error("rotate2DArray: Array must be a 2D array, got " + JSON.stringify(matrix)); } return matrix; }
+
+
+
+	validate () { this.array = Matrix.validate(this.array); return this; }
+	static validate (matrix) { if (!Array.isArray(matrix) || matrix.some((row) => !Array.isArray(row))) { throw new Error("rotate2DArray: Array must be a 2D array, got " + JSON.stringify(matrix)); } return matrix; }
+
+
+	rotate () { this.array = Matrix.rotate(this.array); return this; }
+	static rotate (matrix, angle = 90) {
+		Matrix.validate(matrix);
+
+		// Validate Angle
+		if (angle % 90 !== 0) throw new Error("rotate2DArray: Angle must be a multiple of 90 degrees, got " + angle);
+		angle = (angle < 0 ? 360 + angle : angle) % 360; // Allow negative angles (-90 to 270) and large (720 to 360)
+
+		if (angle === 0 || angle === 360) return matrix;
+		if (angle === 90) return Matrix.reverseRows(Matrix.transpose(matrix));
+		if (angle === 180) return (Matrix.reverseRows(matrix)).reverse();
+		if (angle === 270) return Matrix.transpose(Matrix.reverseRows(matrix));
+	}
+}
+
+	/*
+	To rotate a 2D matrix (or 2D array) by 90 degrees clockwise, the common approach involves transposing the matrix and then reversing each row. A transposition swaps rows and columns, while reversing each row effectively rotates the matrix.
+	*/
+	// console.log("\n", Matrix.rotate([["a", "1"], ["b", "2"], ["c", "3"]], 0).map((x) => x.join(" - ")).join("\n"));
+	// console.log("\n", Matrix.rotate([["a", "1"], ["b", "2"], ["c", "3"]], 90).map((x) => x.join(" - ")).join("\n"));
+	// console.log("\n", Matrix.rotate([["a", "1"], ["b", "2"], ["c", "3"]], 180).map((x) => x.join(" - ")).join("\n"));
+	// console.log("\n", Matrix.rotate([["a", "1"], ["b", "2"], ["c", "3"]], -90).map((x) => x.join(" - ")).join("\n"));
+
+	// console.log("\nrow1:");
+	// console.log(Matrix.transpose([[11, 12, 13], [14, 15, 16, 19, 12], [99], [99], [99], [99], [99], [99]]));
+	// console.log("\nrow2:");
+	// console.log(Matrix.transpose(["a", "1"], ["b", "2"], ["c", "3"]));
+	// console.log("\nrow3:");
+	// const m = new Matrix([[1, 2, 3], [4, 5, 6]]);
+	// console.log(m.transpose());
+
+const removeANSI = (str) => str.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/gi, "");
+
+
+
+
+
+async function scanDirectoryRecursive (startDir) {
+
+	let filesList = { [startDir]: { name: startDir, parents: [], size: 0, order: 1 } };
+	const scanDirectory = async (pathtoScan) => {
+		return await Promise.all((await fsp.readdir(pathtoScan, { withFileTypes: true })).map(async (file, i) => {
+			const object = {
+				name: (pathtoScan + "/" + file.name),
+				fileName: file.name,
+				parents: [filesList[pathtoScan], ...filesList[pathtoScan].parents],
+				size: 0,
+			};
+			object.order = object.parents.length * 10;
+
+			// If folder, run this function again on each
+			if (file.isDirectory()) {
+				filesList[object.name] = object;
+				await scanDirectory((pathtoScan + "/" + file.name));
+			}
+
+			// If file, set own filesize and to filesize total on all parent folders
+			else {
+				object.order += 1;
+				object.size = (await fsp.stat(object.name)).size;
+				object.parents.forEach((p, i) => object.parents[i].size += object.size);
+				filesList[object.name] = object;
+			}
+		}));
+	};
+	await scanDirectory(startDir);
+	return Object.values(filesList);
+}
+
+
+
+
+function formatColumns (lines, alignment = [], {
+	divider = "%%", line = " | ", trim = true, corners = ["╭", "╮", "╰", "╯"], hLine = "─",
+} = {}) {
+
+	const matrix = new Matrix(lines.map((l) => l.map((x) => trim ? x.toString().trim() : x))).rotate().reverseRows();
+	const maxLengths = matrix.array.map((row) => longestIn(row.map((x) => removeANSI(x))).length);
+
+
+	matrix.array = matrix.array.map((row, i) => {
+		const desiredLength = maxLengths[i];
+
+
+
+		return row.map((cell, j) => {
+			const length = removeANSI(cell).length;
+			const diff = Math.abs(length - cell.length);
+			// console.log(`length: ${length}, cell.length: ${cell.length}, desiredLength: ${desiredLength}, cell: '${cell}' diff: ${diff}`);
+
+
+			if (alignment[i] === "left" || alignment[i] === undefined) return cell.padEnd(desiredLength + diff, " ");
+			if (alignment[i] === "right") return cell.padStart(desiredLength + diff, " ");
+			if (alignment[i] === "center") return cell.padEnd(Math.round((desiredLength + diff + length) / 2), " ").padStart(desiredLength + diff, " ");
+		});
+	});
+
+
+
+	return matrix.rotate(-90).reverseRows().array.map((x) => x.join(line)).join("\n");
+}
+
+
+
+const obj = { rr, randomColor, pause, getDistance, removeDuplicatesByID, formatColumns, characters, scanDirectoryRecursive };
 export default obj;

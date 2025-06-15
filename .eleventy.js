@@ -44,7 +44,7 @@ export const config = {
 /** [Intellisense Support] @param {import("@11ty/eleventy").UserConfig} eleventyConfig */
 export default async function (eleventyConfig) {
 	// Copy most files straight through for Vite to process
-	// eleventyConfig.addPassthroughCopy("src/assets");
+	eleventyConfig.addPassthroughCopy("src/assets");
 	// eleventyConfig.addPassthroughCopy("src/**/*.{js,ts,jsx,tsx}"); // src/**/*.!(html)"
 
 	// Files to process with 11ty as templates [https://www.11ty.dev/docs/#step-4-create-some-templates]

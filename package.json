@@ -40,6 +40,7 @@
 		"eleventy-sass": "^2.2.6",
 		"fantasticon": "^3.0.0",
 		"fontverter": "^2.0.0",
+		"get-folder-size": "^5.0.0",
 		"gsap": "^3.13.0",
 		"html-minifier-terser": "^7.2.0",
 		"jsonminify": "^0.4.2",

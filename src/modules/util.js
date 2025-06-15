@@ -2,7 +2,7 @@
 // AWA'S AWESEOEME UTILS!!!
 //
 
-import ansis, { hex } from "ansis";
+import fsp from "fs/promises";
 /**
  * ? Generates a random element from the array.
  * @returns {unknown} A random element from the array.
@@ -216,31 +216,74 @@ class Matrix {
 const removeANSI = (str) => str.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/gi, "");
 
 
+
+
+
+async function scanDirectoryRecursive (startDir) {
+
+	let filesList = { [startDir]: { name: startDir, parents: [], size: 0, depth: 1, children: [], isDirectory: true } };
+	const scanDirectory = async (pathtoScan) => {
+		return await Promise.all((await fsp.readdir(pathtoScan, { withFileTypes: true })).map(async (file, i) => {
+			const object = {
+				name: (pathtoScan + "/" + file.name),
+				fileName: file.name,
+				parents: [filesList[pathtoScan], ...filesList[pathtoScan].parents],
+				children: [],
+				size: 0,
+				isDirectory: file.isDirectory(),
+			};
+			object.depth = object.parents.length * 10;
+					filesList[pathtoScan].children.push(object);
+
+			// If folder, run this function again on each
+			if (object.isDirectory) {
+				filesList[object.name] = object;
+				await scanDirectory((pathtoScan + "/" + file.name));
+			}
+
+			// If file, set own filesize and to filesize total on all parent folders
+			else {
+				object.depth += 1;
+				object.size = (await fsp.stat(object.name)).size;
+				object.parents.forEach((_, i) => {
+					object.parents[i].size += object.size;
+				});
+				filesList[object.name] = object;
+			}
+		}));
+	};
+	await scanDirectory(startDir);
+	return Object.values(filesList).sort((a, b) => a.depth - b.depth);
+}
+
+
+
+
 function formatColumns (lines, alignment = [], {
 	divider = "%%", line = " | ", trim = true, corners = ["╭", "╮", "╰", "╯"], hLine = "─",
 } = {}) {
 
-	const matrix = new Matrix(lines.map((l) => l.split(divider).map((x) => trim ? x.trim() : x))).rotate().reverseRows();
-
-	console.log(JSON.stringify(removeANSI(hex("#00b9be")`EWERWEIUWIEY`)));
-
-
+	const matrix = new Matrix(lines.map((l) => l.map((x) => trim ? x.toString().trim() : x))).rotate().reverseRows();
 	const maxLengths = matrix.array.map((row) => longestIn(row.map((x) => removeANSI(x))).length);
 
-console.log(matrix.array);
 
 	matrix.array = matrix.array.map((row, i) => {
 		const desiredLength = maxLengths[i];
-		console.log(desiredLength);
+
+
 
 		return row.map((cell, j) => {
 			const length = removeANSI(cell).length;
+			const diff = Math.abs(length - cell.length);
+			// console.log(`length: ${length}, cell.length: ${cell.length}, desiredLength: ${desiredLength}, cell: '${cell}' diff: ${diff}`);
 
-			if (alignment[i] === "left" || alignment[i] === undefined) return cell.padEnd(desiredLength, " ");
-			if (alignment[i] === "right") return cell.padStart(desiredLength, " ");
-			if (alignment[i] === "center") return cell.padStart(Math.floor(desiredLength / 2), " ").padEnd(desiredLength, " ");
+
+			if (alignment[i] === "left" || alignment[i] === undefined) return cell.padEnd(desiredLength + diff, " ");
+			if (alignment[i] === "right") return cell.padStart(desiredLength + diff, " ");
+			if (alignment[i] === "center") return cell.padEnd(Math.round((desiredLength + diff + length) / 2), " ").padStart(desiredLength + diff, " ");
 		});
 	});
+
 
 
 	return matrix.rotate(-90).reverseRows().array.map((x) => x.join(line)).join("\n");
@@ -248,5 +291,5 @@ console.log(matrix.array);
 
 
 
-const obj = { rr, randomColor, pause, getDistance, removeDuplicatesByID, formatColumns, characters };
+const obj = { rr, randomColor, pause, getDistance, removeDuplicatesByID, formatColumns, characters, scanDirectoryRecursive };
 export default obj;

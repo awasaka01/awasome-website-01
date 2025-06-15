@@ -1,8 +1,10 @@
 // Print a colorized, connected tree of the __dist directory using ansis and options object
 import { readdirSync, statSync } from "fs";
 import { join } from "path";
-import ansis, { hex } from "ansis";
+import ansis, { bg } from "ansis";
 import u from "../src/modules/util.js";
+import chroma from "chroma-js";
+import getFolderSize from "get-folder-size";
 
 let lines = [
 	"1hi!    %% uwuwu %% [12]",
@@ -13,108 +15,95 @@ let lines = [
 ];
 // lines =
 
-console.log(u.formatColumns(lines, ["left", "center", "right"]));
+
+// console.log(u.formatColumns(lines, ["left", "center", "right"]));
 
 
 
 
-/*
-function printTree (startDir, colors = {}, symbols = {}) {
+async function printTree (startDir, colors = {}, symbols = {}) {
 	const defaultColors = {
-		root: (str) => hex("#f55858")`${str}`,
-		file: (str) => hex("#ffe066")`${str}`,
-		folder: (str) => hex("#00b9be")`${str}`,
-		branch: (str) => hex("#96a2ad")`${str}`,
-		fileSize: (str) => hex("#96a2ad")`${str}`,
-		path: (str) => hex("#000000")`${str}`,
+		root: (str) => ansis.hex("#f5db58")`${str}/`,
+		file: (str) => ansis.hex("#fed1e8")`${str}`,
+		folder: (str) => ansis.hex("#0ceaf1")`${str}/`,
+		branch: (str) => ansis.hex("#6b616b")`${str}`,
+		divider: (str) => ansis.hex("#000000")`${str}`,
+		path: (str) => ansis.hex("#a8a3a8")`${str}`,
+		bg1: "#322e32",
+		bg2: "#282528",
+		bg3: "#202020",
+		// bg2: (str) => str,
+	};
+	const defaultSymbols = {
+		base: " ├─ ",
+		line: " ╎  ",
+		last: " ╰─ ",
+		none: "    ",
 	};
 	colors = { ...defaultColors, ...colors };
-	const defaultSymbols = {
-		file: colors.branch(" ├─ "),
-		line: colors.branch(" ╎  "),
-		last: colors.branch(" ╰─ "),
-		none: colors.branch("    "),
-	};
 	symbols = { ...defaultSymbols, ...symbols };
+	Object.entries(symbols).forEach(([key, value]) => symbols[key] = colors.branch(value));
+	console.log(symbols);
+
+	// Get all files in the directory, with sizes
+	let files = await u.scanDirectoryRecursive(startDir);
+
+	const maxBytesForColor = files[0].size / 2;
+	const formatFileSize = (bytes) => ansis.rgb(...chroma("#45704eff").mix("#b290ed", Math.min(bytes / maxBytesForColor, 1)).rgb())`${(bytes / 1024).toFixed(1)}kB`;
+	const removeANSI = (str) => str.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/gi, "");
 
 
-	function getFolderSize (dir) {
-		let total = 0;
-		for (const file of readdirSync(dir)) {
-			const stats = statSync(join(dir, file));
-			if (stats.isDirectory()) {
-				total += getFolderSize(join(dir, file));
-			} else {
-				total += stats.size;
-			}
+
+	let lines = [];
+
+	const abc = (file, parent, prefix = []) => {
+		let prefixSelf = [];
+		let prefixChildren = [];
+
+		const isLast = parent.children.at(-1) === file;
+		const isRoot = file === files[0];
+
+		// Calculate prefix of self and children
+		if (isRoot) {}
+		else if (isLast) {
+			prefixSelf = [...prefix, symbols.last];
+			prefixChildren = [...prefix, symbols.none];
 		}
-		return total;
-	}
-
-	const output = [`${colors.root(`${startDir}/`)}%%${getFolderSize(startDir)}`];
-
-	const scanDirectory = (currentPath, prefix = []) => {
-		let files = readdirSync(currentPath);
-		// Sort: files first, then directories, both alphabetically
-		files = files.sort((a, b) => {
-			const aIsDir = statSync(join(currentPath, a)).isDirectory();
-			const bIsDir = statSync(join(currentPath, b)).isDirectory();
-			if (aIsDir === bIsDir) return a.localeCompare(b);
-			return aIsDir ? 1 : -1; // files first
-		});
-
-		const folderSize = colors.fileSize(colors.fileSize(` [${(getFolderSize(currentPath) / 1024).toFixed(2)} KB]`));
-
-		files.forEach((file, idx) => {
-			const stats = statSync(join(currentPath, file));
-
-			const isLast = idx === files.length - 1;
-			const isFolder = stats.isDirectory();
-			const fileSize = isFolder ? folderSize : colors.fileSize(`[${(stats.size / (1024)).toFixed(2)} KB]`);
-
-			const displayName = isFolder ? colors.folder(file + "/") : colors.file(file);
-
-			// Decide which prefix to add based on whether it's the last file in the directory
-			if (isLast) { prefix.push(symbols.last); }
-			else { prefix.push(symbols.file); }
-
-			const line = `${prefix.join("")}${displayName} ${fileSize} ^w^ ${colors.path(join(currentPath, file))}`;
-			output.push(line);
+		else {
+			prefixSelf = [...prefix, symbols.base];
+			prefixChildren = [...prefix, symbols.line];
+		}
 
 
-			if (isFolder) {
-				// For children, replace the last prefix with 'none' if last, or 'line' if not last
-				prefix[prefix.length - 1] = isLast ? symbols.none : symbols.line;
-				scanDirectory(join(currentPath, file), prefix);
-			}
-			prefix.pop();
-		});
+		// Add line
+		const fileName = file.name.split("/").pop();
+		lines.push([
+			`${prefixSelf.join("")}${isRoot ? colors.root(fileName) : file.isDirectory ? colors.folder(fileName) : colors.file(fileName)}`,
+			// info.join(" "),
+			formatFileSize(file.size),
+			colors.path(file.name),
+		]);
+
+
+		// Repeat function on all children
+		if (file.isDirectory) { file.children.forEach((child, i) => abc(child, file, prefixChildren)); }
 	};
-
-	scanDirectory(startDir);
-
-	const stripColorCodes = (str) => str.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/gi, "");
-
-	// Calculate longest line length
-	const longestLine = output.reduce((longest, line) => Math.max(longest, stripColorCodes(line.split("^w^")[0]).length), 0);
-
-
-	// Add padding to all lines to make them the same length
-	output.forEach((line, i) => {
-		const split = line.split("^w^");
-		const lengthOfFirstPart = stripColorCodes(split[0]).length;
-		// const lengthOfSecondPart = stripColorCodes(split[1]).length;
-		const padding = " ".repeat(longestLine - lengthOfFirstPart);
-
-		output[i] = line.replace("^w^", padding);
-	});
+	abc(files[0], files[0]);
 
 
 
+	// Format into aligned columns
+	let columns = await u.formatColumns(lines, ["left", "right"], { line: colors.divider("   ") });
 
-	return output.join("\n");
+	// Add alternating background colors
+	columns = columns.split("\n").map((line, i) => ansis.bgHex(colors[(["bg1", "bg2", "bg3", "bg2", "bg1"][i % 2])])`${line}`);
+	return columns.join("\n");
 }
-console.log(printTree("__dist"));
+
+
+
+
+console.log(await printTree("__dist"));
 
 
 /**/
