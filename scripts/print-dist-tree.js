@@ -43,7 +43,6 @@ async function printTree (startDir, colors = {}, symbols = {}) {
 	colors = { ...defaultColors, ...colors };
 	symbols = { ...defaultSymbols, ...symbols };
 	Object.entries(symbols).forEach(([key, value]) => symbols[key] = colors.branch(value));
-	console.log(symbols);
 
 	// Get all files in the directory, with sizes
 	let files = await u.scanDirectoryRecursive(startDir);

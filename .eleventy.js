@@ -37,6 +37,8 @@ export const config = {
 		data: "modules/_data",
 		layouts: "modules/_layouts",
 	},
+	htmlTemplateEngine: "liquid",
+
 };
 
 
@@ -44,11 +46,12 @@ export const config = {
 /** [Intellisense Support] @param {import("@11ty/eleventy").UserConfig} eleventyConfig */
 export default async function (eleventyConfig) {
 	// Copy most files straight through for Vite to process
-	eleventyConfig.addPassthroughCopy("src/assets");
+	eleventyConfig.setQuietMode(true);
+	// eleventyConfig.addPassthroughCopy("src/assets");
 	// eleventyConfig.addPassthroughCopy("src/**/*.{js,ts,jsx,tsx}"); // src/**/*.!(html)"
 
 	// Files to process with 11ty as templates [https://www.11ty.dev/docs/#step-4-create-some-templates]
-	eleventyConfig.addTemplateFormats("html,liquid,css,scss,njk,11ty.js,11ty.ts,11ty.jsx,11ty.tsx,js");
+	eleventyConfig.setTemplateFormats("html,md,liquid,css,scss,njk,11ty.js,11ty.ts,11ty.jsx,11ty.tsx,js");
 
 	// eleventyConfig.addPassthroughCopy({ "src/pages/": "/" });
 
@@ -57,6 +60,13 @@ export default async function (eleventyConfig) {
 	// eleventyConfig.addPlugin(syntaxHighlight);
 	// eleventyConfig.addPlugin(dirOutputPlugin);
 	// eleventyConfig.addPlugin(eleventyImageTransformPlugin, { formats: ["webp"] });
+	let options = {
+		html: true,
+		breaks: true,
+		linkify: true,
+	};
+
+	eleventyConfig.setLibrary("md", markdownIt(options));
 
 	function makeExt (fileExtensions = [], { options = {}, compileFn = (x) => () => x, compileOptions = {} }) {
 		fileExtensions.forEach((fileExtension) => {

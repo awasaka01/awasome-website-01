@@ -221,34 +221,39 @@ const removeANSI = (str) => str.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:
 
 async function scanDirectoryRecursive (startDir) {
 
-	let filesList = { [startDir]: { name: startDir, parents: [], size: 0, order: 1 } };
+	let filesList = { [startDir]: { name: startDir, parents: [], size: 0, depth: 1, children: [], isDirectory: true } };
 	const scanDirectory = async (pathtoScan) => {
 		return await Promise.all((await fsp.readdir(pathtoScan, { withFileTypes: true })).map(async (file, i) => {
 			const object = {
 				name: (pathtoScan + "/" + file.name),
 				fileName: file.name,
 				parents: [filesList[pathtoScan], ...filesList[pathtoScan].parents],
+				children: [],
 				size: 0,
+				isDirectory: file.isDirectory(),
 			};
-			object.order = object.parents.length * 10;
+			object.depth = object.parents.length * 10;
+					filesList[pathtoScan].children.push(object);
 
 			// If folder, run this function again on each
-			if (file.isDirectory()) {
+			if (object.isDirectory) {
 				filesList[object.name] = object;
 				await scanDirectory((pathtoScan + "/" + file.name));
 			}
 
 			// If file, set own filesize and to filesize total on all parent folders
 			else {
-				object.order += 1;
+				object.depth += 1;
 				object.size = (await fsp.stat(object.name)).size;
-				object.parents.forEach((p, i) => object.parents[i].size += object.size);
+				object.parents.forEach((_, i) => {
+					object.parents[i].size += object.size;
+				});
 				filesList[object.name] = object;
 			}
 		}));
 	};
 	await scanDirectory(startDir);
-	return Object.values(filesList);
+	return Object.values(filesList).sort((a, b) => a.depth - b.depth);
 }
 
 

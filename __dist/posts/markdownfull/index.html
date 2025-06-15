@@ -1,6 +1,3 @@
----
-title: My Rad Liquid Blog Post
----
 <!DOCTYPE html>
 <html lang="en">
 <head>
