@@ -8,7 +8,10 @@ import browserslist from "browserslist";
 import { browserslistToTargets } from "lightningcss";
 import markdownIt from "markdown-it";
 import path from "path";
-import { compile } from "sass";
+import * as sass from "sass-embedded";
+const sassOptions = { // https://sass-lang.com/documentation/js-api/interfaces/stringoptions/#loadPaths
+	loadPaths: ["./src/modules/_styles"], // sourceMap: true,
+};
 
 
 // 11ty Plugins
@@ -34,11 +37,10 @@ export const config = {
 		input: "src",
 		output: "__dist",
 		includes: "modules/_includes",
-		data: "modules/_data",
+		// data: "modules/_data",
 		layouts: "modules/_layouts",
 	},
 	htmlTemplateEngine: "liquid",
-
 };
 
 
@@ -51,15 +53,17 @@ export default async function (eleventyConfig) {
 	// eleventyConfig.addPassthroughCopy("src/**/*.{js,ts,jsx,tsx}"); // src/**/*.!(html)"
 
 	// Files to process with 11ty as templates [https://www.11ty.dev/docs/#step-4-create-some-templates]
-	eleventyConfig.setTemplateFormats("html,md,liquid,css,scss,njk,11ty.js,11ty.ts,11ty.jsx,11ty.tsx,js");
+	eleventyConfig.setTemplateFormats(["html", "md", "liquid", "css", "scss", "njk", "11ty.js", "11ty.ts", "11ty.jsx", "11ty.tsx", "js", "jsx", "ts", "tsx"]);
 
 	// eleventyConfig.addPassthroughCopy({ "src/pages/": "/" });
 
 	// Compile SCSS with an 11ty plugin, Vite can do it but this provides easier debugging
 
-	// eleventyConfig.addPlugin(syntaxHighlight);
-	// eleventyConfig.addPlugin(dirOutputPlugin);
-	// eleventyConfig.addPlugin(eleventyImageTransformPlugin, { formats: ["webp"] });
+
+
+	eleventyConfig.addPlugin(syntaxHighlight);
+	eleventyConfig.addPlugin(dirOutputPlugin);
+	eleventyConfig.addPlugin(eleventyImageTransformPlugin, { formats: ["webp"] });
 	let options = {
 		html: true,
 		breaks: true,
@@ -68,10 +72,10 @@ export default async function (eleventyConfig) {
 
 	eleventyConfig.setLibrary("md", markdownIt(options));
 
-	function makeExt (fileExtensions = [], { options = {}, compileFn = (x) => () => x, compileOptions = {} }) {
+	function makeExt (fileExtensions = [], { outputExtension = null, options = {}, compileFn = (x) => () => x, compileOptions = {} }) {
 		fileExtensions.forEach((fileExtension) => {
 			eleventyConfig.addExtension(fileExtension, {
-				...options, outputFileExtension: fileExtension,
+				...options, outputFileExtension: outputExtension ?? fileExtension,
 				compile: compileFn,
 				compileOptions: {
 					permalink: function (contents, inputPath) {
@@ -83,7 +87,7 @@ export default async function (eleventyConfig) {
 							// console.log(data.page);
 							const folder = data.page.filePathStem.split("/").slice(0, -2).join("/");
 							const move = directoriesToMove[folder];
-							const t = `${move}/${data.page.filePathStem.replace(folder, "")}.${fileExtension}`;
+							const t = `${move}/${data.page.filePathStem.replace(folder, "")}.${outputExtension ?? fileExtension}`;
 							// console.log(inputPath, folder, move, t);
 							if (move) return t;
 						};
@@ -93,31 +97,19 @@ export default async function (eleventyConfig) {
 			});
 		});
 	}
-	makeExt(["js", "jsx", "html"], { });
-	makeExt(["scss"], { });
-
-	// eleventyConfig.addExtension("js", {
-	// 	outputExtension: "js",
-	// 	compileOptions: {
-	// 		permalink: function (contents, inputPath) {
-	// 			return (data) => {
-
-	// 			const folder = data.page.filePathStem.split("/").slice(0, -2).join("/");
-	// 			const move = directoriesToMove[folder];
-	// 			const t = `${move}/${data.page.filePathStem.replace(folder, "")}.js`;
-	// 			console.log(inputPath, folder, move, t);
-	// 			if (move) return t;
-	// 		};
-	// 		},
-	// 	},
-	// 	compile: (inputContent, inputPath) => {
-	// 		return (a, b, c) => inputContent;
-	// 	},
-	// });
+	makeExt(["js", "jsx", "ts", "tsx"], { });
+	makeExt(["scss"], { outputExtension: "css", compileFn: (fileContent) => {
+		return (data, inputPath) => {
+			if (data.page.fileSlug.startsWith("_")) return;
+			return sass.compileString(fileContent, sassOptions).css;
+			// return compile(contents, { sourceMap: false }).css;
+		};
+	} });
 
 
-	// if (process.argv.includes("--novite")) return;
-	return;
+	// return; // if (process.argv.includes("--novite")) return;
+
+
 	// Add Vite as middleware for handling of; minification, react, typescript, etc. [https://www.11ty.dev/docs/plugins/#eleventy-plugin-vite]
 	eleventyConfig.addPlugin(EleventyVitePlugin, {
 		// tempFolderName: `__temp-${Math.random().toString(36).slice(2)}`, // seems to help with EPERM: operation not permitted, rename?

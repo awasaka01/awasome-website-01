@@ -2,9 +2,9 @@
 // Overwrite by setting dirNameOverride: "new-folder-name"
 export default {
 // 	 eleventyComputed: {
-// 		permalink: function (data) {
-// 	console.log(data.page.inputPath);
-// },
+		permalink: function (data) {
+			return data.page.fileSlug + "/index." + data.page.outputFileExtension;
+		},
 	// console.log(data.page.inputPath);
 
 	// return false;

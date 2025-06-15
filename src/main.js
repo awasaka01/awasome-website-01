@@ -10,6 +10,6 @@ document.addEventListener("DOMContentLoaded", async (event) => {
 	document.body.style.backgroundColor = chroma.random().hex();
 }, { once: true });
 
-ReactDOM.createRoot(
-	document.getElementById('app')
-).render(<App />);
+// ReactDOM.createRoot(
+// 	document.getElementById('app')
+// ).render(<App />);

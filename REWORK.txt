@@ -1,4 +1,4 @@
-
+ 
 
 
 
@@ -56,7 +56,7 @@ leave ability for futeure adding:
 	- optimize to a lower res .min.webp and a regular .webp
 	- replace all html and css refrences to the original image to double-load the webps instead
 - emoji support
-
+- sourcemaps (helps debugging tools)
 
 
 
