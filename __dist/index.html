@@ -1,63 +1,22 @@
 <!-- /\ this is called front matter https://www.11ty.dev/docs/data-frontmatter/ -->
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head> 
-	<!-- Meta -->	
-<meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="author" content="awa"/>
-<meta name="description" content="silly little website">
-
-
-<!-- Display -->
-<title>awasomewebsite 01</title>
-<link rel="icon" href="/assets/favicon-ClXlJplK.ico" type="image/gif"/>
-
-
-<!-- [?] chroma.js - Color Helper [https://gka.github.io/chroma.js/] -->
-<!-- How to use: Add <import chroma from "chroma-js"> to your file-->
-<!-- For autocompletion: Install the module's types locally (@types/chroma-js) Add /// <reference types="chroma-js"/> to the top of your file -->
-
-
-
-
-<!-- Local CSS and JS -->
-
-
-<!-- GSAP - Animation Library [https://gsap.com/docs/] -->
-
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
- <!-- Use same head for all pages by including the same file -->
+	{% include "head.html" %} <!-- Use same head for all pages by including the same file -->
 	<!-- Icons: --> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<script type="importmap">
-{
-  "imports": {
-    "react": "https://unpkg.com/react@18.2.0/umd/react.production.min.js",
-    "react-dom/client": "https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js",
-    "chroma-js": "https://unpkg.com/chroma-js@3.1.2/es/index.js"
-  }
-}
-</script>
-  <script type="module" crossorigin src="/assets/index-DxfstCDG.js"></script>
-  <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
-  <link rel="stylesheet" crossorigin href="/assets/index-GOijSPvP.css">
 </head>
 <body>
-	<div>
-	<h1 style="background-color: #680000; color: #fff;"><b><u>JavaScript is required to run this site!!!</u></b></h1>
-</div> <!-- Warning shown when JavaScript is disabled -->
+	{% include "noscript.html" %} <!-- Warning shown when JavaScript is disabled -->
 
 	<a href="./color-preview/">Color Preview Page</a>
 	<a href="./template/">Template Page</a>
-	
+
+	<img src="./assets/images/snow.webp" alt="" srcset="">
+	<img src="./assets/images/background-layer-1.png" alt="" srcset="">
+	{% comment %} {{ page | log }} {% endcomment %}
 	<div id="app"></div>
-	<h1>:3</h1>
-<h2>:3</h2>
-<h3>:3</h3>
-<h4>:3</h4>
-<h5>:3</h5>
-<h6>:3</h6>
+	{% include "hello.html" %}
 </body>
 </html>

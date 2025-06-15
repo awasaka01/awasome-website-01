@@ -12,15 +12,18 @@
 		"url": "git+https://github.com/awasaka01/awasome-website-01.git"
 	},
 	"scripts": {
-		"start": "eleventy --serve --quiet",
-		"build": "set DEBUG=Eleventy:Benchmark* && eleventy --output=__dist && node scripts/print-dist-tree.js",
+		"start": "eleventy --serve --quiet --output=__dev",
+		"build": "rimraf __dist/* -g && eleventy && node scripts/print-dist-tree.js",
+		"build:bench": "rimraf __dist/* -g && set DEBUG=Eleventy:Benchmark* && eleventy --output=__dist && node scripts/print-dist-tree.js",
 		"findrules": "stylelint-find-new-rules",
 		"fontconvert": "node scripts/font-converter/index.js"
 	},
 	"dependencies": {
 		"@11ty/eleventy": "^3.1.0",
 		"@11ty/eleventy-img": "^6.0.4",
+		"@11ty/eleventy-plugin-directory-output": "^1.0.1",
 		"@11ty/eleventy-plugin-rss": "^2.0.4",
+		"@11ty/eleventy-plugin-syntaxhighlight": "^5.0.1",
 		"@11ty/eleventy-plugin-vite": "^6.0.0",
 		"@11tyrocks/eleventy-plugin-sass-lightningcss": "^1.3.0",
 		"@jgarber/eleventy-plugin-sass": "^2.1.0",
@@ -41,8 +44,10 @@
 		"html-minifier-terser": "^7.2.0",
 		"jsonminify": "^0.4.2",
 		"lightningcss": "^1.30.1",
+		"markdown-it": "^14.1.0",
 		"nodemon": "^3.1.10",
 		"npm-run-all": "^4.1.5",
+		"patch-package": "^8.0.0",
 		"postcss": "^8.5.3",
 		"postcss-scss": "^4.0.9",
 		"query-ast": "^1.0.5",
@@ -62,7 +67,8 @@
 		"svgtofont": "^6.3.2",
 		"typescript": "^5.8.3",
 		"uglify-js": "^3.19.3",
-		"vite-plugin-font": "^5.1.2"
+		"vite-plugin-font": "^5.1.2",
+		"vite-plugin-image-optimizer": "^1.1.8"
 	},
 	"devDependencies": {
 		"sass": "^1.89.0"

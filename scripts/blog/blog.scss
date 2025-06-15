@@ -1,0 +1,67 @@
+@use "colors" as *;
+@use "fonts" as *;
+@use "sass:color";
+$background-color: $bg;
+$title-color: cl($fg, 500, 600);
+$foreground-color: cl($fg, 500, 999);
+$line-color: $hi;
+
+
+
+body {
+	margin: 4% auto;
+	max-width: 900px;
+	font-family: "RobotoMono";
+
+
+	color: $foreground-color;
+	background-color: cl($background-color, 400, 400);
+}
+img {
+	max-width: 100%;
+	height: auto;
+	aspect-ratio: initial;
+}
+
+main {
+	padding: 30px;
+	background-color: $background-color;
+	// background-color: color.change(lch(#000), $lightness: 0.5, $chroma: 0.1, $hue: 111, $space: oklch);
+}
+
+h1, h2, h3, h4, h5, h6 {
+	color: $title-color;
+}
+
+a {
+	color: $line-color;
+	text-decoration-color: cl($line-color, 200, 500);
+	&:hover {
+		color: cl($line-color, 900);
+		text-decoration: wavy underline cl($line-color, 400);
+		text-decoration-skip-ink: none;
+		text-shadow: 0 0 2px cl($line-color, 700, 700);
+	}
+}
+
+// Code Blocks
+pre {
+	border-radius: 40px;
+}
+
+hr {
+	border-color: $line-color;
+	box-shadow: 0 0 5px 0 $line-color;
+	opacity: 0.9;
+}
+@counter-style circled-alpha {
+	system: fixed;
+	symbols: ✽ ✾ ✿ ❀ ❁ ❃ ❊ ❋ ✣ 🎕 ⚜ ⚘;
+	suffix: " ";
+}
+
+li::marker { color:  cl($foreground-color, 500, 700); }
+ul { list-style: "✽ "; }
+ul ul { list-style: "✫ "; }
+ul ul ul { list-style: "♡ "; }
+ul ul ul ul { list-style: "◇ "; }

@@ -1,8 +1,23 @@
-astro would be better but i just want to use 11ty because um i like it
 
-ISSUES ENCOUNTERED:
-- "main.css doesn't exist at build time, it will remain unchanged to be resolved at runtime"
-+ solution: links to scss files should be main.scss instead of main.css, vite will change the imports during build
+
+
+
+
+
+
+
+
+https://dev.to/p/publishing_from_rss_guide
+https://dev.to/weakish/import-posts-to-dev-to-via-rss-dlj
+
+
+
+
+FEATURES
+- [ ] 
+
+
+
 
 
 
@@ -16,20 +31,81 @@ vite adds:
 others:
 - scss compiling with 11ty
 - html templates with 11ty
--  
+- blog page generation
 
 scripts to run manually when needed:
 - font conversion script
 
 
-
 todo:
 - ability to use typescript OR javascript anywhere (with react)
+- image compression 
+- redux, easy to manage global states with subscribe and call methods, useful with react
+- blog system using markdown files
+	- arbitrary code inside the markdown files (that will be removed during rss feed conversion)
+	- tags, dates, 
+	https://dev.to/p/publishing_from_rss_guide https://dev.to/p/editor_guide https://www.11ty.dev/docs/plugins/rss/
+- get a clean order of operations
+
+leave ability for futeure adding:
+- code testing
+- performance analayzer
+- rss feed, and auto post to dev.to
+- add babel, just to learn it
+- own custom image optimizer plugin
+	- optimize to a lower res .min.webp and a regular .webp
+	- replace all html and css refrences to the original image to double-load the webps instead
+- emoji support
+
+
+
+
+
+
+order:
+https://www.11ty.dev/docs/transforms/#plugins
+
+
+
+
+collections: https://github.com/11ty/eleventy/issues/981
+
+[https://www.11ty.dev/docs/shortcodes/]
+[https://www.11ty.dev/docs/filters/#eleventy-provided-filters]
+https://vento.js.org/getting-started/
+
+
+
+
+
+
+
+astro would be better but i just want to use 11ty because um i like it
+
+ISSUES ENCOUNTERED:
+- "main.css doesn't exist at build time, it will remain unchanged to be resolved at runtime"
++ solution: links to scss files should be main.scss instead of main.css, vite will change the imports during build
+
+EPERM: operation not permitted, rename
+disabling extensions seem to fix
+
+
+
+{
+inputPath: './src/index.html',
+fileSlug: '',
+filePathStem: '/index',
+outputFileExtension: 'html',
+templateSyntax: 'liquid',
+date: 2025-01-28T05:52:52.232Z,
+rawInput: html' +
+'\r\n' +
+'<!DOCTYPE html>\r\n'
+url: '/',
+outputPath: './__dist/index.html'
+}
+
 - precompile react into static-ish html, https://create-react-app.dev/docs/pre-rendering-into-static-html-files/
-- dark mode theme
-- rss feed
-
-
 # REWORK DESIRED
  
 
@@ -52,7 +128,6 @@ output:
 input (the code i have to look at and make):
 - typescript
 - react
-- redux, easy to manage global states with subscribe and call methods, useful with react
 - sass
 - eslint, enforce working and good looking js
 - stylelint, enforce working and good looking css
@@ -61,11 +136,6 @@ others:
 - pnpm for package management
 
 
-### leave ability for futeure adding:
-- code testing
-- performance analayzer
-- rss feed, and auto post to dev.to
-- add babel, just to learn it
 
 
 # notes:

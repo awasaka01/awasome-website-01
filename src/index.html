@@ -5,6 +5,7 @@ icon: null
 ---
 <!-- /\ this is called front matter https://www.11ty.dev/docs/data-frontmatter/ -->
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head> 
@@ -16,7 +17,10 @@ icon: null
 
 	<a href="./color-preview/">Color Preview Page</a>
 	<a href="./template/">Template Page</a>
-	
+
+	<img src="./assets/images/snow.webp" alt="" srcset="">
+	<img src="./assets/images/background-layer-1.png" alt="" srcset="">
+	{% comment %} {{ page | log }} {% endcomment %}
 	<div id="app"></div>
 	{% include "hello.html" %}
 </body>

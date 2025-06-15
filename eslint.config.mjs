@@ -27,7 +27,6 @@ export default [
 	"no-const-assign": "error",
 	"no-constant-binary-expression": "error",
 	"no-constant-condition": "error",
-	"no-control-regex": "error",
 	"no-debugger": "error",
 	"no-dupe-args": "error",
 	"no-dupe-class-members": "error",
@@ -130,6 +129,7 @@ export default [
 
 	"no-unused-vars": "off",
 	"curly": "off",
+	"no-control-regex": "off",
 },
 },
 ];

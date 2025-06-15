@@ -1,8 +1,8 @@
 {
 	// To be used with the 'Toggle Excluded Files' extension
 	"files.exclude": {
-		"**/.eleventy.js": false,
 		"**/.github/": false,
+		"**/__dev/": false,
 		"**/.gitignore": false,
 		"**/jsconfig.json": false,
 		"**/node_modules/": false,
@@ -12,6 +12,7 @@
 		"**/eslint.config.mjs": false,
 		"**/stylelint.config.mjs": false
 	},
+	"terminal.integrated.minimumContrastRatio": 1,
 	// Disable default validation since stylelint is used
 	"css.validate": false,
 	"less.validate": false,

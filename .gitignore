@@ -2,3 +2,4 @@
 /__dev/
 /__temp/
 /pnpm-lock.yaml
+/.cache/
