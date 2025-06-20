@@ -67,6 +67,7 @@ export default defineConfig({
 		"no-empty-source": null,
 
 
+		"at-rule-disallowed-list": null,
 		"number-max-precision": null, // why is this even the default
 		"shorthand-property-no-redundant-values": null, // (top: 0; left: 0; bottom: 0;	right: 0;) is not redundant
 		"font-family-no-missing-generic-family-keyword": null, // [possibly untrue:] the fontface has the defaults anyway???
@@ -74,9 +75,9 @@ export default defineConfig({
 });
 
 
-		// acutally idrn logical properties...
-		// "plugin/use-logical-properties-and-values": [true, {
-		// 	"severity": "error",
-		// }],
-		// "plugin/use-logical-units": [true, { "severity": "error" }],
-		// plugins: ["stylelint-plugin-logical-css"],
+// acutally idrn logical properties...
+// "plugin/use-logical-properties-and-values": [true, {
+// 	"severity": "error",
+// }],
+// "plugin/use-logical-units": [true, { "severity": "error" }],
+// plugins: ["stylelint-plugin-logical-css"],

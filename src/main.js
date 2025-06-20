@@ -1,15 +1,4 @@
-/// <reference types="chroma-js"/>
-import chroma from "chroma-js";
-import React from "react";
-import ReactDOM from "react-dom/client";
-import App from "./App";
-
-
-// ANCHOR - Main event
-document.addEventListener("DOMContentLoaded", async (event) => {
-	document.body.style.backgroundColor = chroma.random().hex();
-}, { once: true });
-
-// ReactDOM.createRoot(
-// 	document.getElementById('app')
-// ).render(<App />);
+window.addEventListener("DOMContentLoaded", () => {
+	document.body.style.fontFamily = "monospace";
+	// document.body.style.backgroundColor = "darkslategrey";
+});

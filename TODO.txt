@@ -1,0 +1,42 @@
+
+# order:
+delete __dist
+run 11ty
+run vite ? how will seperating them work with dev server? chain them with temp folder?
+
+
+
+
+# features desired:
+
+live dev server
+templating in html
+
+ability to use any, anywhere:
+	html, js, scss, css, 
+	typescript, react, jsx
+
+blog system using markdown files
+	arbitrary code inside the markdown files (that will be removed during rss feed conversion)
+	tags, dates, 
+
+customizable output url
+
+minification
+deleteion of unused files
+
+
+# would be nice:	
+
+rollup
+sitemap.xml [https://github.com/aplauche/11ty-Rapid-Starter/blob/main/src/sitemap.njk#L10]
+own custom image optimizer plugin
+	optimize to a lower res .min.webp and a regular .webp
+	replace all html and css refrences to the original image to double-load the webps instead
+
+
+
+
+https://quartz.jzhao.xyz/advanced/creating-components
+https://obsidian.md/
+https://deepakness.com/blog/publishing-from-obsidian-using-11ty/

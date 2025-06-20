@@ -1,17 +1,17 @@
 {
 	// To be used with the 'Toggle Excluded Files' extension
 	"files.exclude": {
-		"**/.github/": true,
-		"**/__dev/": true,
-		"**/.cache/": true,
-		"**/.gitignore": true,
-		"**/jsconfig.json": true,
-		"**/node_modules/": true,
-		"**/package.json": true,
-		"**/pnpm-lock.yaml": true,
-		"**/pnpm-workspace.yaml": true,
-		"**/eslint.config.mjs": true,
-		"**/stylelint.config.mjs": true
+		"**/.github/": false,
+		"**/__dev/": false,
+		"**/.cache/": false,
+		"**/.gitignore": false,
+		"**/jsconfig.json": false,
+		"**/node_modules/": false,
+		"**/package.json": false,
+		"**/pnpm-lock.yaml": false,
+		"**/pnpm-workspace.yaml": false,
+		"**/eslint.config.mjs": false,
+		"**/stylelint.config.mjs": false
 	},
 	"terminal.integrated.minimumContrastRatio": 1,
 	// Disable default validation since stylelint is used
@@ -19,7 +19,7 @@
 	"less.validate": false,
 	"scss.validate": false,
 	"editor.codeActionsOnSave": { "source.fixAll.stylelint": "explicit" },
-	// Buttons to run the commands easier 
+	// Buttons to run the commands easier
 	"actionButtons": {
 		"commands": [
 			{
@@ -29,7 +29,7 @@
 			{
 				"name": "$(eye) Live Preview",
 				"command": "pnpm run start"
-			},
+			}
 		],
 		"defaultColor": "none",
 		"reloadButton": "↻",
@@ -39,20 +39,17 @@
 	// "commentAnchors.workspace.excludeFiles": "**/{__dist,node_modules,.git,.idea,target,out,build,bin,obj,dist,vendor}/**/*",
 	// "commentAnchors.workspace.pathFormat": "full",
 	"editor.wordSeparators": "`~!@#$%^&*()=+[{]}\\|;:'\",.<>/?", // remove '-' from the list to allow double clicking on words to copy them
-    "editor.tokenColorCustomizations": {
-        "textMateRules": [
-            {
-                "scope": [
-                    "comment",
-                    "punctuation.definition.comment",
-                ],
-                "settings": {
-                    "fontStyle": ""
-                }
-            }
-        ]
-    },
+	"editor.tokenColorCustomizations": {
+		"textMateRules": [
+			{
+				"scope": ["comment", "punctuation.definition.comment"],
+				"settings": {
+					"fontStyle": ""
+				}
+			}
+		]
+	},
 	"files.associations": {
-		"*.html": "liquid",
+		"*.html": "liquid"
 	}
 }

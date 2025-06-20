@@ -1,27 +1,15 @@
----
-title: awasomewebsite 01
-icon: null
-# templateEngineOverride: liquid
----
-<!-- /\ this is called front matter https://www.11ty.dev/docs/data-frontmatter/ -->
-
-
 <!DOCTYPE html>
-<html lang="en">
-<head> 
-	{% include "head.html" %} <!-- Use same head for all pages by including the same file -->
-	<!-- Icons: --> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<html lang="en" data-theme="light">
+<head>
+	{% include "head.html" %}
+	  <script>
+    // Read the user's theme preference from localStorage early
+    const theme = localStorage.getItem('theme');
+ // Apply dark mode if the user's system prefers it
+    //   document.documentElement.dataset.theme = 'light';
+    
+  </script>
 </head>
-<body>
-	{% include "noscript.html" %} <!-- Warning shown when JavaScript is disabled -->
-
-	<a href="./color-preview/">Color Preview Page</a>
-	<a href="./template/">Template Page</a>
-
-	<img src="./assets/images/snow.webp" alt="" srcset="">
-	<img src="./assets/images/background-layer-1.png" alt="" srcset="">
-	{% comment %} {{ page | log }} {% endcomment %}
-	<div id="app"></div>
-	{% include "hello.html" %}
+	<h1>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eligendi quo laboriosam sapiente libero neque commodi recusandae repudiandae, sit ratione placeat debitis atque, porro quos doloribus inventore ipsa officia nostrum officiis.</h1>
 </body>
 </html>
