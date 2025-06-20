@@ -15,8 +15,8 @@
 
 
 <!-- Local CSS and JS -->
-<script type="module" src="/pages/template2/main.js"></script>
-<link rel="stylesheet" href="/pages/template2/main.css">
+<script type="module" src="main.js"></script>
+<link rel="stylesheet" href="main.css">
 
 
 <!-- [?] chroma.js - Color Helper [https://gka.github.io/chroma.js/] -->
@@ -28,19 +28,28 @@
 } }</script>
 
 
-<!-- GSAP - Animation Library [https://gsap.com/docs/] -->
 
 
-<script>document.body.style.backgroundColor = "red"</script>
 
-<!-- [object Object][object Object][object Object] -->
+
+
+
+
 
 
 
  
+	<link href="colors.css" rel="preload" as="style" onload="this.rel='stylesheet'">
+	<noscript><link rel="stylesheet" href="colors.css"></noscript>
 </head>
 <body>
-	<noscript><h1 style="background-color: #680000; color: #fff;"><b><u>JavaScript is required to run this site!!!</u></b></h1></noscript> <!-- Warning shown when JavaScript is disabled -->
+
+	<main>
+		<ul id="color-variables">
+			<li></li>
+			<li></li>
+		</ul>
+	</main>
 
 	<h1>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eligendi quo laboriosam sapiente libero neque commodi recusandae repudiandae, sit ratione placeat debitis atque, porro quos doloribus inventore ipsa officia nostrum officiis.</h1>
 </body>

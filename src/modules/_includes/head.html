@@ -12,8 +12,8 @@
 
 
 <!-- Local CSS and JS -->
-<script type="module" src="{{ 'main.js' | toAbsolute }}"></script>
-<link rel="stylesheet" href="{{ 'main.css' | toAbsolute }}">
+<script type="module" src="main.js"></script>
+<link rel="stylesheet" href="main.css">
 
 
 <!-- [?] chroma.js - Color Helper [https://gka.github.io/chroma.js/] -->
@@ -35,10 +35,12 @@
 {% endif %}
 
 
+<script>
+	const theme = localStorage.getItem("theme");
+	if (theme) { document.documentElement.setAttribute("data-theme", theme); }
+</script>
 
 
-
-<!-- {{ collections.all | log }} -->
 {% comment %} <noscript><h1 style="background-color: #680000; color: #fff;"><b><u>JavaScript is required to run this site!!!</u></b></h1></noscript> {% endcomment %}
 
 

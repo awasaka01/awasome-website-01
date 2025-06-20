@@ -4,7 +4,7 @@ export default {
 	eleventyComputed: {
 		permalink: function ({ page }) {
 			const outputPath = page.filePathStem.split("/").slice(2).join("/") + "." + page.outputFileExtension; // remove /pages/ from path
-			// console.log(`permalinking: ${page.inputPath} -> ${outputPath}`);
+			console.log(`permalinking: ${page.inputPath} -> ${outputPath}`);
 			return outputPath;
 		},
 	},

@@ -1,6 +1,8 @@
 
-
-
+import * as sass from "sass-embedded";
+const sassOptions = { // https://sass-lang.com/documentation/js-api/interfaces/stringoptions/#loadPaths
+	loadPaths: ["./src/modules/_styles"], // sourceMap: true,
+};
 
 // A named config export, instead of returning inside the eleventyConfig function
 // because it's "preferred for order-of-operations reasons" https://www.11ty.dev/docs/config-shapes/#optional-return-object
@@ -20,9 +22,21 @@ export default async function (eleventyConfig) {
 
 	eleventyConfig.setTemplateFormats(["html", "js", "css", "scss", "jsx", "ts", "tsx", "njk", "md", "liquid", "11ty.js", "11ty.ts", "11ty.cjs", "11ty.mjs"]);
 	eleventyConfig.addFilter("toAbsolute", function (args) {
-		console.log(`${this.page.filePathStem.split("/").slice(0, -1).join("/")}/${args}`);
+		// console.log(`${this.page.filePathStem.split("/").slice(0, -1).join("/")}/${args}`);
 		return `${this.page.filePathStem.split("/").slice(0, -1).join("/")}/${args}`;
 	});
+	eleventyConfig.addExtension("js", { outputFileExtension: "js", compile: (x) => () => x });
+	eleventyConfig.addExtension("scss", {
+		outputFileExtension: "css",
+		compile: (fileContent) => {
+			return (data, inputPath) => {
+				if (data.page.fileSlug.startsWith("_")) return;
+				return "/* stylelint-disable */\n" + sass.compileString(fileContent, sassOptions).css;
+			};
+		},
+	});
+
+
 	// https://www.11ty.dev/docs/languages/custom/#get-data-and-get-instance-from-input-path
 	// https://www.11ty.dev/docs/languages/custom/
 	// eleventyConfig.addExtension("js", {

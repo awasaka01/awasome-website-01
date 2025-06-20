@@ -1,0 +1,116 @@
+/* stylelint#{"-"}disable */
+@use "sass:color";
+@use "sass:math";
+@use "sass:map";
+@use "sass:string";
+@use "sass:meta";
+@use "sass:list";
+@use "./functions.scss" as *;
+// Color parameter map: variable name (no $) => config
+
+
+
+
+// How much to adjust each color type by, and min/max (multiplied by n-500)
+$themes: (
+	light: (
+		fg: (color: lch(63.09% 51.79 4.85), l: 0.00155, c: 0.0002, h: 0.12), 
+		hi: (color: lch(77.21% 43.44 196.4), l: 0.001, c: 0.0003, h: -0.01, lmin: 0), 
+		bg: (color: lch(60.85% 45.82 304.06), l: 0.0007, c: -0.000004, h: 0.12),
+	),
+	dark: (
+		fg: (color: lch(59.86% 67.42 134.29), ), 
+		hi: (color: lch(74.7% 63.53 114.77), ), 
+		bg: (color: lch(55.18% 0.58 290.33), h: 0.3)
+	)
+);
+
+// Default values for $adjustment params if not specified
+$DEFAULT-color-options: (
+	/* Lightness adjustment factor: */ l: 0.0015,
+	/*    Chroma adjustment factor: */ c: 0.0002,
+	/*       Hue adjustment factor: */ h: 0.12,
+	/*           Minimum lightness: */ lmin: 0,
+	/*           Maximum lightness: */ lmax: 100, 
+	/*              Minimum chroma: */ cmin: 0,
+	/*              Maximum chroma: */ cmax: 1234,
+	/*     Minimum hue, in degrees: */ hmin: -360,
+	/*     Maximum hue, in degrees: */ hmax: 360,
+);
+
+// Fill in default values for each color type in each theme using $DEFAULT-adjustment-params
+@each $theme, $colors in $themes { @each $type, $options in $colors { @each $key, $default in $DEFAULT-color-options { @if not map.has-key($options, $key) { $options: map.merge($options, ($key: $default)); } }		$colors: map.merge($colors, ($type: $options)); }	$themes: map.merge($themes, ($theme: $colors)); }
+
+
+$colorsToCompile: ();
+@each $theme-id, $colors in $themes { $colorsToCompile: map.set($colorsToCompile, $theme-id, []); }
+
+
+@function cl($id, $number: 500, $lightness: 500) {
+
+
+
+	$varname: "--#{$id}-#{$number}-#{$lightness}";
+	// Generate colors for each theme 
+	$colorsGenerated: ();
+
+	// if colorsToCompile.light.$id does not exist, create it:
+	@if not map.has-key(map.get($colorsToCompile, light), $varname) {
+		@each $theme-id, $color-types in $themes {
+			$color-options: map.get($color-types, $id);
+			$color: map.get($color-options, color);
+			// @debug "";
+			// @debug "clrs";
+			// @debug $color;
+			$l: map.get($color-options, l); $lmin: map.get($color-options, lmin); $lmax: map.get($color-options, lmax);
+			$c: map.get($color-options, c); $cmin: map.get($color-options, cmin); $cmax: map.get($color-options, cmax);
+			$h: map.get($color-options, h); $hmin: map.get($color-options, hmin); $hmax: map.get($color-options, hmax);	
+			// @debug $l $c $h;
+			$L: math.clamp($lmin * 100%, color.channel($color, "lightness", $space: lch) + (($number - 500) * $l), $lmax * 100%);
+			$C: math.clamp($cmin, color.channel($color, "chroma", $space: lch) + ((500 - $number) * $c), $cmax);
+			$H: math.clamp($hmin * 1deg, color.channel($color, "hue", $space: lch) + (($number - 500) * $h), $hmax * 1deg);
+			// @debug $L $C $H;
+		
+			$out-color: color.change(lch(0% 0 0deg), $lightness: $L, $chroma: $C, $hue: $H, $space: lch);
+			// @debug $out-color;
+			$out-color: color.scale($out-color, $lightness: (($lightness - 500) * 0.001) * 100%, $space: oklch);
+			// @debug $out-color;
+			$out-color: lch(color.channel($out-color, "lightness", $space: lch) color.channel($out-color, "chroma", $space: lch) color.channel($out-color, "hue", $space: lch));
+			// @debug $out-color;
+		
+		
+			$colorsGenerated: map.merge($colorsGenerated, ($theme-id: $out-color));
+		
+			$colorsToCompile: map.set($colorsToCompile, $theme-id, map.set(map.get($colorsToCompile, $theme-id), $varname, $out-color)) !global;
+		}
+	}
+	@return var(#{$varname}); 
+}
+
+@mixin compile-colors {
+	@each $theme-id, $colors in $colorsToCompile {
+		/* Color variables for '#{$theme-id}' theme, only used ones are compiled */
+		[data-theme="#{$theme-id}"] {
+			@each $varname, $color in $colors {
+				#{$varname}: #{$color};
+			}
+		}
+	}
+}
+
+
+body {
+	font-family: monospace;
+	$clrs: [];
+	@for $i from 0 through 99 {
+		$i: $i * 10 + 5;
+		$clrs: list.append($clrs, cl(bg, $i));
+	}
+	background: f_steppedGradient(
+		$clrs,
+		to right
+	);
+}
+
+
+@include compile-colors;
