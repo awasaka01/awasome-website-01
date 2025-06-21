@@ -20,16 +20,16 @@
 <!-- How to use: Add <import chroma from "chroma-js"> to your file-->
 <!-- For autocompletion: Install the module's types locally (@types/chroma-js) Add /// <reference types="chroma-js"/> to the top of your file -->
 <script type="importmap">{ "imports": {
-	{% if add contains "react" %} 
+	{% if addFeatures contains "react" %} 
 		"react": "https://unpkg.com/react@18.2.0/umd/react.production.min.js",
 		"react-dom/client": "https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js",
 	{% endif %}
-	{% if add contains "chroma-js" %} "chroma-js": "https://unpkg.com/chroma-js@3.1.2/es/index.js" {% endif %}
+	{% if addFeatures contains "chroma-js" or addFeatures contains "chroma" %} "chroma-js": "https://unpkg.com/chroma-js@3.1.2/es/index.js" {% endif %}
 } }</script>
 
 
 
-{% if add contains "gsap" %}
+{% if addFeatures contains "gsap" %}
 <!-- GSAP - Animation Library [https://gsap.com/docs/] -->
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
 {% endif %}

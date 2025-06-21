@@ -86,6 +86,7 @@ $colorsToCompile: ();
 	}
 	@return var(#{$varname}); 
 }
+@function c($id, $number: 500, $lightness: 500) { @return cl($id, $number, $lightness); }
 
 @mixin compile-colors {
 	@each $theme-id, $colors in $colorsToCompile {

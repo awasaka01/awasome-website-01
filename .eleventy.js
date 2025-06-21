@@ -1,8 +1,13 @@
+import jsdom from "jsdom"; // Virtual DOM, for easier preprocessing
+import printTree from "./scripts/print-dist-tree.js";
+
+
 
 import * as sass from "sass-embedded";
 const sassOptions = { // https://sass-lang.com/documentation/js-api/interfaces/stringoptions/#loadPaths
-	loadPaths: ["./src/modules/_styles"], // sourceMap: true,
+	loadPaths: ["./src/modules/_styles"], // TODO sourceMap: true,
 };
+
 
 // A named config export, instead of returning inside the eleventyConfig function
 // because it's "preferred for order-of-operations reasons" https://www.11ty.dev/docs/config-shapes/#optional-return-object
@@ -14,18 +19,56 @@ export const config = {
 		data: "modules/_data",
 		layouts: "modules/_layouts",
 	},
+	templateFormats: ["html", "js", "css", "scss", "jsx", "ts", "tsx", "njk", "md", "liquid", "11ty.js", "11ty.ts", "11ty.cjs", "11ty.mjs"],
 };
 
 
 /** [Intellisense Support] @param {import("@11ty/eleventy").UserConfig} eleventyConfig */
 export default async function (eleventyConfig) {
+	eleventyConfig.ignores.add("_*");
 
-	eleventyConfig.setTemplateFormats(["html", "js", "css", "scss", "jsx", "ts", "tsx", "njk", "md", "liquid", "11ty.js", "11ty.ts", "11ty.cjs", "11ty.mjs"]);
-	eleventyConfig.addFilter("toAbsolute", function (args) {
-		// console.log(`${this.page.filePathStem.split("/").slice(0, -1).join("/")}/${args}`);
-		return `${this.page.filePathStem.split("/").slice(0, -1).join("/")}/${args}`;
+
+	// Add changeless extension to custom template formats to allow them to be permalinked from in directory data files (pages.11tydata.js)
+	["js", "css"]
+	.forEach((extension) => { eleventyConfig.addExtension(extension, {
+		outputFileExtension: extension,
+		compile: (content) => { return ({ page }) => {
+			if (page.inputPath.endsWith(".11tydata.js")) return;
+			return content;
+	}; } }); });
+
+
+	/* ANCHOR - Set global flags */
+	eleventyConfig.on("eleventy.beforeConfig", async () => {
+		const build = process.argv.includes("--build");
+		process.env.ELEVENTY_ENV = build ? "build" : "server";
+
+		// Enable minification only in production
+		if (process.env.MODE?.trim() === "full") {
+			eleventyConfig.addTransform("PRODUCTION", async function (content) {
+				if (!content) return;
+				const formatted = await (async () => {
+					switch (this.page.outputFileExtension) {
+						case "html": return await buildFormatHTML(content, this);
+						case "js": return await buildFormatJS(content, this);
+						case "css": return await buildFormatCSS(content, this);
+						default: return content;
+					}
+				})();
+
+				if (formatted === content) return content;
+
+				const originalSize = Buffer.byteLength(content, "utf-8");
+				const formattedSize = Buffer.byteLength(formatted, "utf-8");
+				const difference = (formattedSize - originalSize) / 1024;
+				console.log(`\x1b[90m${this.page.inputPath}\x1b[0m: ${difference > 0 ? "+" : ""}${difference.toFixed(2)}kb`);
+				return formatted;
+			});
+		}
 	});
-	eleventyConfig.addExtension("js", { outputFileExtension: "js", compile: (x) => () => x });
+
+
+	/* ANCHOR - SCSS compilation, using sass-embedded */
 	eleventyConfig.addExtension("scss", {
 		outputFileExtension: "css",
 		compile: (fileContent) => {
@@ -35,6 +78,47 @@ export default async function (eleventyConfig) {
 			};
 		},
 	});
+
+	/* ANCHOR - Preprocessor to make lines even lengths, ?%?fill: ?%? to set specific postion on that line, and character to use */
+	eleventyConfig.addPreprocessor("fillRemainingSpace", "html", (data, content) => {
+		if (!data.addFeatures?.includes("fillRemainingSpace")) return;
+
+		const body = content.match(/<body>.+<\/body>/gms);
+		const dom = new jsdom.JSDOM(body);
+		const document = dom.window.document;
+		const elements = Array.from(document.getElementsByClassName("fillRemainingSpace"));
+
+		if (elements.length === 0) return;
+
+		const filterCodesOut = (str) => str.replace(/\?%\?.+?\?%\?/gm, "");
+		elements.forEach((el) => {
+
+			// Calculate longest line
+			const children = Array.from(el.children);
+			const longest = children.map((x) => filterCodesOut(x.textContent).length).reduce((a, b) => a > b ? a : b);
+
+			// Loop over each line and grow to match longest
+			children.forEach((child) => {
+				const length = filterCodesOut(child.textContent).length;
+				const diff = Math.abs(length - longest);
+				const fills = child.innerHTML.split("?%?")
+					.filter((x) => x.startsWith("fill:"))
+					.map((x) => (x.split(":")[1].split("")));
+
+				// Repeat each fill evenly
+				fills.forEach((fill, i) => {
+					const fn = i === 0 ? Math.floor : i === fills.length - 1 ? Math.ceil : Math.round;
+					const fillString = Array.from({ length: fn(diff / (fills.length)) }, (v, i) => fill[i % fill.length]).join("");
+					child.innerHTML = child.innerHTML.replace(`?%?fill:${fill.join("")}?%?`, fillString);
+				});
+			});
+		});
+		return content.replace(/<body>.+<\/body>/gms, document.body.outerHTML);
+	});
+
+
+
+
 
 
 	// https://www.11ty.dev/docs/languages/custom/#get-data-and-get-instance-from-input-path
@@ -53,6 +137,69 @@ export default async function (eleventyConfig) {
 	// 	compile: (input) => () => input,
 	// });
 }
+
+import postcss from "postcss";
+import postcss_cssnano from "cssnano";
+import postcss_preset_env from "postcss-preset-env";
+
+import * as babel from "@babel/core";
+import UglifyJS from "uglify-js";
+
+import { minify } from "html-minifier-terser";
+
+
+// https://github.com/jonathantneal/posthtml-inline-assets
+// https://github.com/posthtml/posthtml-minify-classnames?tab=readme-ov-file
+// https://github.com/posthtml/posthtml-color-shorthand-hex-to-six-digit
+
+
+
+// ANCHOR - Optimize all files as much as possible, but only in production (some of this probably overlaps with vite but wtvr)
+
+// posthtml - minify
+async function buildFormatHTML (content, data) {
+	content = await minify(content, { // useful: <!-- htmlmin:ignore --> [https://github.com/terser/html-minifier-terser?tab=readme-ov-file#options-quick-reference]
+		removeScriptTypeAttributes: true,
+		collapseBooleanAttributes: true,
+		removeRedundantAttributes: true,
+		removeTagWhitespace: true,
+		removeOptionalTags: true,
+		removeComments: true,
+		minifyURLs: true,
+		minifyCSS: true,
+		minifyJS: true,
+	});
+	content = content.replace(/[\r\t\n]/g, "").split("\n").filter((x) => x.length > 0).map((x) => x.trim()).join("\n").trim();
+	return content;
+}
+
+// babel - minify, backwards compatibility, optimization
+async function buildFormatJS (content, data) {
+	content = await babel.transformAsync(content, {
+		filename: data.page.inputPath, // data.page.fileSlug + "." + data.page.outputFileExtension,
+		compact: true,
+		comments: false,
+		// plugins: ["module:fast-async"],
+		presets: [["@babel/preset-env", {}], "@babel/preset-react", "@babel/preset-typescript"],
+	});
+	content = UglifyJS.minify(content.code, {
+
+		// TODO add import maps
+	},
+).code;
+	return content;
+}
+
+// postcss - minify, backwards compatibility
+async function buildFormatCSS (content, data) {
+	content = await postcss([ // https://github.com/postcss/postcss?tab=readme-ov-file#js-api
+		postcss_preset_env({ stage: 0 }), // https://github.com/csstools/postcss-plugins/tree/main/plugin-packs/postcss-preset-env
+		postcss_cssnano, // https://github.com/csstools/postcss-plugins/tree/main/plugin-packs/postcss-cssnano
+	])
+	.process(content, { from: "/", to: "/" });
+	return content.css;
+}
+
 
 
 

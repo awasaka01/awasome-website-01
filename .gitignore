@@ -1,5 +1,5 @@
-/node_modules/
-/__dev/
-/__temp/
 /pnpm-lock.yaml
+/node_modules/
+/____temp/
+/__BUILD/
 /.cache/

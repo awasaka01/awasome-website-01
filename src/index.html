@@ -1,15 +1,25 @@
+---
+addFeatures: ["chroma", "fillRemainingSpace"]
+---
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 	{% include "head.html" %}
-	  <script>
-    // Read the user's theme preference from localStorage early
-    const theme = localStorage.getItem('theme');
- // Apply dark mode if the user's system prefers it
-    //   document.documentElement.dataset.theme = 'light';
-    
-  </script>
 </head>
-	<h1>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eligendi quo laboriosam sapiente libero neque commodi recusandae repudiandae, sit ratione placeat debitis atque, porro quos doloribus inventore ipsa officia nostrum officiis.</h1>
+<body>
+	{% include "theme.html" %}
+
+	<div class="autoResize fillRemainingSpace" data-parent="true">
+		<p>┏━━━━?%?fill:━?%?━━━━┓</p>
+		<p>┃?%?fill: ?%?hello?%?fill: ?%?┃</p>
+		<p>┃ [ <button>Click</button> ] ?%?fill: ?%? ┃</p>
+		<p>┃?%?fill: ?%?┃</p>
+		<p>┃ ?%?fill: ?%? A ?%?fill: ?%? W ?%?fill: ?%? A ?%?fill: ?%? ┃</p>
+		<p>┃ abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{};:'",./<>? `~ ┃</p>
+	</div>
+
+	<span id="character">1</span>
+	 <br><br><br><br><br><br><br><br><br><br><br><br> <br><br><br><br><br><br><br><br><br><br><br><br> <br><br><br><br><br><br><br><br><br><br><br><br> <br><br><br><br><br><br><br><br><br><br><br><br> <br><br><br><br><br><br><br><br><br><br><br><br> <br><br><br><br><br><br><br><br><br><br><br><br> <br><br><br><br><br><br><br><br><br><br><br><br> <br><br><br><br><br><br><br><br><br><br><br><br> <br><br><br><br><br><br><br><br><br><br><br><br>
 </body>
 </html>

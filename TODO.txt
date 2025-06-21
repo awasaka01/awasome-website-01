@@ -1,3 +1,4 @@
+https://www.11ty.dev/docs/plugins/bundle/
 
 # order:
 delete __dist
@@ -27,6 +28,14 @@ deleteion of unused files
 
 
 # would be nice:	
+
+posthtml?
+
+
+postcss?
+
+babel?
+
 
 rollup
 sitemap.xml [https://github.com/aplauche/11ty-Rapid-Starter/blob/main/src/sitemap.njk#L10]

@@ -1,8 +1,0 @@
-/* stylelint-disable */
-[data-theme=dark] body {
-  background-color: darkslateblue;
-}
-
-[data-theme=light] body {
-  background-color: rgb(204, 196, 255);
-}
