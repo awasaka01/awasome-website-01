@@ -11,10 +11,6 @@
 <link rel="icon" href="{{ favicon | default: '/assets/images/favicon.ico' }}" type="image/gif"/>
 
 
-<!-- Local CSS and JS -->
-<script type="module" src="main.js"></script>
-<link rel="stylesheet" href="main.css">
-
 
 <!-- [?] chroma.js - Color Helper [https://gka.github.io/chroma.js/] -->
 <!-- How to use: Add <import chroma from "chroma-js"> to your file-->
@@ -24,8 +20,13 @@
 		"react": "https://unpkg.com/react@18.2.0/umd/react.production.min.js",
 		"react-dom/client": "https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js",
 	{% endif %}
-	{% if addFeatures contains "chroma-js" or addFeatures contains "chroma" %} "chroma-js": "https://unpkg.com/chroma-js@3.1.2/es/index.js" {% endif %}
+	{% if addFeatures contains "chroma-js" or addFeatures contains "chroma" %} "chroma-js": "https://unpkg.com/chroma-js@3.1.2/index.js", {% endif %}
+	"zoom-level": "https://unpkg.com/zoom-level@2.5.0/dist/zoom-level.esm.js"
 } }</script>
+
+<!-- Local CSS and JS -->
+<script type="module" src="main.js{{ nocache }}"></script>
+<link rel="stylesheet" href="main.css{{ nocache }}">
 
 
 

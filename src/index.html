@@ -1,25 +1,58 @@
----
-addFeatures: ["chroma", "fillRemainingSpace"]
+---json
+{
+	"addFeatures": ["chroma", "fillRemainingSpace"],
+	"replaceCharacters": {
+		"insertLocation": "__",
+		"regexes": [
+			["1([┏━┓─┃┗┛ ]+)", "g", "<span class='boxdraw-color-1'>$1</span>"],
+			["2([┏━┓─┃┗┛ ]+)", "g", "<span class='boxdraw-color-2'>$1</span>"]
+		]
+	}
+}
 ---
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
 	{% include "head.html" %}
+	{% comment %} <script src="https://unpkg.com/zoom-level"></script> {% endcomment %}
+
 </head>
-<body>
-	{% include "theme.html" %}
+<body style="font-family: monospace;">
+	<div id="spacing"></div>
+	<main>
+	
+	<div>
+	<label for="theme-select">Theme: </label>{% include "theme.html" %}
+</div>
+		<br><br><br>
 
-	<div class="autoResize fillRemainingSpace" data-parent="true">
-		<p>┏━━━━?%?fill:━?%?━━━━┓</p>
-		<p>┃?%?fill: ?%?hello?%?fill: ?%?┃</p>
-		<p>┃ [ <button>Click</button> ] ?%?fill: ?%? ┃</p>
-		<p>┃?%?fill: ?%?┃</p>
-		<p>┃ ?%?fill: ?%? A ?%?fill: ?%? W ?%?fill: ?%? A ?%?fill: ?%? ┃</p>
-		<p>┃ abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{};:'",./<>? `~ ┃</p>
-	</div>
-
+	<section class="autoResize">
+		{% comment %} <div class="fillRemainingSpace" id="e"> {% endcomment %}
+			<p>1┏━━?f━/f━━┓</p>
+			<p>1┃?f /f hello worm ?f /f1┃</p>
+			<p>1┃   2?f─/f    1┃</p>
+			<p>1┃ [ <button>button</button> ] ?f /f 1┃</p>
+			<p>1┃?f /f  ?f /f1┃</p>
+			<p>1┃?f /f  ?f /f1┃</p>
+			<p>1┃?f /f  ?f /f1┃</p>
+			<p>1┃?f /f  ?f /f1┃</p>
+			<p>1┃?f /f  ?f /f1┃</p>
+			<p>1┃?f /f  ?f /f1┃</p>
+			<p>1┃?f /f  ?f /f1┃</p>
+			<p>1┃?f /f  ?f /f1┃</p>
+			<p>1┃?f /f  ?f /f1┃</p>
+			<p>1┃ ?f /f A ?f /f W ?f /f A ?f /f 1┃</p>
+			<p>1┃ abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{};:'",./<>? `~ 1┃</p>
+			<p>1┗━━?f━/f━━┛</p>
+		{% comment %} </div> {% endcomment %}
+	</section>
 	<span id="character">1</span>
-	 <br><br><br><br><br><br><br><br><br><br><br><br> <br><br><br><br><br><br><br><br><br><br><br><br> <br><br><br><br><br><br><br><br><br><br><br><br> <br><br><br><br><br><br><br><br><br><br><br><br> <br><br><br><br><br><br><br><br><br><br><br><br> <br><br><br><br><br><br><br><br><br><br><br><br> <br><br><br><br><br><br><br><br><br><br><br><br> <br><br><br><br><br><br><br><br><br><br><br><br> <br><br><br><br><br><br><br><br><br><br><br><br>
+	<br><br><br><br><br><br><br><br><br><br><br><br> <br><br><br><br><br><br><br><br><br><br><br><br> <br><br><br><br><br><br><br><br><br><br><br><br> <br><br><br><br><br><br><br><br><br><br><br><br> <br><br><br><br><br><br><br><br><br><br><br><br> <br><br><br><br><br><br><br><br><br><br><br><br> <br><br><br><br><br><br><br><br><br><br><br><br> <br><br><br><br><br><br><br><br><br><br><br><br> <br><br><br><br><br><br><br><br><br><br><br><br>
+
+	</main>
+	<!-- Inline the scripts that change things that are visible, to prevent flash of unstyled content an external script would show whilst downloading --->
+	{% comment %} <script src="./critical.js"></script> {% endcomment %}
+	<script>{% include "./critical.js" %}</script>
 </body>
 </html>

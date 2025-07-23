@@ -1,5 +1,24 @@
 https://www.11ty.dev/docs/plugins/bundle/
 
+
+
+
+# commands:
+- only the bare minimum for site to work, for quick build time during live development:
+build 
+	= compile all template files with 11ty (html, njk, liquid)
+	= compile typescript
+	= compile react
+	= compile scss/sass
+	= copy all other files through
+
+
+- full build steps, for the production site
+startfull = start
+	+ minification
+	+ rollup (bundling code together, deleteion of unused files)
+
+https://github.com/11ty/eleventy-dev-server/issues/9#issuecomment-2722593070 
 # order:
 delete __dist
 run 11ty
