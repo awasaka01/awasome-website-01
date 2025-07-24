@@ -3,6 +3,8 @@ https://www.11ty.dev/docs/plugins/bundle/
 
 
 
+
+
 # commands:
 - only the bare minimum for site to work, for quick build time during live development:
 build 
@@ -23,6 +25,14 @@ https://github.com/11ty/eleventy-dev-server/issues/9#issuecomment-2722593070
 delete __dist
 run 11ty
 run vite ? how will seperating them work with dev server? chain them with temp folder?
+
+
+
+
+# undocumented 11ty features:
+
+lots of dev server stuff: https://github.com/11ty/eleventy-dev-server/releases/tag/v2.0.7
+dev server ready: https://github.com/11ty/eleventy-dev-server/issues/17#issuecomment-2722773367
 
 
 

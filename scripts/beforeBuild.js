@@ -11,3 +11,15 @@ for (const folder of folders) {
 		fs.mkdirSync(folder);
 	}
 }
+
+
+// Clear folders that are going to be used\
+const FLAG_FULL_BUILD = process.env.FULL_BUILD !== undefined;
+const foldersToClear = [process.env.FOLDER_TEMP, FLAG_FULL_BUILD ? process.env.FOLDER_BUILD : process.env.FOLDER_DEV];
+
+for (const folder of foldersToClear) {
+	if (fs.existsSync(folder)) {
+		console.log(chalk.red(`Clearing folder  : /${folder}/`));
+		fs.rmSync(folder, { recursive: true, force: true });
+	}
+}

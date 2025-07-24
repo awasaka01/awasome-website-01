@@ -9,7 +9,7 @@ import * as babel from "@babel/core";
 import UglifyJS from "uglify-js";
 
 import jsdom from "jsdom"; // Virtual DOM, for easier preprocessing
-import printTree from "./scripts/print-dist-tree.js";
+import printTree from "../print-dist-tree.js";
 import { on } from "events";
 import * as Vite from "vite";
 
@@ -259,12 +259,6 @@ async function buildFormatJS (content, data) {
 
 
 
-// Add "extension" that just returns the content (unless it's 11tydata.js)
-// Required for permalinks to work
-function addBlankExtensionForPermalinks (ext) { this.addExtension(ext, {
-	outputFileExtension: ext,
-	compile: (content) => ({ page }) => page.inputPath.endsWith(".11tydata.js") ? undefined : content,
-}); }
 
 
 
