@@ -36,5 +36,5 @@ let message = "This is a string"; // TypeScript infers 'message' as type 'string
 
 document.body.onload = () => {
 	console.log("Loaded");
-  document.body.style.color = "darkslateblue";
+//   document.body.style.color = "darkslateblue";
 };

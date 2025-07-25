@@ -1,9 +1,11 @@
 import "dotenv/config";
+const { FOLDER_BUILD, FOLDER_DEV, FOLDER_TEMP, FULL_BUILD, FULL_START } = process.env;
 import chalk from "chalk";
+
 
 // Create all the folders if they don't exist
 import fs from "fs";
-const folders = [process.env.FOLDER_BUILD, process.env.FOLDER_DEV, process.env.FOLDER_TEMP];
+const folders = [FOLDER_BUILD, FOLDER_DEV, FOLDER_TEMP];
 
 for (const folder of folders) {
 	if (!fs.existsSync(folder)) {
@@ -13,13 +15,19 @@ for (const folder of folders) {
 }
 
 
-// Clear folders that are going to be used\
-const FLAG_FULL_BUILD = process.env.FULL_BUILD !== undefined;
-const foldersToClear = [process.env.FOLDER_TEMP, FLAG_FULL_BUILD ? process.env.FOLDER_BUILD : process.env.FOLDER_DEV];
 
-for (const folder of foldersToClear) {
-	if (fs.existsSync(folder)) {
-		console.log(chalk.red(`Clearing folder  : /${folder}/`));
-		fs.rmSync(folder, { recursive: true, force: true });
+// Empty the folders that are going to be used
+const foldersToEmpty = [FOLDER_TEMP, FULL_BUILD !== undefined ? FOLDER_BUILD : FOLDER_DEV];
+
+for (const folder of foldersToEmpty) {
+	if (!fs.existsSync(folder)) continue;
+	const files = fs.readdirSync(folder, { withFileTypes: true });
+	if (files.length === 0) continue;
+	for (const file of files) {
+		fs.rmSync(`${folder}/${file.name}`, { recursive: true, force: true });
 	}
+	console.log(chalk.blue("Emptied Folder: " + chalk.white(`/${folder}/`)));
 }
+
+
+//

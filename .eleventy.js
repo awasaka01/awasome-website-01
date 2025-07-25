@@ -1,17 +1,18 @@
 import path from "node:path";
+
+// Environment Variables
 import "dotenv/config";
 const FLAG_FULL_BUILD = process.env.FULL_BUILD !== undefined;
+const { FOLDER_BUILD, FOLDER_DEV, FOLDER_TEMP } = process.env;
 
 // Vite + Plugins
-import react from "@vitejs/plugin-react";
-import * as Vite from "vite";
-import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 
-//
+// e
 import { minify } from "html-minifier-terser";
 import * as sass from "sass-embedded";
 import { eleventyImageTransformPlugin } from "@11ty/eleventy-img";
 
+import customTransforms from "./scripts/custom-transforms.js";
 
 
 
@@ -29,6 +30,10 @@ const options = {
 
 
 
+// Configure Vite, enabling more things when FLAG_FULL_BUILD is true
+import * as Vite from "vite";
+import react from "@vitejs/plugin-react";
+import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 
 const viteOptions = {
 	clearScreen: false,
@@ -45,9 +50,8 @@ const viteOptions = {
 	},
 	build: {
 		emptyOutDir: false,
-		outDir: path.resolve(".", FLAG_FULL_BUILD ? process.env.FOLDER_BUILD : process.env.FOLDER_DEV), // absolute path to FOLDER_DEV
+		outDir: path.resolve(".", FLAG_FULL_BUILD ? FOLDER_BUILD : FOLDER_DEV), // absolute path to FOLDER_DEV
 		rollupOptions: {
-
 			output: {
 				...(!FLAG_FULL_BUILD ? {
 					entryFileNames: "assets/[name].js",
@@ -60,15 +64,17 @@ const viteOptions = {
 		minify: FLAG_FULL_BUILD ? "esbuild" : false,
 		cssCodeSplit: FLAG_FULL_BUILD,
 	},
-	root: process.env.FOLDER_TEMP, // is set to FOLDER_DEV if in server mode
+	root: FOLDER_TEMP, // is set to FOLDER_DEV if in server mode
 	treeshake: FLAG_FULL_BUILD,
     manualChunks: FLAG_FULL_BUILD ? undefined : false,
 };
+
+
 // https://www.11ty.dev/docs/config/
 export const config = {
 	dir: {
 		input: "src",
-		output: process.env.FOLDER_TEMP,
+		output: process.env.ELEVENTY_RUN_MODE === "serve" ? FOLDER_DEV : FOLDER_TEMP,
 		includes: "modules/_includes",
 		data: "modules/_data",
 		layouts: "modules/_layouts",
@@ -77,51 +83,43 @@ export const config = {
 };
 
 
-
-/** [Intellisense Support] @param {import("@11ty/eleventy").UserConfig} eleventyConfig */
+/* ANCHOR - 11ty main configuration function */
+/** @param {import("@11ty/eleventy").UserConfig} eleventyConfig [Intellisense Support] */
 export default async function (eleventyConfig) {
 	eleventyConfig.ignores.add("_*");
 	eleventyConfig.addPassthroughCopy("src/assets/");
+	eleventyConfig.setQuietMode(true);
 
-	// Add {{ nocache }} to the end of a url to only use the latest build files, probably irrelevant as Vite renames the files anyway
-	eleventyConfig.addGlobalData("nocache", `?nocache=${Date.now().toString(36)}`);
+	customTransforms(eleventyConfig);
+
 
 	["js", "css"].forEach(addBlankExtensionForPermalinks, eleventyConfig); // eleventyConfig.addExtension that just returns the content, required for permalinks in folder data (like pages.11tydata.js) to work for some reason
 	eleventyConfig.addExtension("scss", { outputFileExtension: "css", compile: compileSCSS }); // SCSS compilation, using sass-embedded
 
 
-
-	// Image Optimization
+	// HTML Minification + Image Conversion
 	if (FLAG_FULL_BUILD) {
 		eleventyConfig.addTransform("minifyHTML", minifyHTML);
-		eleventyConfig.addPlugin(eleventyImageTransformPlugin, {
-			formats: ["webp"],
-			filenameFormat: (id, src, width, format) => `${path.basename(src, path.extname(src))}-${width}w.${format}`,
-		});
+		eleventyConfig.addPlugin(eleventyImageTransformPlugin, { formats: ["webp"], filenameFormat: (id, src, width, format) => `${path.basename(src, path.extname(src))}-${width}w.${format}` });
 	}
 
 
-	/* ANCHOR - Vite, build for production, after 11ty, from ____temp (11ty output) to __production (Vite output) */
+	/* Vite, build for production, after 11ty is done, from ____temp (11ty output) to __production (Vite output) */
 	eleventyConfig.on("eleventy.after", async ({ dir, runMode, outputMode, results }) => {
 		if (runMode !== "build" || results.length === 0) return;
-		if (dir.output !== process.env.FOLDER_TEMP) throw new Error(`Expected 11ty to output to ${process.env.FOLDER_TEMP} but got ${dir.output}`);
+		if (dir.output !== FOLDER_TEMP) throw new Error(`Expected 11ty to output to ${FOLDER_TEMP} but got ${dir.output}`);
 		viteOptions.build.rollupOptions.input = results
 			.filter((entry) => Boolean(entry.outputPath)) // filter out `false` serverless routes
 			.filter((entry) => (entry.outputPath || "").endsWith(".html")) // only html output
-			.map((entry) => {
-				console.log(entry.outputPath);
-				// const f = path.resolve(process.env.FOLDER_TEMP, entry.outputPath);
-				// console.log(f);
-				return entry.outputPath;
-			});
+			.map((entry) => entry.outputPath);
 		await Vite.build(viteOptions);
 	});
 
-	/* ANCHOR - Vite, live development server */
+	/* Vite, live development server */
 	eleventyConfig.setServerOptions({
 		...options.serverOptions11ty,
 		setup: async () => { // setup <- mysterious undocumented server option taken from eleventy-plugin-vite
-			viteOptions.root = path.resolve(".", process.env.FOLDER_DEV); // change source folder
+			viteOptions.root = path.resolve(".", FOLDER_DEV); // change source folder
 			const viteDevServer = await Vite.createServer(viteOptions);
 
 			process.on("SIGINT", async () => await viteDevServer.close());
