@@ -9,7 +9,6 @@ const { FOLDER_BUILD, FOLDER_DEV, FOLDER_TEMP } = process.env;
 
 // e
 import { minify } from "html-minifier-terser";
-import * as sass from "sass-embedded";
 import { eleventyImageTransformPlugin } from "@11ty/eleventy-img";
 
 import customTransforms from "./scripts/custom-transforms.js";
@@ -94,8 +93,10 @@ export default async function (eleventyConfig) {
 
 
 	["js", "css"].forEach(addBlankExtensionForPermalinks, eleventyConfig); // eleventyConfig.addExtension that just returns the content, required for permalinks in folder data (like pages.11tydata.js) to work for some reason
-	eleventyConfig.addExtension("scss", { outputFileExtension: "css", compile: compileSCSS }); // SCSS compilation, using sass-embedded
+	eleventyConfig.addExtension("scss", { outputFileExtension: "css", useLayouts: false, compile: compileSCSS }); // SCSS compilation, using sass-embedded
 
+
+	eleventyConfig.addExtension("11tydata", { outputFileExtension: "js", useLayouts: false });
 
 	// HTML Minification + Image Conversion
 	if (FLAG_FULL_BUILD) {
@@ -153,8 +154,11 @@ async function minifyHTML (content) {
 
 
 // Compiles SCSS, using sass-embedded
+import * as sass from "sass-embedded";
 async function compileSCSS (fileContent) { return (data, inputPath) => {
 	if (data.page.fileSlug.startsWith("_")) return;
+
+	options.scss.loadPaths.push(path.dirname(data.page.inputPath));
 	return "/* stylelint-disable */\n" + sass.compileString(fileContent, options.scss).css;
 }; }
 

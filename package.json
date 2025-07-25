@@ -5,7 +5,7 @@
 	"type": "module",
 	"scripts": {
 		"clear": "rimraf __dev/* -g && rimraf __production/* -g && rimraf ____temp/* -g",
-		"start": "node ./scripts/beforeBuild.js && eleventy --incremental --serve",
+		"start": "node ./scripts/beforeBuild.js && eleventy --serve",
 		"build": "node ./scripts/beforeBuild.js && eleventy --quiet && node ./scripts/afterBuild.js",
 		"buildfull": "set FULL_BUILD=1 && node ./scripts/beforeBuild.js -b && eleventy && node ./scripts/afterBuild.js",
 		"startfull": "set FULL_BUILD=1 && set FULL_START=1 && npm-run-all -p startfull:autobuild startfull:server",

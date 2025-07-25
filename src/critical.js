@@ -8,7 +8,7 @@ async function setWidths (zoomLevel = 1.25) {
 
 	const uh = document.getElementById("spacing").clientWidth;
 	const bodywidth = document.body.offsetWidth;
-	const singleCharacter = document.getElementById("character").offsetWidth;
+	const singleCharacter = document.getElementById("baseline-character-for-size-ref").offsetWidth;
 	Array.from(document.getElementsByClassName("autoResize")).forEach((el) => {
 		const vw = Math.min(uh) * (zoomLevel - 0.25);
 
