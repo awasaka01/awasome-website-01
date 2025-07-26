@@ -1,11 +1,12 @@
 import "dotenv/config";
 const { FOLDER_BUILD, FOLDER_DEV, FOLDER_TEMP, FULL_BUILD, FULL_START } = process.env;
 import chalk from "chalk";
+console.log(process.env.FULL_BUILD);
 
 
 // Create all the folders if they don't exist
 import fs from "fs";
-const folders = [FOLDER_BUILD, FOLDER_DEV, FOLDER_TEMP];
+const folders = [FOLDER_TEMP, FULL_BUILD !== undefined ? FOLDER_BUILD : FOLDER_DEV];
 
 for (const folder of folders) {
 	if (!fs.existsSync(folder)) {
