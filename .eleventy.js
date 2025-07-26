@@ -47,6 +47,11 @@ const viteOptions = {
 	css: !FLAG_FULL_BUILD ? undefined : {
 		transformer: "lightningcss",
 	},
+	resolve: {
+		alias: {
+			"@util": path.resolve(".", "src/modules/util.ts"),
+		},
+	},
 	build: {
 		emptyOutDir: false,
 		outDir: path.resolve(".", FLAG_FULL_BUILD ? FOLDER_BUILD : FOLDER_DEV), // absolute path to FOLDER_DEV
@@ -88,11 +93,11 @@ export default async function (eleventyConfig) {
 	eleventyConfig.ignores.add("_*");
 	eleventyConfig.addPassthroughCopy("src/assets/");
 	eleventyConfig.setQuietMode(true);
-
+	eleventyConfig.addPassthroughCopy({ "src/not_found.html": "not_found.html" });
 	customTransforms(eleventyConfig);
 
 
-	["js", "css"].forEach(addBlankExtensionForPermalinks, eleventyConfig); // eleventyConfig.addExtension that just returns the content, required for permalinks in folder data (like pages.11tydata.js) to work for some reason
+	["js", "ts", "jsx", "tsx", "css"].forEach(addBlankExtensionForPermalinks, eleventyConfig); // eleventyConfig.addExtension that just returns the content, required for permalinks in folder data (like pages.11tydata.js) to work for some reason
 	eleventyConfig.addExtension("scss", { outputFileExtension: "css", useLayouts: false, compile: compileSCSS }); // SCSS compilation, using sass-embedded
 
 

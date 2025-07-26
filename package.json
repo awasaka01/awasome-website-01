@@ -5,7 +5,8 @@
 	"type": "module",
 	"scripts": {
 		"clear": "rimraf __dev/* -g && rimraf __production/* -g && rimraf ____temp/* -g",
-		"start": "node ./scripts/beforeBuild.js && eleventy --serve",
+		"start2": "node ./scripts/beforeBuild.js && eleventy --serve",
+		"start": "node ./scripts/beforeBuild.js && eleventy --incremental --serve",
 		"build": "node ./scripts/beforeBuild.js && eleventy --quiet && node ./scripts/afterBuild.js",
 		"buildfull": "set FULL_BUILD=1 && node ./scripts/beforeBuild.js -b && eleventy && node ./scripts/afterBuild.js",
 		"startfull": "set FULL_BUILD=1 && set FULL_START=1 && npm-run-all -p startfull:autobuild startfull:server",
@@ -36,7 +37,6 @@
 		"react": "^19.1.0",
 		"react-dom": "^19.1.0",
 		"sass-embedded": "^1.89.2",
-		"typescript": "^5.8.3",
 		"vite": "^6.3.5",
 		"vite-plugin-image-optimizer": "^2.0.2"
 	},
@@ -54,6 +54,8 @@
 		"stylelint": "^16.19.0",
 		"stylelint-config-sass-guidelines": "^12.1.0",
 		"stylelint-config-standard-scss": "^15.0.1",
-		"stylelint-define-config": "^16.19.0"
+		"stylelint-define-config": "^16.19.0",
+		"ts-node": "^10.9.2",
+		"typescript": "^5.8.3"
 	}
 }

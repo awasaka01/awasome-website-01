@@ -1,15 +1,18 @@
 {
 	// To be used with the 'Toggle Excluded Files' extension
 	"files.exclude": {
-		"**/.github/": true,
-		"**/.cache/": true,
-		"**/.gitignore": true,
-		"**/jsconfig.json": true,
-		"**/node_modules/": true,
-		"**/pnpm-lock.yaml": true,
-		"**/pnpm-workspace.yaml": true,
-		"**/eslint.config.mjs": true,
-		"**/stylelint.config.mjs": true
+		"**/.github/": false,
+		"**/.cache/": false,
+		"**/.gitignore": false,
+		"**/jsconfig.json": false,
+		"**/node_modules/": false,
+		"**/pnpm-lock.yaml": false,
+		"**/pnpm-workspace.yaml": false,
+		"**/eslint.config.mjs": false,
+		"**/tsconfig.json": false,
+		"**/.env": false,
+		"**/not_found.html": false,
+		"**/stylelint.config.mjs": false
 	},
 	"terminal.integrated.minimumContrastRatio": 1,
 	// Disable default validation since stylelint is used

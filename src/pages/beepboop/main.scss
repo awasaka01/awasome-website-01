@@ -1,0 +1,46 @@
+// @use "sass:color";    // https://sass-lang.com/documentation/modules/color/
+// @use "sass:list";     // https://sass-lang.com/documentation/modules/list/
+// @use "sass:map";      // https://sass-lang.com/documentation/modules/map/
+// @use "sass:math";     // https://sass-lang.com/documentation/modules/math/
+// @use "sass:meta";     // https://sass-lang.com/documentation/modules/meta/
+// @use "sass:selector"; // https://sass-lang.com/documentation/modules/selector/
+// @use "sass:string";   // https://sass-lang.com/documentation/modules/string/
+@use "bundled" as *;
+@include reset;
+@include base;
+
+
+
+
+main {
+	background-color: c(bg, 300);
+	outline: 6px solid c(bg, 50);
+	padding: 15px;
+	max-width: 40rem;
+	margin: 0 auto;
+	box-shadow: 5px 5px 20px 5px rgb(0 0 0 / 28.2%);
+}
+#options {
+	color: grey;
+}
+#layers {
+	position: relative;
+	display: flex;
+	background-color: c(bg, 600, 700);
+
+	> canvas {
+		width: 100%;
+		image-rendering: pixelated;
+	}
+	// Overlay additional layers on top of the first
+	> canvas:not(:first-child) {
+		position: absolute;
+		top: 0; left: 0;
+	}
+	@for $i from 1 through 5 { > canvas:nth-child(#{$i}) { z-index: 10 - $i; } }
+}
+
+
+
+
+@include compile-colors; 

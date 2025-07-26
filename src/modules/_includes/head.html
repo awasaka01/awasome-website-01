@@ -21,11 +21,10 @@
 		"react-dom/client": "https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js",
 	{% endif %}
 	{% if addFeatures contains "chroma-js" or addFeatures contains "chroma" %} "chroma-js": "https://unpkg.com/chroma-js@3.1.2/index.js", {% endif %}
-	"zoom-level": "https://unpkg.com/zoom-level@2.5.0/dist/zoom-level.esm.js"
 } }</script>
 
 <!-- Local CSS and JS -->
-<script type="module" src="main.js{{ nocache }}"></script>
+<script type="module" src="main.{{ script-ext | default: "js" }}{{ nocache }}"></script>
 <link rel="stylesheet" href="main.css{{ nocache }}">
 
 
