@@ -8,15 +8,15 @@
 
 # commands
 
-▷ `build` · Quickly build the project with minimal build steps for a working build, skipping minimization, full rollup, etc.
+▷ `devbuild` · Quickly build the project with minimal build steps for a working build, skipping minimization, full rollup, etc.
 
-▷ `start` · Live development server, integrates Vite's dev server into Eleventy's
+▷ `dev` · Live development server, integrates Vite's dev server into Eleventy's
 
-▷ `buildfull` · Full build for production, including everything
+▷ `build` · Full build for production, including everything
 
-▷ `startfull` · Runs `buildfull` when changes in src folder, also hosts the site for easy preview
+▷ `autobuild` · Runs `buildfull` when changes in src folder, also hosts the site for easy preview
 
-▷ `build-b` / `startfull-b` /... · Same as abovee but with 11ty's benchmarking enabled
+<!-- ▷ `build-b` / `startfull-b` /... · Same as abovee but with 11ty's benchmarking enabled -->
 
 notyet▷ `BUILD-FINAL` · Same as `buildfull` but for running in places like github actions, reduced logging and other human things
 

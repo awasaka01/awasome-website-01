@@ -5,9 +5,6 @@ import "dotenv/config";
 const FLAG_FULL_BUILD = process.env.FULL_BUILD !== undefined;
 const { FOLDER_BUILD, FOLDER_DEV, FOLDER_TEMP } = process.env;
 
-// Vite + Plugins
-
-// e
 import { minify } from "html-minifier-terser";
 import { eleventyImageTransformPlugin } from "@11ty/eleventy-img";
 
@@ -92,9 +89,9 @@ export const config = {
 export default async function (eleventyConfig) {
 	eleventyConfig.ignores.add("_*");
 	eleventyConfig.addPassthroughCopy("src/assets/");
-	eleventyConfig.setQuietMode(true);
 	eleventyConfig.addPassthroughCopy({ "src/not_found.html": "not_found.html" });
 	customTransforms(eleventyConfig);
+	if (!FLAG_FULL_BUILD) eleventyConfig.setQuietMode(true);
 
 
 	["js", "ts", "jsx", "tsx", "css"].forEach(addBlankExtensionForPermalinks, eleventyConfig); // eleventyConfig.addExtension that just returns the content, required for permalinks in folder data (like pages.11tydata.js) to work for some reason

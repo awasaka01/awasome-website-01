@@ -65,7 +65,7 @@ jobs:
 
             # Run build command
             - name: Build
-              run: pnpm run buildfull
+              run: pnpm run build
 
             - name: Log after build
               run: echo "✅ Build completed"
