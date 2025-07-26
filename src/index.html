@@ -1,79 +1,66 @@
----
-title: awasomewebsite 01
+---json
+{
+	"addFeatures": ["chroma", "fillRemainingSpace"],
+	"replaceCharacters": {
+		"insertLocation": "__",
+		"regexes": [
+			["1([┏━┓─┃┗┛ ]+)", "g", "<span class='boxdraw-color-1'>$1</span>"],
+			["2([┏━┓─┃┗┛ ]+)", "g", "<span class='boxdraw-color-2'>$1</span>"]
+		]
+	}
+}
 ---
 
 <!DOCTYPE html>
 <html lang="en">
-<head> {% include "head.html" %} </head>
+<head>
+	{% include "head.html" %}
+	<script type="module" src="main.ts"></script>
+</head>
 <body>
-	<section id="container">
-
-	<div id="pageList" style="--n: 53">
-		<span class="darker">
-			<div class="unhideRandom">
-				<br>
-				<!--
-				<p hidden>""</p> 
-				-->
-				<p hidden>""</p> 
-				<p hidden>""</p> 
-				<p hidden>"If you are what you eat then my client is an innocent man!"</p> 
-				<p hidden>"Some mischievous creature snuck into the control room!"</p> 
-				<p hidden>"The dinos are escaping!"</p>
-				<p hidden>"A wild Dino is escaping your park!"</p>
-				<p hidden>"Do not hallucinate. Do not make up factual information."</p>
-			</div>
-
-			<br>
-			<p>FlomWer Personal Home Machine LT-TM [Version 73.63.75.67]</p>
-			<p>(C) Copyright AWASAKA Corporation, 2077. All rights reserved.</p>
-			<p>-------------------------------------------------------------</p>
-		</span>
-		<br>
-		{% include "logo-text.html" %}
-		<p hidden>---------------------------------------------------------------------------------------------</p>
-		<br><br>
-		<p class="darker">C:\> run welcome.sh</p>
-		<p class="title"><b>Things I've (not yet) made:</b></p>
-		<br>
-		<div class="links">
-			<p><a href="/">-> <u>Rain World Scugbook</u> - Description of the thingy</a></p>
-			<p><a href="/">-> <u>Steve Locator</u> - Finds steve</a></p>
-			<p><a href="/">-> <u>TGieleie aaaaaof the thingy</u> - Descrthingy</a></p>
-			<p><a href="/">-> <u>TGieleie a a of the thingy</u> - Descriptiose ase ase a eas n of the thingy</a></p>
-			<p><a href="/">-> <u>TGieleie aease ase ae of the thingy</u> - Descriptae aseaion of the thingy</a></p>
-			<p><a href="/">-> <u>TGieleie aehingy</u> - Descriptae hingy</a></p>
-			<p><a href="/">-> <u>lorem</u> - AAAAAAAAAAAAAAAAAAAA  AAAA AAAAAAAAA AA AAAAAAAAAAAAAAAAAAAAAAAAAAAA</a></p>
-		</div> 
-		<br>
-		
-		<p class="blink darker">C:\></p>
-	</div>
-
-	<div id="barcode"><div><div></div></div></div>		
+	<p>u22w22u</p>
+    <div id="root"></div>
+	<div id="spacing"></div>
+	<main>
 	
-	
-
 	<div>
-		<br><br><br><br><br>
-	</div>
+	<label for="theme-select">Theme: </label>{% include "theme.html" %}
+</div>
+		<br><br><br>
 
-	<div id="sorting">
-		<span><p id="random">Random</p> <p></p> </span>
-		<span>
-			<div>| </div><p>Loop: <output id="loopCount">   </output></p>
-			<div> | </div><p>Time: <output id="timeDisplay">   </output>s</p>
-			<div> | </div><p>Delay: 8ms</p>
-			<div> | </div><p>Bars: 60</p>
-			<div> |</div>
-		</span>
-		<span id="sortingBars">
-			<div style="height: 60em;"></div>
-		</span>
-	</div>
+	<!-- -->
+	<section class="autoResize">
+			<p>1┏━━?f━/f━━┓</p>
+			<p>1┃?f /f hello world ?f /f1┃</p>
+			<p>1┃   2?f─/f   1┃</p>
+			<p>1┃?f /f  ?f /f1┃</p>
+			<p>1┃  [ <a href="/color-preview/">?f /fColor Preview?f /f</a> ]  1┃</p>
+			<p>1┃?f /f  ?f /f1┃</p>
+			<p>1┃  [ <a href="/template/">?f /fTemplate?f /f</a> ]  1┃</p>
+			<p>1┃?f /f  ?f /f1┃</p>
+			<p>1┃  [ <a href="/beepboop/">?f /fBeep Boop?f /f</a> ]  1┃</p>
+			<p>1┃?f /f  ?f /f1┃</p>
+			<p>1┃?f /f  ?f /f1┃</p>
+			<p>1┃?f /f  ?f /f1┃</p>
+			<p>1┃?f /f  ?f /f1┃</p>
+			<p>1┃?f /f  ?f /f1┃</p>
+			<p>1┃?f /f  ?f /f1┃</p>
+			<p>1┃?f /f  ?f /f1┃</p>
+			<p>1┃?f /f  ?f /f1┃</p>
+			<p>1┃?f /f  ?f /f1┃</p>
+			<p>1┃?f /f A ?f /f W ?f /f A ?f /f1┃</p>
+			<p>1┃?f /f  ?f /f1┃</p>
+			<p>1┗?f━/f━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛</p>
+			
 
+			<!-- ?f NEW BLOCK /f -->
 
-</section>
-	<div id="corners"><p></p><p></p><p></p><p></p></div> <!-- Plus symbol in each corner -->
+	</section>
+	<span id="baseline-character-for-size-ref">1</span>
+	<br><br><br><br><br><br><br><br><br><br><br><br>
+	
+	</main>
+	<!-- Inline the scripts that change things that are visible, to prevent flash of unstyled content an external script would show whilst downloading -->
+	<script>{% include "./critical.js" %}</script>
 </body>
 </html>

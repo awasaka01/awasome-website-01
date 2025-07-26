@@ -1,0 +1,103 @@
+// -------------------------------\\
+// ~ forwarded in _bundled.scss ~ \\
+// -------------------------------\\
+
+// how2use:
+// cl(bg) -> var(--bg-500-500)
+// cl(bg, 100) -> var(--bg-100-500)
+// cl(bg, 100, 200) -> var(--bg-100-200)
+// ! REQUIRED AT END OF FILE: 
+// @include compile-colors;
+
+// How much to adjust each color type by, and min/max (multiplied by n-500)
+$themes: (
+	wet: (
+		fg: (color: #f2ead9, l: 0.1, c: 0.000000001, h: 0.02), 
+		bg: (color: #333f58, l: 0.007, c: 0.00001, h: 0.05, cmin: 0.01),
+		hi: (color: #00b9be, l: 0.04, c: 0.00016, h: -0.01), 
+	),
+	default: (
+		fg: (color: #c5c0ca, l: 0.1, c: 0.0001, h: 0.05), 
+		bg: (color: #322637, l: 0.015, c: 0.00001, h: 0.08, cmin: 0.01),
+		hi: (color: #e52e46, l: 0.04, c: 0.00016, h: 0.034), 
+	)
+);
+
+
+
+// Default values for $adjustment params if not specified
+$DEFAULT-color-options: (
+	/* Lightness adjustment factor: */ l: 0.007,
+	/*    Chroma adjustment factor: */ c: 0.0001,
+	/*       Hue adjustment factor: */ h: 0.05,
+	/*           Minimum lightness: */ lmin: -999,
+	/*           Maximum lightness: */ lmax: 100, 
+	/*              Minimum chroma: */ cmin: 0,
+	/*              Maximum chroma: */ cmax: 0.4,
+	/*     Minimum hue, in degrees: */ hmin: -360,
+	/*     Maximum hue, in degrees: */ hmax: 360,
+);
+
+
+
+@use "sass:map";
+@use "sass:list";
+@use "sass:math";
+@use "sass:color";
+
+// Fill in default values for each color type in each theme using $DEFAULT-adjustment-params
+@each $theme, $colors in $themes { @each $type, $options in $colors { @each $key, $default in $DEFAULT-color-options { @if not map.has-key($options, $key) { $options: map.merge($options, ($key: $default)); } }		$colors: map.merge($colors, ($type: $options)); }	$themes: map.merge($themes, ($theme: $colors)); }
+
+$colorsToCompile: ();
+@each $theme-id, $colors in $themes { $colorsToCompile: map.set($colorsToCompile, $theme-id, []); }
+
+@function cl($id, $number: 500, $lightness: 500) {
+
+	$varname: "--#{$id}-#{$number}-#{$lightness}";
+	// Generate colors for each theme 
+	$colorsGenerated: ();
+
+	// if colorsToCompile.light.$id does not exist, create it:
+	@if not map.has-key(map.get($colorsToCompile, default), $varname) {
+		@each $theme-id, $color-types in $themes {
+			$color-options: map.get($color-types, $id);
+			$color: map.get($color-options, color);
+			// @debug "";
+			// @debug "clrs";
+			// @debug $color;
+			$l: map.get($color-options, l); $lmin: map.get($color-options, lmin); $lmax: map.get($color-options, lmax);
+			$c: map.get($color-options, c); $cmin: map.get($color-options, cmin); $cmax: map.get($color-options, cmax);
+			$h: map.get($color-options, h); $hmin: map.get($color-options, hmin); $hmax: map.get($color-options, hmax);	
+			// @debug $l $c $h;
+			$L: math.clamp($lmin * 100%, color.channel($color, "lightness", $space: oklch) + (($number - 500) * $l), $lmax * 100%);
+			$C: math.clamp($cmin, color.channel($color, "chroma", $space: oklch) + ((500 - $number) * $c), $cmax);
+			$H: math.clamp($hmin * 1deg, color.channel($color, "hue", $space: oklch) + (($number - 500) * $h), $hmax * 1deg);
+			// @debug $L $C $H;
+			$out-color: color.change(lch(0% 0 0deg), $lightness: $L, $chroma: $C, $hue: $H, $space: oklch);
+			// @debug $out-color;
+			$out-color: color.scale($out-color, $lightness: (($lightness - 500) * 0.001) * 100%, $space: oklch);
+			// @debug $out-color;
+			// $out-color: (color.channel($out-color, "lightness", $space: oklch) color.channel($out-color, "chroma", $space: oklch) color.channel($out-color, "hue", $space: oklch));
+			// @debug $out-color;
+			$colorsGenerated: map.merge($colorsGenerated, ($theme-id: $out-color));
+			$colorsToCompile: map.set($colorsToCompile, $theme-id, map.set(map.get($colorsToCompile, $theme-id), $varname, $out-color)) !global;
+		}
+	}
+	@return var(#{$varname}); 
+}
+@function c($id, $number: 500, $lightness: 500) { @return cl($id, $number, $lightness); }
+
+@mixin compile-colors {
+	@each $theme-id, $colors in $colorsToCompile {
+		/* Color variables for '#{$theme-id}' theme, only used ones are compiled */
+		@if $theme-id == "default" {
+			[data-theme="default"], html:not([data-theme]) {
+				@each $varname, $color in $colors { #{$varname}: #{$color}; }
+			}
+		} @else {
+			[data-theme="#{$theme-id}"] {
+				@each $varname, $color in $colors { #{$varname}: #{$color}; }
+			}
+		}
+	}
+}

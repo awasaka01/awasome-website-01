@@ -1,7 +1,3 @@
-import {} from "awa";
-
-window.addEventListener("load", () => {
-
-	//
+window.addEventListener("DOMContentLoaded", () => {
 
 });

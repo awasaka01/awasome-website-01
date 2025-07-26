@@ -1,0 +1,76 @@
+<!-- Meta -->	
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="author" content="awasaka01"/>
+<meta name="description" content="{{ description | default: 'silly little website' }}">
+
+
+<!-- Display -->
+<title>{{ title | default: "default title haha" }}</title>
+<link rel="icon" href="{{ favicon | default: '/assets/images/favicon.ico' }}" type="image/gif"/>
+
+
+
+<!-- [?] chroma.js - Color Helper [https://gka.github.io/chroma.js/] -->
+<!-- How to use: Add <import chroma from "chroma-js"> to your file-->
+<!-- For autocompletion: Install the module's types locally (@types/chroma-js) Add /// <reference types="chroma-js"/> to the top of your file -->
+<script type="importmap">{ "imports": {
+	{% if addFeatures contains "react" %} 
+		"react": "https://unpkg.com/react@18.2.0/umd/react.production.min.js",
+		"react-dom/client": "https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js",
+	{% endif %}
+	{% if addFeatures contains "chroma-js" or addFeatures contains "chroma" %} "chroma-js": "https://unpkg.com/chroma-js@3.1.2/index.js", {% endif %}
+		"beep": "boop"
+} }</script>
+
+<!-- Local CSS and JS -->
+<script type="module" src="main.{{ script-ext | default: "js" }}{{ nocache }}"></script>
+<link rel="stylesheet" href="main.css{{ nocache }}">
+
+
+
+{% if addFeatures contains "gsap" %}
+<!-- GSAP - Animation Library [https://gsap.com/docs/] -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+{% endif %}
+
+
+<script>
+	const theme = localStorage.getItem("theme");
+	if (theme) { document.documentElement.setAttribute("data-theme", theme); }
+</script>
+
+
+{% comment %} <noscript><h1 style="background-color: #680000; color: #fff;"><b><u>JavaScript is required to run this site!!!</u></b></h1></noscript> {% endcomment %}
+
+
+{% comment %} 
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "{{ title | default: 'default title haha' }}",
+  "url": "{{ url | default: site.url | default: '/' }}",
+  "description": "{{ description | default: 'silly little website' }}"
+}
+</script> 
+<meta name="description" content="{{ description | default: 'silly little website' }}"/>
+<meta name="robots" content="index, follow"/>
+<meta name="keywords" content="{{ keywords | default: 'awa, silly, website, blog, portfolio, coding' }}"/>
+<meta name="theme-color" content="#00b9be"/>
+<meta name="color-scheme" content="light dark"/>
+<meta name="referrer" content="strict-origin-when-cross-origin"/>
+<meta property="og:title" content="{{ title | default: 'default title haha' }}"/>
+<meta property="og:description" content="{{ description | default: 'silly little website' }}"/>
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="{{ url | default: site.url | default: '/' }}"/>
+<meta property="og:image" content="{{ og_image | default: '/assets/images/og-image.png' }}"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="{{ title | default: 'default title haha' }}"/>
+<meta name="twitter:description" content="{{ description | default: 'silly little website' }}"/>
+<meta name="twitter:image" content="{{ og_image | default: '/assets/images/og-image.png' }}"/>
+<link rel="canonical" href="{{ url | default: site.url | default: '/' }}"/>
+
+{% endcomment %}

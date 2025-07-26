@@ -1,0 +1,21 @@
+---yaml
+title: "Template Page"
+---
+<!DOCTYPE html><html lang="en"><head>
+
+	{% include "head.html" %}
+
+</head><body>
+	
+	<label for="theme-select">Theme: </label>{% include "theme.html" %}<a href="/">Home</a>
+
+	<main>
+		<section id="options">
+		<p>Options:</p> 
+		<br>
+		</section>
+		{% assign size = 50 %}
+		<div id="layers"><canvas width={{size}} height={{size}}></canvas><canvas width={{size}} height={{size}}></canvas></div>
+	</main>
+
+</body></html>

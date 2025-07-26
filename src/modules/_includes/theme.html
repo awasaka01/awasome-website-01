@@ -1,0 +1,12 @@
+<select id="theme-select">
+	<option value="default">Default</option>
+	<option value="wet">wet</option>
+</select>
+<script>
+	const dropdown = document.getElementById("theme-select");
+	if (theme) { dropdown.value = theme; }
+	dropdown.addEventListener("change", () => {
+		document.documentElement.setAttribute("data-theme", dropdown.value);
+		localStorage.setItem("theme", dropdown.value);
+	});
+</script>

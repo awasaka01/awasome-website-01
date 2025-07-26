@@ -1,14 +1,76 @@
 {
+	// To be used with the 'Toggle Excluded Files' extension
 	"files.exclude": {
-		"**/.eleventy.js": false,
+		"**/.github/": false,
+		"**/.cache/": false,
 		"**/.gitignore": false,
-		"**/.vscode/": false,
-		"**/*.css": false,
-		"**/*.css.map": false,
 		"**/jsconfig.json": false,
 		"**/node_modules/": false,
-		"**/package.json": false,
 		"**/pnpm-lock.yaml": false,
-		"**/pnpm-workspace.yaml": false
+		"**/pnpm-workspace.yaml": false,
+		"**/eslint.config.mjs": false,
+		"**/tsconfig.json": false,
+		"**/.env": false,
+		"**/not_found.html": false,
+		"**/stylelint.config.mjs": false
+	},
+	"terminal.integrated.minimumContrastRatio": 1,
+	// Disable default validation since stylelint is used
+	"css.validate": false,
+	"less.validate": false,
+	"scss.validate": false,
+	"editor.codeActionsOnSave": { "source.fixAll.stylelint": "explicit" },
+	// Buttons to run the commands easier
+	"actionButtons": {
+		"commands": [
+			{
+				"name": "$(tools) Build",
+				"command": "pnpm run build"
+			},
+			{
+				"name": "$(eye) Live Preview",
+				"command": "pnpm run start"
+			}
+		],
+		"defaultColor": "none",
+		"reloadButton": "↻",
+		"loadNpmCommands": false
+	},
+	"workbench.colorCustomizations": {
+		"terminal.ansiBlack": "#000000",
+		"terminal.ansiRed": "#cd3131",
+		"terminal.ansiGreen": "#0dbc79",
+		"terminal.ansiYellow": "#e5e510",
+		"terminal.ansiBlue": "#2472c8",
+		"terminal.ansiMagenta": "#bc3fbc",
+		"terminal.ansiCyan": "#11a8cd",
+		"terminal.ansiWhite": "#e5e5e5",
+		"terminal.ansiBrightBlack": "#666666",
+		"terminal.ansiBrightRed": "#f14c4c",
+		"terminal.ansiBrightGreen": "#23d18b",
+		"terminal.ansiBrightYellow": "#f5f543",
+		"terminal.ansiBrightBlue": "#3b8eea",
+		"terminal.ansiBrightMagenta": "#d670d6",
+		"terminal.ansiBrightCyan": "#29b8db",
+		"terminal.ansiBrightWhite": "#e5e5e5",
+		"terminal.foreground": "#ffffff",
+		"terminal.selectionBackground": "#c1deff"
+	},
+	// "commentAnchors.workspace.lazyLoad": true,
+	// "commentAnchors.workspace.excludeFiles": "**/{__dist,node_modules,.git,.idea,target,out,build,bin,obj,dist,vendor}/**/*",
+	// "commentAnchors.workspace.pathFormat": "full",
+	"editor.wordSeparators": "`~!@#$%^&*()=+[{]}\\|;:'\",.<>/?", // remove '-' from the list to allow double clicking on words to copy them
+	"editor.tokenColorCustomizations": {
+		"textMateRules": [
+			{
+				"scope": ["comment", "punctuation.definition.comment"],
+				"settings": {
+					"fontStyle": ""
+				}
+			}
+		]
+	},
+	"files.associations": {
+		"*.html": "liquid"
 	}
 }
