@@ -90,7 +90,6 @@ window.addEventListener("DOMContentLoaded", () => {
 		),
 		cells: [],
 	}));
-console.log(layers);
 
 	layers.forEach((layer, i2) => {
 		const { canvas, ctx } = layer;
