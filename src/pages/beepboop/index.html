@@ -14,8 +14,14 @@ title: "Template Page"
 		<p>Options:</p> 
 		<br>
 		</section>
-		{% assign size = 50 %}
-		<div id="layers"><canvas width={{size}} height={{size}}></canvas><canvas width={{size}} height={{size}}></canvas></div>
+
+		<!-- Create n amount of layers -->
+		<div id="layers">
+			{% assign size = 50 %}
+			{% for i in (1..5) %}
+				<canvas width={{size}} height={{size}}></canvas>
+			{% endfor %}
+		</div>
 	</main>
 
 </body></html>

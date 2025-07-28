@@ -1,38 +1,25 @@
 
-		"beforeBuild": "cross-env FULL_BUILD=1 node ./scripts/beforeBuild.js",
-		"afterBuild": "node ./scripts/afterBuild.js",
-		"eleventy-fullbuild": "cross-env FULL_BUILD=1 eleventy --quiet",
-		"build-dev": "npm-run-all -s beforeBuild cross-env FULL_BUILD=1 eleventy afterBuild",
-		"start": "cross-env FULL_BUILD=1 npm-run-all -s beforeBuild start",
-		"clear": "rimraf __dev/* -g && rimraf __production/* -g && rimraf ____temp/* -g",
-		"start2": "node ./scripts/beforeBuild.js && eleventy --serve",
-		"start": "node ./scripts/beforeBuild.js && eleventy --incremental --serve",
-		"build": "node ./scripts/beforeBuild.js && eleventy --quiet && node ./scripts/afterBuild.js",
-		"buildfull": "cross-env FULL_BUILD=1 node ./scripts/beforeBuild.js -b && eleventy && node ./scripts/afterBuild.js",
-		
-		"startfull": "cross-env FULL_BUILD=1 FULL_START=1 npm-run-all -p startfull:autobuild startfull:server",
-		"startfull:autobuild": "nodemon --watch .eleventy.js --watch src --ext \"*\" --exec \"pnpm buildfull\" --delay 4",
-		"startfull:server": "serve __production -p 8080 -n",
-		
-		"start-b": "cross-env DEBUG=Eleventy:Benchmark* && pnpm run start",
-		"build-b": "cross-env DEBUG=Eleventy:Benchmark* && pnpm run build",
-		"startfull-b": "cross-env DEBUG=Eleventy:Benchmark* && pnpm run startfull",
-		"buildfull-b": "cross-env DEBUG=Eleventy:Benchmark* && pnpm run buildfull"
 
 
 
 // TODO - Actually TODO:
 
 # Minor:
-[ ] Add 404 page
+[x] Add 404 page 
 [ ] Make unimmportant characters on the main menu not selectable
+[ ] Copy old neocities + github link
 
 
 # Framework:
 [ ] 
 
 
+# Major:
+[ ] NO MORE COMPLETE OVERHAULS OF THE WHOLE WEBSITE
+
+
 # Would be nice:
+
 sitemap.xml [https://github.com/aplauche/11ty-Rapid-Starter/blob/main/src/sitemap.njk#L10]
 own custom image optimizer plugin
 	optimize to a lower res .min.webp and a regular .webp
@@ -66,4 +53,5 @@ blog system using markdown files
 	tags, dates, 
 customizable output url
 minification
+		"buildfull-b": "cross-env DEBUG=Eleventy:Benchmark* && pnpm run buildfull"
 deleteion of unused files

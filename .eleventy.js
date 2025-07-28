@@ -140,7 +140,7 @@ export default async function (eleventyConfig) {
 // Minifies HTML, using html-minifier-terser
 async function minifyHTML (content) {
 	if (!this.page.outputPath.endsWith(".html")) return content;
-	content = content.replace(/[\r\t\n]/g, "").split("\n").filter((x) => x.length > 0).map((x) => x.trim()).join("\n").trim();
+	content = content.replace(/[\r\t]/g, "").split("\n").map((x) => x.trim()).join("\n");
 	content = await minify(content, { // useful: <!-- htmlmin:ignore --> [https://github.com/terser/html-minifier-terser?tab=readme-ov-file#options-quick-reference]
 		removeScriptTypeAttributes: true,
 		collapseBooleanAttributes: true,
@@ -148,8 +148,8 @@ async function minifyHTML (content) {
 		removeOptionalTags: false,
 		removeComments: true,
 		minifyURLs: true,
-		minifyCSS: true,
-		minifyJS: true,
+		minifyCSS: false,
+		minifyJS: false,
 	});
 	return content;
 }

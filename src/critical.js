@@ -1,5 +1,5 @@
-const onlyText = (str) => str.replace(/\?%\?.+?\?%\?/gm, "");
 
+const onlyText = (str) => str.replace(/\?%\?.+?\?%\?/gm, "");
 
 // Make the font size in .autoResize elements as big as possible to touch edges of the container
 async function setWidths (zoomLevel = 1.25) {
