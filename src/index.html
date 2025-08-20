@@ -1,11 +1,11 @@
 ---json
 {
-	"addFeatures": ["chroma", "fillRemainingSpace"],
+	"addFeatures": ["chroma", "fillRemainingSpace", "bezier-easing"],
 	"replaceCharacters": {
 		"insertLocation": "__",
 		"regexes": [
-			["1([┏━┓─┃┗┛ ]+)", "g", "<span class='boxdraw-color-1'>$1</span>"],
-			["2([┏━┓─┃┗┛ ]+)", "g", "<span class='boxdraw-color-2'>$1</span>"]
+			["1([┏━┓─┃┗┛╭╮╯╰╋ ]+)", "g", "<span class='boxdraw-color-1'>$1</span>"],
+			["2([┏━┓─┃┗┛╭╮╯╰╋ ]+)", "g", "<span class='boxdraw-color-2'>$1</span>"]
 		]
 	}
 }
@@ -18,48 +18,58 @@
 	<script type="module" src="main.ts"></script>
 </head>
 <body>
-	<p>u22w22u</p>
-    <div id="root"></div>
-	<div id="spacing"></div>
 	<main>
-	
-	<div>
-	<label for="theme-select">Theme: </label>{% include "theme.html" %}
-</div>
+		
+		<div><label for="theme-select">Theme: </label>{% include "theme.html" %}</div>
 		<br><br><br>
 
-	<!-- -->
-	<section class="autoResize">
-			<p>1┏━━?f━/f━━┓</p>
-			<p>1┃?f /f hello world ?f /f1┃</p>
-			<p>1┃   2?f─/f   1┃</p>
-			<p>1┃?f /f  ?f /f1┃</p>
-			<p>1┃  [ <a href="/color-preview/">?f /fColor Preview?f /f</a> ]  1┃</p>
-			<p>1┃?f /f  ?f /f1┃</p>
-			<p>1┃  [ <a href="/template/">?f /fTemplate?f /f</a> ]  1┃</p>
-			<p>1┃?f /f  ?f /f1┃</p>
-			<p>1┃  [ <a href="/beepboop/">?f /fBeep Boop?f /f</a> ]  1┃</p>
-			<p>1┃?f /f  ?f /f1┃</p>
-			<p>1┃?f /f  ?f /f1┃</p>
-			<p>1┃?f /f  ?f /f1┃</p>
-			<p>1┃?f /f  ?f /f1┃</p>
-			<p>1┃?f /f  ?f /f1┃</p>
-			<p>1┃?f /f  ?f /f1┃</p>
-			<p>1┃?f /f  ?f /f1┃</p>
-			<p>1┃?f /f  ?f /f1┃</p>
-			<p>1┃?f /f  ?f /f1┃</p>
-			<p>1┃?f /f A ?f /f W ?f /f A ?f /f1┃</p>
-			<p>1┃?f /f  ?f /f1┃</p>
-			<p>1┗?f━/f━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛</p>
-			
-
-			<!-- ?f NEW BLOCK /f -->
-
-	</section>
-	<span id="baseline-character-for-size-ref">1</span>
-	<br><br><br><br><br><br><br><br><br><br><br><br>
-	
+		<!-- Main content -->
+			<div class="autoResize" id="page-list">
+				<!-- ?f NEW BLOCK /f -->
+				<p>1┏━━?f━/f━━┓</p>
+				<p>1┃?f /f  ?f /f1┃</p>
+				<p>1┃?f /f hi 1?f /f┃</p>
+				<p>1┃?f /f  ?f /f1┃</p>
+				<p>1┃?f /f list of pages that maybe exists: 1?f /f┃</p>
+				<p>1┃  2?f─/f  1┃</p>
+				<p>1┃?f /f  ?f /f1┃</p>
+				<p>1┃   [ <a href="/color-preview/">?f /f<span>Color Preview</span>?f /f</a> ]1   ┃</p>
+				<p>1┃?f /f  ?f /f1┃</p>
+				<p>1┃   [ <a href="/template/">?f /f<span>Template</span>?f /f</a> ]1   ┃</p>
+				<p>1┃?f /f  ?f /f1┃</p>
+				<p>1┃   [ <a href="/beepboop/">?f /f<span>Beep Boop</span>?f /f</a> ]1   ┃</p>
+				<p>1┃?f /f  ?f /f1┃</p>
+				<p>1┃?f /f  ?f /f1┃</p>
+				<p>1┃?f /f  ?f /f1┃</p>
+				<p>1┃?f /f  ?f /f1┃</p>
+				<p>1┃?f /f  ?f /f1┃</p>
+				<p>1┃?f /f  ?f /f1┃</p>
+				<p>1┃?f /f  ?f /f1┃</p>
+				<p>1┃?f /f  ?f /f1┃</p>
+				<p>1┃?f /f  ?f /f1┃</p>
+				<p>1┃?f /f a ?f /f w ?f /f a ?f /f1┃</p>
+				<p>1┃?f /f  ?f /f1┃</p>
+				<p>1┗?f━/f━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛</p>
+				<!-- ?f NEW BLOCK /f -->
+			</div>
+			<div class="autoResize" id="sparkle">
+				<p>        glowe :3        </p>
+			</div>
+		</section>
+		<span id="baseline-character-for-size-ref">1</span>
+		<br><br><br><br><br><br><br><br><br><br><br><br>
+		
 	</main>
+
+	
+	<!-- Elements that are outside of the normal flow, such as backgrounds or overlays -->
+	<div id="bg-full">
+		<canvas id="stars"></canvas>
+	</div>
+    <div id="root"></div>
+	<div id="spacing"></div>
+
+
 	<!-- Inline the scripts that change things that are visible, to prevent flash of unstyled content an external script would show whilst downloading -->
 	<script>{% include "./critical.js" %}</script>
 </body>

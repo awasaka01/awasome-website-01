@@ -13,8 +13,12 @@ async function setWidths (zoomLevel = 1.25) {
 		const vw = Math.min(uh) * (zoomLevel - 0.25);
 
 
+		// Get all children, 2 levels deep
+		// const children = Array.from(el.children).flatMap((x) => Array.from(x.children) || []);
+		// console.log(children);
 		const children = Array.from(el.children);
-		const longestLine = children.map((x) => onlyText(x.textContent).length).reduce((a, b) => Math.max(a, b));
+
+		const longestLine = children.map((x) => onlyText(x.textContent).length).reduce(((a, b) => Math.max(a, b)), 0);
 		// console.log(children.map((x) => onlyText(x.textContent)))
 		el.style.setProperty("font-size", `${((vw / singleCharacter) / longestLine) * 100}px`);
 	});

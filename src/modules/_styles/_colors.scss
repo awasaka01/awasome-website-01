@@ -16,6 +16,11 @@ $themes: (
 		bg: (color: #333f58, l: 0.007, c: 0.00001, h: 0.05, cmin: 0.01),
 		hi: (color: #00b9be, l: 0.04, c: 0.00016, h: -0.01), 
 	),
+	sun: (
+		fg: (color: #262421, l: 0.1, c: 0.000000001, h: 0.02), 
+		bg: (color: #f1e1d3, l: 0.007, c: 0.00001, h: 0.05, cmin: 0.01),
+		hi: (color: #fae05c, l: 0.04, c: 0.00016, h: -0.01), 
+	),
 	default: (
 		fg: (color: #c5c0ca, l: 0.1, c: 0.0001, h: 0.05), 
 		bg: (color: #322637, l: 0.015, c: 0.00001, h: 0.08, cmin: 0.01),
@@ -51,7 +56,7 @@ $DEFAULT-color-options: (
 $colorsToCompile: ();
 @each $theme-id, $colors in $themes { $colorsToCompile: map.set($colorsToCompile, $theme-id, []); }
 
-@function cl($id, $number: 500, $lightness: 500) {
+@function cl($id, $number: 500, $lightness: 500, $alpha: 1) {
 
 	$varname: "--#{$id}-#{$number}-#{$lightness}";
 	// Generate colors for each theme 
@@ -73,19 +78,22 @@ $colorsToCompile: ();
 			$C: math.clamp($cmin, color.channel($color, "chroma", $space: oklch) + ((500 - $number) * $c), $cmax);
 			$H: math.clamp($hmin * 1deg, color.channel($color, "hue", $space: oklch) + (($number - 500) * $h), $hmax * 1deg);
 			// @debug $L $C $H;
-			$out-color: color.change(lch(0% 0 0deg), $lightness: $L, $chroma: $C, $hue: $H, $space: oklch);
+			
+			// Create color from variables above, adjust brightness, adjust opacity
+			$out-color: color.change(lch(0% 0 0deg), $lightness: $L, $chroma: $C, $hue: $H, $space: oklch, $alpha: $alpha);
 			// @debug $out-color;
 			$out-color: color.scale($out-color, $lightness: (($lightness - 500) * 0.001) * 100%, $space: oklch);
 			// @debug $out-color;
-			// $out-color: (color.channel($out-color, "lightness", $space: oklch) color.channel($out-color, "chroma", $space: oklch) color.channel($out-color, "hue", $space: oklch));
+			$out-color: color.change($out-color, $alpha: $alpha);
 			// @debug $out-color;
+
 			$colorsGenerated: map.merge($colorsGenerated, ($theme-id: $out-color));
 			$colorsToCompile: map.set($colorsToCompile, $theme-id, map.set(map.get($colorsToCompile, $theme-id), $varname, $out-color)) !global;
 		}
 	}
 	@return var(#{$varname}); 
 }
-@function c($id, $number: 500, $lightness: 500) { @return cl($id, $number, $lightness); }
+@function c($id, $number: 500, $lightness: 500, $alpha: 1) { @return cl($id, $number, $lightness, $alpha); }
 
 @mixin compile-colors {
 	@each $theme-id, $colors in $colorsToCompile {

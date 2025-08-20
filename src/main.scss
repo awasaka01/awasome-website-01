@@ -1,17 +1,58 @@
 @use "bundled" as *;
+@use "sass:color";
+@include reset;
+
 :root {
 	--font-size: 10px;
 }
 $body-padding: 10px;
 body {
 	font-family: gohu11, monospace;
-	background-color: c(bg);
+	background-color: c(bg, 400, 0);
 	color: c(fg);
 	box-sizing: border-box;
 	padding: $body-padding;
 	margin: 0;
 	min-width: max-content;
 }
+html {
+	// height: 100%;
+}
+
+
+#bg-full {
+
+	inset: 0 0 0 0;
+	position: absolute;
+	max-width: 100%;
+	height: max-content;
+	overflow: hidden;
+	z-index: -1;
+	pointer-events: none;
+	> * {
+		display: block;
+		padding: 0;
+		margin: 0;
+	}
+}
+#stars {
+	//
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #spacing {
 	width: calc(100% - $body-padding * 2);
 	height: calc(100% - $body-padding * 2);
@@ -25,7 +66,7 @@ body {
 	max-width: 65rem;
 }
 #theme-select {
-	font-size: 2em;
+	// font-size: 2em;
 }
 .boxdraw-color-1 {
 	color: c(fg, 300, 500);
@@ -33,6 +74,7 @@ body {
 .boxdraw-color-2 {
 	color: c(fg, 100, 500);
 }
+
 
 
 
@@ -44,50 +86,87 @@ body {
 }
 
 main {
-	// box-sizing: border-box;
-
 	margin: 0 auto;
-
 	display: grid;
-	max-width: 70rem;
 	grid-template-columns: 1fr minmax(0, 1fr) 1fr;
 	justify-items: center;
-	// max-width: 100%;
-	// width: 100%;
 	> * {
 		grid-column: 1 / -1;
 	}
 }
+#sparkle {
+	margin-top: 20px;
+	* {
+		white-space: pre;
+		text-shadow: 
+			0 0 12px currentcolor;
+		opacity: 0.9;
+	}
+}
 
+#page-list {
+	background-color: c(bg, 500, 500, 0.9);
+	outline: c(bg, 300, 450) solid 9px;
+	margin-top: 30px;
 
-
-.autoResize {
-
-	background-color: c(bg, 200, 500);
 	line-height: 1;
 	* {
 		font-size: inherit;
-		white-space: pre;
 		font-family: inherit;
+		white-space: pre;
 		margin: 0;
 		padding: 0;
 		border: none;
 		background-color: transparent;
 	}
-}
-a {
-	// position: absolute;
-	// transform-origin: center center;
-	// transform: scale(1.3);
-	&:hover {
-		background-color: cl(hi);
-		color: c(hi, 0, 40);
-	}
-	color: cl(fg, 450, 500);
-	text-decoration: none;
+	a {
+		// position: absolute;
+		// transform-origin: center center;
+		// transform: scale(1.3);
+		color: cl(fg, 100, 999);
+		text-decoration: none;
+		cursor: pointer;
+		
+		> span {
+			$distance: 10; // distance (in characters) to fade-in from
 
-	
-	cursor: pointer;
+			position: relative;
+			text-decoration: underline cl(fg, 450, 501, 0.7) 1px; // TODO - can't have diff opacity for same color in cl() 
+			
+			&::after { right: calc(100% + #{$distance}ch); content: "<- "; }
+			&::before { left: calc(100% + #{$distance}ch); content: " ->"; } 
+			&::before, &::after {
+				position: absolute;
+				display: inline-block;
+
+				opacity: 0;
+				color: inherit;
+
+				transition-duration: 0.1s; // instantly reset when unhover
+				transition-timing-function: steps(#{$distance});
+				transition-property: left, right, opacity;
+			}
+		}
+		&:hover {
+			color: #000;
+			background-color: cl(hi);
+			> span {
+				text-decoration: none;
+				&::after { right: 100%; content: "-> "; }
+				&::before { left: 100%; content: " <-"; }
+				&::after, &::before {
+					opacity: 1;
+					transition-duration: 0.3s;
+				}
+			}
+		}
+	} 
 }
+
+
+.autoResize {
+	//
+}
+
 
 @include compile-colors;

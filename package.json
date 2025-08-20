@@ -6,14 +6,11 @@
 	"scripts": {
 		"beforeBuild": "node ./scripts/beforeBuild.js",
 		"afterBuild": "node ./scripts/afterBuild.js",
-
 		"eleventy-build": "eleventy",
 		"eleventy-serve": "eleventy --incremental --serve",
-
 		"dev": "npm-run-all -s beforeBuild eleventy-serve",
 		"devbuild": "npm-run-all -s beforeBuild eleventy-build afterBuild",
-
-		"build": "cross-env FULL_BUILD=1 npm-run-all -s beforeBuild eleventy-build afterBuild",		
+		"build": "cross-env FULL_BUILD=1 npm-run-all -s beforeBuild eleventy-build afterBuild",
 		"buildauto": "cross-env FULL_BUILD=1 FULL_START=1 npm-run-all -s beforeBuild -p buildauto:1 buildauto:2",
 		"buildauto:1": "nodemon --watch .eleventy.js --watch src --ext \"*\" --exec \"pnpm run build\" --delay 4",
 		"buildauto:2": "serve __production -p 8080 -n"
@@ -28,6 +25,7 @@
 		"@11ty/eleventy-img": "^6.0.4",
 		"@vitejs/plugin-react": "^4.7.0",
 		"ansis": "^4.1.0",
+		"bezier-easing": "^2.1.0",
 		"chalk": "^5.4.1",
 		"chroma-js": "^3.1.2",
 		"cross-env": "^10.0.0",
