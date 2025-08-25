@@ -1,85 +1,95 @@
-import type { BaseCell } from "./cells.js";
-import * as types from "./types.js";
-const { ErrNotEmpty, ErrOutOfBounds } = types;
+import { BaseCell } from "./cells.js";
+import { config, mouse, clr, symbols, WIDTH, HEIGHT, indexToXY } from "./global.js";
 
-
-export abstract class BaseLayer {
-	protected constructor () {}
-}
 
 // Visual Layer, only used for rendering to a canvas
-export class VisualLayer extends BaseLayer {
+export class VisualLayer {
+	private imageData : ImageData;
+	private data32 : Uint32Array;
+
 	readonly canvas : HTMLCanvasElement;
 	readonly ctx : CanvasRenderingContext2D;
+
 	public autoRender ?: boolean;
-	public cells : BaseCell[];
 
 	constructor (canvas : HTMLCanvasElement, { autoRender = true } = {}) {
-		super();
+		const ctx = canvas.getContext("2d");
+		ctx.imageSmoothingEnabled = false;
+		this.ctx = ctx;
 		this.canvas = canvas;
-		this.ctx = canvas.getContext("2d");
-		this.ctx.imageSmoothingEnabled = false;
+
+		// Create Image Buffer, for efficient single pixel changes
+		// imageData.data is an array with 4 bytes per pixel [r, g, b, a, r, g, b, a, ...],
+		// data32 combines the 4 bytes into a single 32-bit number, access each individual byte using shifts [rgba, rgba, ...]
+		this.imageData = ctx.createImageData(WIDTH, HEIGHT);
+		this.data32 = new Uint32Array(this.imageData.data.buffer);
+
+		// Options
 		this.autoRender = autoRender;
-		this.cells = [];
 	}
+
+
+	private pixelsHaveBeenChanged = false;
+
+	public setPixel (index : number, RGBa32bit : number) {
+		if (this.pixelsHaveBeenChanged === false) this.pixelsHaveBeenChanged = true;
+		this.data32[index] = RGBa32bit;
+	}
+
 	public draw () {
-		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-		this.cells.forEach((cell) => cell.draw());
+		if (this.pixelsHaveBeenChanged) { // Only draw if a change has been made
+			this.pixelsHaveBeenChanged = false;
+			this.ctx.putImageData(this.imageData, 0, 0);
+		}
 	}
-	public add (cell : BaseCell) { this.cells.push(cell); }
-	public remove (cell : BaseCell) { this.cells.splice(this.cells.indexOf(cell), 1); }
 }
+
+
 
 // Collision Layer, used for updates
-export class CollisionLayer extends BaseLayer {
-	private grid : Map<string, BaseCell | null>;
-	public autoTick ?: boolean; // Whether to tick this layer in the main game loop, can still be manually triggered
+type CollisionLayerOptions = { autoTick ?: boolean, edgeLooping ?: boolean };
+export class CollisionLayer {
 
-	constructor (readonly width : number, readonly height : number,	{ autoTick = true, edgeLooping = true } = {}) {
-		if (width < 0 || height < 0) throw new Error(`[CollisionLayer] Width and height must be >= 0, got ${width}, ${height}`);
-		super();
-		this.width = width;
-		this.height = height;
-		this.autoTick = autoTick;
-		this.cells = [];
+	public grid : (BaseCell | null)[];
+	public cells : Set<BaseCell> = new Set();
+	public options : CollisionLayerOptions;
 
-		// Generate an empty Map to store postitions of all cells, coordinates are in the format `${x} ${y}`
-		this.grid = new Map<string, BaseCell | null>(Array.from({ length: width * height }, (_, i) => [`${i % width} ${Math.trunc(i / width)}`, null]));
+	constructor (options : CollisionLayerOptions = {}) {
+		this.options = { autoTick: true, edgeLooping: true, ...options };
+
+		// Generate an empty 2D array to store postitions of all cells on this layer, index = 'x + y * WIDTH'
+		this.grid = Array.from({ length: WIDTH * HEIGHT }, () => null);
 	}
 
-	public move (cell : BaseCell, toX : number, toY : number, skipCheck = false) {
-		if (skipCheck !== true) {
-			const result = this.CheckIfInBoundsAndEmpty(toX, toY); if (result !== true)
-			return result;
-		}
-		this.grid.set(`${cell.x} ${cell.y}`, null);
-		this.grid.set(`${toX} ${toY}`, cell);
-		return true;
-	}
-	public set (x : number, y : number, cell : BaseCell) {
-		const result = this.CheckIfInBoundsAndEmpty(x, y); if (result !== true) return result;
-		this.grid.set(`${x} ${y}`, cell);
-		this.cells.push(cell);
-		return true;
-	}
-	public remove (x : number, y : number) {
-		if (x < 0 || y < 0 || x >= this.width || y >= this.height) return ErrOutOfBounds;
-		this.grid.set(`${x} ${y}`, null);
-		this.cells.splice(this.cells.findIndex((cell) => cell.x === x && cell.y === y), 1);
-		return true;
+
+	public get (index : number) { return this.grid[index]; }
+
+	public add (cell : BaseCell) : Symbol | BaseCell | void {
+		const index = cell.index;
+		const destination = this.grid[index];
+
+		if (destination === undefined) throw Error(`Out of bounds: ${cell.x}, ${cell.y}`);
+		if (destination !== null) return destination; // A cell already exists at this location
+
+		this.cells.add(cell);
+		this.grid[index] = cell;
+		return symbols.success;
 	}
 
-	public get (x : number, y : number) { return this.grid.get(`${x} ${y}`); }
-
-	// Safety checks to avoid sneaky bugs
-	private CheckIfInBoundsAndEmpty (x : number, y : number) {
-		if (x < 0 || y < 0 || x >= this.width || y >= this.height) return ErrOutOfBounds;
-		if (this.grid.get(`${x} ${y}`) !== null) return ErrNotEmpty;
-		return true;
+	public remove (cell : BaseCell) {
+		if (this.cells.delete(cell) === false) throw Error(`Cell does not exist on this layer: ${cell}, ${JSON.stringify(this)}`);
+		this.grid[cell.index] = null;
 	}
 
-	// Outside of class methods, do not allow modifying the cells array directly
-	private _cells : BaseCell[];
-	public get cells () { return this._cells; }
-	protected set cells (arr : BaseCell[]) { this._cells = arr; }
+	public move (cell : BaseCell, toIndex : number) {
+		const destination = this.grid[toIndex];
+
+		if (destination === undefined) throw Error(`Out of bounds: ${cell.x}, ${cell.y}`);
+		if (destination !== null) return destination; // A cell already exists at this location
+
+		this.grid[cell.index] = null;
+		this.grid[toIndex] = cell;
+		return symbols.success;
+	}
 }
+

@@ -58,7 +58,7 @@ $colorsToCompile: ();
 
 @function cl($id, $number: 500, $lightness: 500, $alpha: 1) {
 
-	$varname: "--#{$id}-#{$number}-#{$lightness}";
+	$varname: "--#{$id}-#{$number}-#{$lightness}-#{$alpha * 100}";
 	// Generate colors for each theme 
 	$colorsGenerated: ();
 
@@ -99,7 +99,7 @@ $colorsToCompile: ();
 	@each $theme-id, $colors in $colorsToCompile {
 		/* Color variables for '#{$theme-id}' theme, only used ones are compiled */
 		@if $theme-id == "default" {
-			[data-theme="default"], html:not([data-theme]) {
+			[data-theme="default"], html:not([data-theme]) { // default, applied when no data-theme in localstorage
 				@each $varname, $color in $colors { #{$varname}: #{$color}; }
 			}
 		} @else {
@@ -107,5 +107,16 @@ $colorsToCompile: ();
 				@each $varname, $color in $colors { #{$varname}: #{$color}; }
 			}
 		}
+	}
+
+	// Add overall light/dark knowledge
+	[data-theme="default"] {
+		--theme-type: "dark";
+	}	
+	[data-theme="wet"] {
+		--theme-type: "dark";
+	}
+	[data-theme="sun"] {
+		--theme-type: "light";
 	}
 }

@@ -1,10 +1,10 @@
 import awa from "@util";
 import chroma from "chroma-js";
 import BezierEasing from "bezier-easing";
-let mouse : awa.MouseTrack;
+let mouse;
 
 document.body.onload = () => {
-	mouse = new awa.MouseTrack();
+	mouse = awa.trackMouse();
 	ShinyStars();
 
 };

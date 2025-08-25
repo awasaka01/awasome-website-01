@@ -98,14 +98,15 @@ main {
 	margin-top: 20px;
 	* {
 		white-space: pre;
-		text-shadow: 
-			0 0 12px currentcolor;
 		opacity: 0.9;
 	}
 }
+[data-theme="default"] {
+	--theme-type: "dark";
+}
 
 #page-list {
-	background-color: c(bg, 500, 500, 0.9);
+	background-color: c(bg, 500, 500, 0.5);
 	outline: c(bg, 300, 450) solid 9px;
 	margin-top: 30px;
 
@@ -131,7 +132,7 @@ main {
 			$distance: 10; // distance (in characters) to fade-in from
 
 			position: relative;
-			text-decoration: underline cl(fg, 450, 501, 0.7) 1px; // TODO - can't have diff opacity for same color in cl() 
+			text-decoration: underline cl(fg, 450, 500, 0.7) 1px;
 			
 			&::after { right: calc(100% + #{$distance}ch); content: "<- "; }
 			&::before { left: calc(100% + #{$distance}ch); content: " ->"; } 

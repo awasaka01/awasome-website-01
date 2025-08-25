@@ -15,21 +15,60 @@ namespace awa {
 
 	export const removeANSI = (str : string) => str.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/gi, "");
 
+	// L1 / Manhattan distance (diamond), min amount of grid spaces needed to traverse to reach target
+	export function distanceL1 (x1 : number, y1 : number, x2 : number, y2 : number) {
+		return Math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2);
+	}
+	// L2 / Euclidean distance (circle), straight line to target
+	export function distanceL2 (x1 : number, y1 : number, x2 : number, y2 : number) {
+		return Math.hypot(x1 - x2, y1 - y2);
+	}
+	// L∞ norm / Chebyshev distance (square), maximum of horizontal and vertical distance
+	export function distanceLInf (x1 : number, y1 : number, x2 : number, y2 : number) {
+		return Math.max(Math.abs(x1 - x2), Math.abs(y1 - y2));
+	}
 
-	type MatrixType = string[][];
+	type Generate = (x : number, y : number) => any;
+	type Array2D = any[][];
+	export function generate2DArray (width : number, height : number, fn ?: Generate) : Array2D {
+		const arr : Array2D = [];
+		for (let y = 0; y < height; y++) {
+			arr.push([]);
+			for (let x = 0; x < width; x++) {
+				arr[y].push(fn ? fn(x, y) : null);
+			}
+		}
+		return arr;
+	}
+
 	export class Matrix {
+		public array : Array2D;
 
-		constructor (public array : MatrixType) {
-			return this;
+		// "Overload signatures"
+		constructor (array : Array2D);
+		constructor (width : number, height : number, fn ?: Generate);
+
+		constructor (arg1 : (Array2D | number), height ?: number, mappingFunction : Generate = () => null) {
+
+			// If arg1 is a number, and all other arguments are defined, generate the matrix with that width and height
+			if (typeof arg1 === "number" && height && mappingFunction) {
+				const width = arg1;
+				this.array = generate2DArray(width, height, mappingFunction);
+			}
+			// If arg1 is an array, use it for the matrix
+			else if (Array.isArray(arg1)) {
+				this.array = arg1;
+			}
 		}
 
-
+		// Transpose : Swap rows and columns
 		transpose () { this.array = Matrix.transpose(this.array); return this; }
-		static transpose (matrix : MatrixType) {
+		static transpose (matrix : Array2D) {
 			Matrix.validate(matrix);
 
-			const output : MatrixType = [];
+			const output : Array2D = [];
 			const longestRowLength = longestIn(matrix).length;
+
 
 			for (let i = 0; i < matrix.length; i++) {
 				for (var j = 0; j < longestRowLength; j++) {
@@ -40,20 +79,28 @@ namespace awa {
 			return output;
 		}
 
+		static getRect (
+			matrix : Array2D, x : number, y : number, width : number, height : number,
+			options ?: { fill ?: boolean },
+		) : any[] {
+
+			return [];
+		}
+
 
 		reverseRows () { this.array = Matrix.reverseRows(this.array); return this; }
-		static reverseRows (matrix : MatrixType) {
+		static reverseRows (matrix : Array2D) {
 			Matrix.validate(matrix);
 			for (let i = 0; i < matrix.length; i++) { matrix[i].reverse(); }
 			return matrix;
 		}
 
 		validate () { this.array = Matrix.validate(this.array); return this; }
-		static validate (matrix : MatrixType) { if (!Array.isArray(matrix) || matrix.some((row) => !Array.isArray(row))) { throw new Error("rotate2DArray: Array must be a 2D array, got " + JSON.stringify(matrix)); } return matrix; }
+		static validate (matrix : Array2D) { if (!Array.isArray(matrix) || matrix.some((row) => !Array.isArray(row))) { throw new Error("rotate2DArray: Array must be a 2D array, got " + JSON.stringify(matrix)); } return matrix; }
 
 
 		rotate (angle = 90) { this.array = Matrix.rotate(this.array, angle); return this; }
-		static rotate (matrix : MatrixType, angle = 90) {
+		static rotate (matrix : Array2D, angle = 90) {
 			Matrix.validate(matrix);
 
 			// Validate Angle
@@ -68,92 +115,6 @@ namespace awa {
 		}
 	}
 
-	// pnpm exec ts-node ./src/modules/Untitled-1.ts
-
-	/*
-	class GameLoop {
-		public paused: boolean;
-		private targetTPS: number;
-		private targetFPS: number;
-		private tickCount: number = 0;
-		private frameCount: number = 0;
-
-		private lastTickTimestamp: number = 0;
-		private lastFrameTimestamp: number = 0;
-
-		private updateCallback: Function;
-		private drawCallback: Function;
-
-		constructor (options: { tps: number, fps: number }, updateCallback: Function, drawCallback: Function) {
-			this.paused = false;
-
-			this.targetTPS = options.tps;
-			this.targetFPS = options.fps;
-			this.updateCallback = updateCallback;
-			this.drawCallback = drawCallback;
-
-
-
-			// // Start main loop
-			// requestAnimationFrame(() => {
-			// 	if (this.paused !== true) {
-			// 		drawCallback();
-			// 		updateCallback();
-			// 		requestAnimationFrame(() => this.start());
-			// 	}
-			// 	console.log("e");
-			// });
-			requestAnimationFrame((t) => this.loop(t));
-		}
-		loop (currentTimestamp: number) {
-
-			let ticksThisFrame = 0;
-
-			const msPerFrame = 1000 / this.targetFPS;
-			const msPerTick = 1000 / this.targetTPS;
-			let delta = currentTimestamp - this.lastTickTimestamp;
-
-			// console.log(currentTimestamp - this.lastTickTimestamp, msPerTick);
-			while (currentTimestamp - this.lastTickTimestamp >= msPerTick) {
-				this.updateCallback();
-				this.lastTickTimestamp += msPerTick;
-
-				ticksThisFrame += 1;
-				if (ticksThisFrame >= 5) { this.lastTickTimestamp = currentTimestamp; break; }
-			}
-
-
-			// console.log(currentTimestamp - this.lastTickTimestamp, msPerFrame);
-			if (currentTimestamp - this.lastFrameTimestamp >= msPerFrame) {
-				this.drawCallback();
-				this.lastFrameTimestamp = currentTimestamp;
-			}
-
-
-			requestAnimationFrame((t) => this.loop(t));
-		}
-
-		start () { return this; }
-		end () { return this; }
-		pause () { this.paused = true; return this;	}
-		resume () { this.paused = false; return this; }
-	}
-
-
-	const game = new GameLoop({ tps: 1, fps: 3 },
-		() => {
-			console.log("ticked!",);
-		},
-		() => {
-			console.log("drawn!", performance.now());
-		},
-	);
-
-	function requestAnimationFrame (callback: Function) {
-		setTimeout(() => { callback(performance.now()); }, 1);
-	}
-	*/
-
 	class GameLoopTimer {
 		private unprocessedTime = 0;
 		private lastTimestamp = 0;
@@ -162,6 +123,10 @@ namespace awa {
 		private callback : (alpha ?: number) => void;
 		private readonly MAX_CATCHUP_LOOPS : number;
 		private readonly INTERPOLATION_ENABLED : boolean;
+
+		private _ticksSinceStart = 0;
+		public get ticksSinceStart () { return this._ticksSinceStart; }
+		private set ticksSinceStart (value : number) { this._ticksSinceStart = value; }
 
 		constructor (targetRate : number, callback : (alpha ?: number) => void, interpolate : boolean = false, MAX_CATCHUP_LOOPS = 20) {
 			this.MS_PER_LOOP = 1000 / targetRate;
@@ -172,15 +137,17 @@ namespace awa {
 		}
 		tick (currentTimestamp : number) {
 			if (this.lastTimestamp === 0) { // First loop
+				this._ticksSinceStart += 1;
 				this.lastTimestamp = currentTimestamp;
-				this.callback(); return;
+				this.callback(this.ticksSinceStart); return;
 			}
 
 			let delta = currentTimestamp - this.lastTimestamp; // Delta time is the time elapsed since the end of the previous frame, to the start of the current frame
 
 			if (delta >= this.MS_PER_LOOP) { // If enough time has passed, run the callback
+				this._ticksSinceStart += 1;
 				this.lastTimestamp = currentTimestamp;
-				this.callback(); return;
+				this.callback(this.ticksSinceStart); return;
 			} // else: do nothing
 		}
 		// TODO - implement alpha ticks
@@ -192,7 +159,6 @@ namespace awa {
 			this.unprocessedTime += delta; // Unprocessed time is the time we have not ticked through yet
 
 			for (let i = 1; i <= this.MAX_CATCHUP_LOOPS && this.unprocessedTime >= this.MS_PER_LOOP; i++) {
-				// console.log(this);.
 				this.callback(0);
 				this.unprocessedTime -= this.MS_PER_LOOP;
 			}
@@ -284,8 +250,8 @@ namespace awa {
 
 
 
-
-	export class MouseTrack {
+	//
+	class MouseTracker {
 		private _x : number;
 		private _y : number;
 		private set y (y : number) { this._y = y; }
@@ -293,14 +259,90 @@ namespace awa {
 		public get x () { return this._x; }
 		public get y () { return this._y; }
 		private update (x : number, y : number) { this._x = x; this._y = y; }
-		constructor () {
-			document.addEventListener("mousemove", (e) => this.update(e.clientX, e.clientY));
-			document.addEventListener("touchmove", (e) => this.update(e.touches[0].clientX, e.touches[0].clientY));
-			document.addEventListener("touchstart", (e) => this.update(e.touches[0].clientX, e.touches[0].clientY));
-			document.addEventListener("touchend", (e) => this.update(e.changedTouches[0].clientX, e.changedTouches[0].clientY));
-			document.addEventListener("touchcancel", (e) => this.update(e.changedTouches[0].clientX, e.changedTouches[0].clientY));
+		constructor (target : HTMLElement | HTMLDocument = document) {
+			target.addEventListener("mousemove", (e : Event) => this.update((e as MouseEvent).offsetX, (e as MouseEvent).offsetY));
+
 		}
 	}
+
+	let mouse = undefined;
+	export function trackMouse (target ?: HTMLElement) : MouseTracker {
+		if (mouse !== undefined) return mouse;
+		mouse = new MouseTracker(target);
+		return mouse;
+	}
+
+	class TrackedInput {
+		name : string;
+
+		element : HTMLInputElement;
+		eventNames : string[] = [];
+		public callbacks : { "input" : ((e : { target : HTMLInputElement } & Event) => void)[], "change" : ((e : { target : HTMLInputElement } & Event) => void)[] } = { "input": [], "change": [] };
+		constructor (element) {
+			this.element = element;
+			this.name = element.name;
+
+			// Add event listeners
+			this.element.addEventListener("input", (e) => { for (const callback of this.callbacks.input) { callback(e as { target : HTMLInputElement } & Event); } });
+			this.element.addEventListener("change", (e) => { for (const callback of this.callbacks.change) { callback(e as { target : HTMLInputElement } & Event); } });
+		}
+		public listen (event : ("input" | "change"), callback : (e : { target : HTMLInputElement } & Event) => void) {
+			this.callbacks[event].push(callback);
+			callback({ target: this.element } as { target : HTMLInputElement } & Event);
+		}
+		public getValue () {
+			if (this.element.type === "checkbox") return `${this.element.checked}`;
+			return this.element.value;
+		}
+		public get value () { return this.element.value; }
+	}
+
+
+	class InputTracker {
+		static inputs : TrackedInput[] = [];
+
+		// Register an 'input' element to be tracked on change, triggering callbacks that can be attached by '.listen()'
+		static addInput (input : HTMLInputElement) {
+			const trackedInput = new TrackedInput(input);
+			this.inputs.push(trackedInput);
+			return trackedInput;
+		}
+
+		// Register an 'output' element to automatically fill itself with the value of a TrackedInput, when it changes
+		static addOutput (output : HTMLOutputElement) {
+			const targetInput = this.inputs.find((input) => input.name === output.name);
+			if (targetInput === undefined) throw new Error(`No matching input found for name ${output.name}, or it is not yet tracked`);
+			targetInput.listen("input", () => output.value = targetInput.getValue());
+			output.value = targetInput.getValue();
+		}
+		static get (name : string) {
+			return this.inputs.find((input) => input.name === name);
+		}
+	}
+
+
+	export function trackInputs (identifierClassName = "awa-input") {
+
+		// Start tracking all inputs currently on page, that have class
+		const inputElements = document.querySelectorAll(`input.${identifierClassName}`) as NodeListOf<HTMLInputElement>;
+		for (const input of inputElements) {
+			if (input.id === undefined) throw new Error("Tracked element must have an id");
+			InputTracker.addInput(input);
+		}
+
+		// Add all output elements to the element it wants to be output for
+		const outputElements = document.querySelectorAll(`output.${identifierClassName}`) as NodeListOf<HTMLOutputElement>;
+		for (const output of outputElements) {
+			if (output.name === undefined) throw new Error("Tracked element must have a specified 'name' attribute");
+			InputTracker.addOutput(output);
+		}
+
+		return InputTracker; //
+	}
+
+
+	export function average (arr : number[]) { return arr.reduce((a, b) => a + b, 0) / arr.length; }
+
 }
 
 export default awa;
