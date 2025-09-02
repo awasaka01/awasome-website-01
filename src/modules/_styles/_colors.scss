@@ -11,20 +11,20 @@
 
 // How much to adjust each color type by, and min/max (multiplied by n-500)
 $themes: (
-	wet: (
-		fg: (color: #f2ead9, l: 0.1, c: 0.000000001, h: 0.02), 
-		bg: (color: #333f58, l: 0.007, c: 0.00001, h: 0.05, cmin: 0.01),
-		hi: (color: #00b9be, l: 0.04, c: 0.00016, h: -0.01), 
+	snowy: (
+		fg: (color: #e1e3f4, l: 0.05, c: 0.0002, h: 0.1), 
+		bg: (color: #2f485c, l: 0.05, c: -0.00005, h: 0.04),
+		hi: (color: #53e4db, l: 0.05, c: 0.00016, h: -0.01), 
 	),
-	sun: (
-		fg: (color: #262421, l: 0.1, c: 0.000000001, h: 0.02), 
-		bg: (color: #f1e1d3, l: 0.007, c: 0.00001, h: 0.05, cmin: 0.01),
-		hi: (color: #fae05c, l: 0.04, c: 0.00016, h: -0.01), 
+	greyy: (
+		fg: (color: #ffffff, l: 0.1, c: 0, h: 0), 
+		bg: (color: #414141, l: 0.007, c: 0, h: 0),
+		hi: (color: #839383, l: 0.04, c: 0, h: 0), 
 	),
 	default: (
-		fg: (color: #c5c0ca, l: 0.1, c: 0.0001, h: 0.05), 
-		bg: (color: #322637, l: 0.015, c: 0.00001, h: 0.08, cmin: 0.01),
-		hi: (color: #e52e46, l: 0.04, c: 0.00016, h: 0.034), 
+		fg: (color: #eeeaf3, l: 0.1, c: 0.0001, h: -0.05), 
+		bg: (color: #322734, l: 0.05, c: -0.00001, h: -0.08),
+		hi: (color: #f43877, l: 0.05, c: 0.00016, h: 0.04), 
 	)
 );
 

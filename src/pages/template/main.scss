@@ -1,6 +1,5 @@
-@use "reset" as *;
 @use "bundled" as *;
-
+@include reset;
 
 body {
 	background-color: c(bg);

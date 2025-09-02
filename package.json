@@ -9,8 +9,10 @@
 		"eleventy-build": "eleventy",
 		"eleventy-serve": "eleventy --incremental --serve",
 		"dev": "npm-run-all -s beforeBuild eleventy-serve",
+		"dev2": "pnpm beforeBuild && eleventy --serve",
 		"devbuild": "npm-run-all -s beforeBuild eleventy-build afterBuild",
 		"build": "cross-env FULL_BUILD=1 npm-run-all -s beforeBuild eleventy-build afterBuild",
+		"build-neocities": "cross-env FULL_BUILD=1 BUILD_TARGET=neocities eleventy=1 npm-run-all -s beforeBuild eleventy-build afterBuild",
 		"buildauto": "cross-env FULL_BUILD=1 FULL_START=1 npm-run-all -s beforeBuild -p buildauto:1 buildauto:2",
 		"buildauto:1": "nodemon --watch .eleventy.js --watch src --ext \"*\" --exec \"pnpm run build\" --delay 4",
 		"buildauto:2": "serve __production -p 8080 -n"
@@ -21,7 +23,6 @@
 	"license": "ISC",
 	"packageManager": "pnpm@10.12.1",
 	"dependencies": {
-		"@11ty/eleventy": "^3.1.1",
 		"@11ty/eleventy-img": "^6.0.4",
 		"@types/pathfinding": "^0.1.0",
 		"@vitejs/plugin-react": "^4.7.0",
@@ -32,6 +33,7 @@
 		"cross-env": "^10.0.0",
 		"dotenv": "^17.2.0",
 		"eleventy": "^1.0.7",
+		"eleventy-plugin-vento": "^4.5.1",
 		"html-minifier-terser": "^7.2.0",
 		"jsdom": "^26.1.0",
 		"lightningcss": "^1.30.1",
@@ -46,6 +48,8 @@
 		"neverBuiltDependencies": []
 	},
 	"devDependencies": {
+		"11ty.ts": "^0.0.6",
+		"@11ty/eleventy": "^3.1.1",
 		"@stylistic/stylelint-config": "^2.0.0",
 		"@types/chroma-js": "^3.1.1",
 		"@types/jsdom": "^21.1.7",

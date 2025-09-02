@@ -9,7 +9,9 @@
 @include reset;
 @include base;
 
-
+body {
+	font-family: "gohu11";
+}
 
 
 main {
@@ -41,6 +43,19 @@ main {
 }
 
 
-
+#pause {
+	font-family: inherit;
+	padding: 10px;
+	box-sizing: border-box;
+	position: relative;
+	
+	*:last-child {
+		display: block;
+		max-height: 0;
+		opacity: 0;
+		user-select: none;
+		pointer-events: none;
+	}
+}
 
 @include compile-colors; 

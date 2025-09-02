@@ -1,13 +1,53 @@
-import awa from "@util";
+import * as awa from "@util";
+import type { MouseTracker } from "@util";
 import chroma from "chroma-js";
 import BezierEasing from "bezier-easing";
-let mouse;
-
-document.body.onload = () => {
+let mouse : awa.MouseTracker;
+// <script>
+// 	const dropdown = document.getElementById("theme-select");
+// 	if (theme) { dropdown.value = theme; }
+// 	dropdown.addEventListener("change", () => {
+// 		document.documentElement.setAttribute("data-theme", dropdown.value);
+// 		localStorage.setItem("theme", dropdown.value);
+// 	});
+// </script>
+document.addEventListener("DOMContentLoaded", () => {
 	mouse = awa.trackMouse();
 	ShinyStars();
+	const runes = "₀₁₂₃₄₅₆₇₈₉ᛁᛄᛇᛈᛉᛋᚱᚳᚷᚸᚹᚻᚾᚠᚢᚣᚦᚩᚪᚫ".split("");
+	const out = document.getElementById("runes");
+	const length = 66;
 
-};
+
+});
+
+
+function SlidingPuzzle () {
+	const width = 6, height = 6;
+	const element = document.getElementById("slidingpuzzle") as HTMLDivElement;
+	const tiles = {} as Record<number, HTMLDivElement>;
+	let blankIndex = 0; // 0,0 is the blank tile
+
+	for (let index = 0; index < width * height; index++) {
+		const tile = document.createElement("div");
+		if (index === 0) tile.classList.add("blank");
+		tile.style.order = `${index}`;
+		tiles[index] = tile;
+		tile.innerText = index.toString();
+
+		tile.addEventListener("click", () => {
+			const tile = tiles[index];
+			const blank = tiles[blankIndex];
+			tiles[index] = blank;
+			tiles[blankIndex] = tile;
+			[blank.style.order, tile.style.order] = [tile.style.order, blank.style.order];
+
+			blankIndex = index;
+		});
+
+		element.appendChild(tile);
+	}
+}
 
 async function ShinyStars () {
 	const easing = BezierEasing(0.76, 0, 0.24, 1);
@@ -27,7 +67,7 @@ async function ShinyStars () {
 	const weightedTypes = awa.weightedRandom(
 		types.map((t) => [t.weight, t]),
 		true,
-	) as { color : () => string; weight : number }[];
+	) as { color : () => string; weight : number; size : number; curve : () => number; duration ?: () => number }[];
 
 	const stars = [] as {
 		x : number;
@@ -101,7 +141,7 @@ async function ShinyStars () {
 	const loop = new awa.GameLoop({ a: { rate: 20, callback: () => {
 		performance.mark("loop");
 		const now = Date.now();
-
+		//               ^?
 		// Kill any stars that have expired
 		for (let i = stars.length - 1; i >= 0; i--) {
 			const star = stars[i];

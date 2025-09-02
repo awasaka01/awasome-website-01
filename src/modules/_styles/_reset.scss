@@ -42,4 +42,16 @@
 		border-collapse: collapse;
 		border-spacing: 0;
 	}
+	button {
+		color: inherit;
+		appearance: none;
+		border: none;
+		font-family: inherit;
+		padding: 0;
+		margin: 0;
+		outline: none;
+		font-size: inherit;
+		background-color: unset;
+	}
 }
+

@@ -1,5 +1,6 @@
 // emit a .d.ts file [https://www.typescriptlang.org/docs/handbook/declaration-files/dts-from-js.html]
 {
+	// "include": ["src", "scripts/go/wasm_exec_types.d.ts", "scripts/wasm_exec.js"],
 	"compilerOptions": {
 		/* Visit https://aka.ms/tsconfig to read more about this file */
 
@@ -32,7 +33,7 @@
 		// "moduleResolution": "node10",                     /* Specify how TypeScript looks up a file from a given module specifier. */
 		// "baseUrl": "./",                                  /* Specify the base directory to resolve non-relative module names. */
 		"paths": {
-			"@util": ["./src/modules/util.ts"]
+			"@util": ["./awa-util/util.ts"]
 		} /* Specify a set of entries that re-map imports to additional lookup locations. */,
 		// "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */
 		// "typeRoots": [],                                  /* Specify multiple folders that act like './node_modules/@types'. */

@@ -1,16 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	{% include "head.html" %}
-	<link href="colors.css" rel="stylesheet">
-</head>
-<body>
+---yaml
+title: "Color Preview"
+---
+<!DOCTYPE html><html lang="en"><head>
+
+	{{ include "head.html" }}
+	<link rel="stylesheet" href="colors.css">
+
+</head><body>
+	<br>
+	<a href="/">Home</a>
+	<label for="theme-select">Theme: </label>{{ include "theme-select.html" }}
+	{{ include "theme-script.html" }}
+	<br><br>
 
 	<main>
-
-		<label for="theme-select">Select a theme</label>
-		{%  include "theme.html" %}
-		
 
 		<div id="color-variables">
 			<section class="var-section"><p class="title">fg</p><div class="bars"><div>500</div><div>0-900</div><div>0-999</div></div></section>

@@ -1,76 +1,104 @@
----json
-{
-	"addFeatures": ["chroma", "fillRemainingSpace", "bezier-easing"],
-	"replaceCharacters": {
-		"insertLocation": "__",
-		"regexes": [
-			["1([┏━┓─┃┗┛╭╮╯╰╋ ]+)", "g", "<span class='boxdraw-color-1'>$1</span>"],
-			["2([┏━┓─┃┗┛╭╮╯╰╋ ]+)", "g", "<span class='boxdraw-color-2'>$1</span>"]
-		]
-	}
-}
+---yaml
+title: "Home"
+uwu: true
+replace:
+    "𝓕": '<span class="spacer"></span>'
 ---
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	{% include "head.html" %}
-	<script type="module" src="main.ts"></script>
-</head>
-<body>
-	<main>
-		
-		<div><label for="theme-select">Theme: </label>{% include "theme.html" %}</div>
-		<br><br><br>
+<!DOCTYPE html><html lang="en"><head>
+	{{ include "head.html" }}
+</head><body><br><br><br>
 
-		<!-- Main content -->
-			<div class="autoResize" id="page-list">
-				<!-- ?f NEW BLOCK /f -->
-				<p>1┏━━?f━/f━━┓</p>
-				<p>1┃?f /f  ?f /f1┃</p>
-				<p>1┃?f /f hi 1?f /f┃</p>
-				<p>1┃?f /f  ?f /f1┃</p>
-				<p>1┃?f /f list of pages that maybe exists: 1?f /f┃</p>
-				<p>1┃  2?f─/f  1┃</p>
-				<p>1┃?f /f  ?f /f1┃</p>
-				<p>1┃   [ <a href="/color-preview/">?f /f<span>Color Preview</span>?f /f</a> ]1   ┃</p>
-				<p>1┃?f /f  ?f /f1┃</p>
-				<p>1┃   [ <a href="/template/">?f /f<span>Template</span>?f /f</a> ]1   ┃</p>
-				<p>1┃?f /f  ?f /f1┃</p>
-				<p>1┃   [ <a href="/beepboop/">?f /f<span>awarium</span>?f /f</a> ]1   ┃</p>
-				<p>1┃?f /f  ?f /f1┃</p>
-				<p>1┃?f /f  ?f /f1┃</p>
-				<p>1┃?f /f  ?f /f1┃</p>
-				<p>1┃?f /f  ?f /f1┃</p>
-				<p>1┃?f /f  ?f /f1┃</p>
-				<p>1┃?f /f  ?f /f1┃</p>
-				<p>1┃?f /f  ?f /f1┃</p>
-				<p>1┃?f /f  ?f /f1┃</p>
-				<p>1┃?f /f  ?f /f1┃</p>
-				<p>1┃?f /f a ?f /f w ?f /f a ?f /f1┃</p>
-				<p>1┃?f /f  ?f /f1┃</p>
-				<p>1┗?f━/f━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛</p>
-				<!-- ?f NEW BLOCK /f -->
+{{# <h1>⚠️wiork in progress! !</h1> #}}
+
+
+
+<!-- Main content -->	
+<main>
+		
+	<section>
+	
+	</section>
+	<div id="logo-text" class="autoResize">{{ include "logo-text.html" }}</div>
+	<div class="autoResize" id="main">
+
+		<p class="title">𝓕 awasomewebsite ♡ </p>
+		<p>𝓒1:┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓◺</p>
+		{{# <p>𝓒1:┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┣◺</p> #}}
+		<p>𝓒1:┃◺𝓕    𝓒1:┃◺</p>
+		<p>𝓒1:┃◺𝓕  List of Pages:  𝓕𝓒1:┃◺</p>
+		<p>𝓒1:┃◺𝓕    𝓒1:┃◺</p>
+		{{ if env.BUILD_TARGET !== "neocities" }}
+		<p>𝓒1:┃◺      [ <a href="/awarium/">𝓕<span>awarium</span>𝓕</a> ]      𝓒1:┃◺</p>
+		{{ /if }}
+		<p>𝓒1:┃◺      [ <a href="/template/">𝓕<span>Template</span>𝓕</a> ]      𝓒1:┃◺</p>
+		<p>𝓒1:┃◺      [ <a href="/color-preview/">𝓕<span>Color Preview</span>𝓕</a> ]      𝓒1:┃◺</p>
+		<p>𝓒1:┃◺𝓕    𝓒1:┃◺</p>
+		<p>𝓒1:┃◺𝓕    𝓒1:┃◺</p>
+		<p>𝓒1:┃◺𝓕    𝓒1:┃◺</p>
+		<p>𝓒1:┣━━━━━━━━━━━┓◺𝓒2:{{ for count of 33 }}⋰⋱{{ /for }}◺𝓒1:┃◺</p>
+		<section>
+			<div>{{ for count of 6 }}<p>𝓒1:┃◺</p>{{ /for }}
 			</div>
-			<div class="autoResize" id="sparkle">
-				<p>        glowe :3        </p>
+			<div id="image"></div>
+			<div>
+				<p>𝓒1:┃◺  𝓕𝓒1:┃◺</p>
+				<div id="dropdown-container">
+					<p>𝓒1:┃◺ theme: </p>
+					{{ include "theme-select.html" }}
+					𝓕<p>𝓒1:┃◺</p>
+					</div>
+				<p>𝓒1:┃◺  𝓕𝓒1:┃◺</p> 
+				<p>𝓒1:┃◺  𝓕𝓒1:┃◺</p> 
+				<p>𝓒1:┃◺  𝓕𝓒1:┃◺</p> 
+				<p>𝓒1:┃◺ site updated <output id="last-updated">0 seconds</output> ago 𝓕𝓒1:┃◺</p>
 			</div>
 		</section>
-		<span id="baseline-character-for-size-ref">1</span>
-		<br><br><br><br><br><br><br><br><br><br><br><br>
-		
-	</main>
-
+		<p>𝓒1:┗━━━━━━━━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛◺</p>
 	
-	<!-- Elements that are outside of the normal flow, such as backgrounds or overlays -->
-	<div id="bg-full">
-		<canvas id="stars"></canvas>
 	</div>
-    <div id="root"></div>
-	<div id="spacing"></div>
+	<div class="autoResize" id="sparkle"><p>         glowe :3         </p></div>
+</main>
+
+<br><br><br><br><br><br>
+<br><br><br><br><br><br>
 
 
-	<!-- Inline the scripts that change things that are visible, to prevent flash of unstyled content an external script would show whilst downloading -->
-	<script>{% include "./critical.js" %}</script>
+<!-- Elements that are outside of the normal flow, such as backgrounds, overlays, and elements used for calculating -->
+<div id="bg-full"><canvas id="stars"></canvas></div>
+<div id="spacing"></div> <!-- Used to calculate max width of .autoResize -->
+<span id="baseline-character-for-size-ref">1</span> <!-- Consistently sized single character, used to calculate font size -->
+
+<!-- Inline the scripts that change things that are visible, to prevent flash of unstyled content an external script would show whilst downloading -->
+{{ include "theme-script.html" }}
+<script>{{ include "./critical.js" }}</script>
+<script>
+	const lastUpdated = {{|> Date.now() }};
+	const output = document.getElementById("last-updated");
+	const formats = [
+		[1000 * 60, "second"],
+		[1000 * 60 * 60, "minute"],
+		[1000 * 60 * 60 * 24, "hour"],
+		[1000 * 60 * 60 * 24 * 7, "day"],
+		[1000 * 60 * 60 * 24 * 30, "week"],
+		[1000 * 60 * 60 * 24 * 365, "month"],
+		[Infinity, "year"],
+	];
+	function updateOutput() {
+		const msdiff = Date.now() - lastUpdated;
+
+		const index = formats.findIndex(([s]) => msdiff < s); // Find largest format smaller than diff
+		const [_, label] = formats[index];
+		const divisor = formats[index - 1]?.[0] ?? 1000; // Use limit of previous format as divisor
+		const n = Math.floor(msdiff / divisor);
+
+		output.value = `${n} ${label}${n !== 1 ? "s" : ""}`;
+		setTimeout(updateOutput, divisor); // Update every <label>
+	}
+	updateOutput();
+</script>
 </body>
 </html>
+
+
+

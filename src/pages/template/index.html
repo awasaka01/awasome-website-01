@@ -3,14 +3,16 @@ title: "Template Page"
 ---
 <!DOCTYPE html><html lang="en"><head>
 
-	{% include "head.html" %}
+	{{ include "head.html" }}
 
 </head><body>
-	
-	<p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eligendi quo laboriosam sapiente libero neque commodi recusandae repudiandae, sit ratione placeat debitis atque, porro quos doloribus inventore ipsa officia nostrum officiis.</p>
-	<br>
-	<label for="theme-select">Theme: </label>{% include "theme.html" %}
 	<br>
 	<a href="/">Home</a>
+	<label for="theme-select">Theme: </label>{{ include "theme-select.html" }}
+	{{ include "theme-script.html" }}
+	<br><br>
+	<p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eligendi quo laboriosam sapiente libero neque commodi recusandae repudiandae, sit ratione placeat debitis atque, porro quos doloribus inventore ipsa officia nostrum officiis.</p>
 
+	
+	
 </body></html>

@@ -1,84 +1,84 @@
-#
-name: Build site, deploy to Neocities
+# #
+# name: Build site, deploy to Neocities
 
-on:
-    # Run on push, merge, or manual trigger. only on main branch,
-    push:
-        branches:
-            - main
-    pull_request:
-        branches:
-            - main
-        types: [closed]
-    workflow_dispatch:
+# on:
+#     # Run on push, merge, or manual trigger. only on main branch,
+#     push:
+#         branches:
+#             - main
+#     pull_request:
+#         branches:
+#             - main
+#         types: [closed]
+#     workflow_dispatch:
 
-# Only allow 1 deploy at a time to prevent concurrent deploys doing strange things
-concurrency:
-    group: build-main
-    cancel-in-progress: true
+# # Only allow 1 deploy at a time to prevent concurrent deploys doing strange things
+# concurrency:
+#     group: build-main
+#     cancel-in-progress: true
 
-jobs:
-    # Single deploy job since we're just deploying
-    deploy:
-        # Run only if:
-        # - event is NOT a pull_request (like push or workflow_dispatch)
-        # - OR if event IS a pull_request AND it was merged
-        if: github.event.pull_request == null || github.event.pull_request.merged == true
-
-
-        runs-on: ubuntu-latest
-        steps:
-
-            # dont know
-            - name: Checkout
-              uses: actions/checkout@v4
-
-            - name: Log after checkout
-              run: echo "✅ Checked out code at commit $GITHUB_SHA"
+# jobs:
+#     # Single deploy job since we're just deploying
+#     deploy:
+#         # Run only if:
+#         # - event is NOT a pull_request (like push or workflow_dispatch)
+#         # - OR if event IS a pull_request AND it was merged
+#         if: github.event.pull_request == null || github.event.pull_request.merged == true
 
 
-            # Install Node.js
-            - uses: actions/setup-node@v4
-              with:
-                  node-version: 'latest' # Or your desired Node.js version
+#         runs-on: ubuntu-latest
+#         steps:
 
-            - name: Log Node version
-              run: node -v
+#             # dont know
+#             - name: Checkout
+#               uses: actions/checkout@v4
 
-
-            # Install pnpm ? i think
-            - uses: pnpm/action-setup@v3
-              with:
-                  version: '10' # Or your desired pnpm version
-                  cache: 'pnpm' # This enables caching of the pnpm store
-            - name: Log pnpm version
-              run: pnpm -v
+#             - name: Log after checkout
+#               run: echo "✅ Checked out code at commit $GITHUB_SHA"
 
 
-            # Install dependencies
-            - name: Install dependencies
-              run: pnpm install
+#             # Install Node.js
+#             - uses: actions/setup-node@v4
+#               with:
+#                   node-version: 'latest' # Or your desired Node.js version
 
-            - name: Log after dependencies install
-              run: echo "✅ Dependencies installed"
-
-
-            # Run build command
-            - name: Build
-              run: pnpm run build
-
-            - name: Log after build
-              run: echo "✅ Build completed"
+#             - name: Log Node version
+#               run: node -v
 
 
-            # Deploy to Neocities
-            - name: Deploy to Neocities
-              if: github.event_name != 'workflow_dispatch'
-              uses: bcomnes/deploy-to-neocities@v3
-              with:
-                  api_key: ${{ secrets.NEOCITIES_API_TOKEN }}
-                  cleanup: true
-                  dist_dir: __production
+#             # Install pnpm ? i think
+#             - uses: pnpm/action-setup@v3
+#               with:
+#                   version: '10' # Or your desired pnpm version
+#                   cache: 'pnpm' # This enables caching of the pnpm store
+#             - name: Log pnpm version
+#               run: pnpm -v
 
-            - name: Log after deploy
-              run: echo "✅ Deployment to Neocities completed"
+
+#             # Install dependencies
+#             - name: Install dependencies
+#               run: pnpm install
+
+#             - name: Log after dependencies install
+#               run: echo "✅ Dependencies installed"
+
+
+#             # Run build command
+#             - name: Build
+#               run: pnpm run build
+
+#             - name: Log after build
+#               run: echo "✅ Build completed"
+
+
+#             # Deploy to Neocities
+#             - name: Deploy to Neocities
+#               if: github.event_name != 'workflow_dispatch'
+#               uses: bcomnes/deploy-to-neocities@v3
+#               with:
+#                   api_key: ${{ secrets.NEOCITIES_API_TOKEN }}
+#                   cleanup: true
+#                   dist_dir: __production
+
+#             - name: Log after deploy
+#               run: echo "✅ Deployment to Neocities completed"

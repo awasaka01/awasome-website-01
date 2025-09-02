@@ -27,7 +27,7 @@ const globalRules = {
 	"no-dupe-else-if": "error",
 	"no-dupe-keys": "error",
 	"no-duplicate-case": "error",
-	"no-duplicate-imports": "error",
+	// "no-duplicate-imports": "error",
 	"no-empty-character-class": "error",
 	"no-empty-pattern": "error",
 	"no-ex-assign": "error",
@@ -101,7 +101,7 @@ const globalRules = {
 	"@stylistic/wrap-iife": "error",
 
 	// Quotes
-	"@stylistic/quotes": ["error", "double"],
+	"@stylistic/quotes": ["error", "double", { "avoidEscape": true, "allowTemplateLiterals": "always" }],
 	"@stylistic/quote-props": ["error", "consistent"],
 
 	// Commas

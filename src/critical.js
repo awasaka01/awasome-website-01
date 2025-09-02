@@ -1,28 +1,32 @@
+function onlyText (node) {
+  const clone = node.cloneNode(true);
+  clone.querySelectorAll(".exclude").forEach((el) => el.remove());
+  return clone.textContent;
+}
 
-const onlyText = (str) => str.replace(/\?%\?.+?\?%\?/gm, "");
 
 // Make the font size in .autoResize elements as big as possible to touch edges of the container
 async function setWidths (zoomLevel = 1.25) {
-	// zoomLevel = 1.25;
-	zoomLevel = Math.max(zoomLevel, 1.25);
+  zoomLevel = Math.max(zoomLevel, 1.25);
 
-	const uh = document.getElementById("spacing").clientWidth;
-	const bodywidth = document.body.offsetWidth;
-	const singleCharacter = document.getElementById("baseline-character-for-size-ref").offsetWidth;
-	Array.from(document.getElementsByClassName("autoResize")).forEach((el) => {
-		const vw = Math.min(uh) * (zoomLevel - 0.25);
+  const uh = document.getElementById("spacing").clientWidth;
+  const singleCharacter = document.getElementById("baseline-character-for-size-ref").offsetWidth;
 
+  Array.from(document.getElementsByClassName("autoResize")).forEach((el) => {
+    const vw = uh * (zoomLevel - 0.25);
 
-		// Get all children, 2 levels deep
-		// const children = Array.from(el.children).flatMap((x) => Array.from(x.children) || []);
-		// console.log(children);
-		const children = Array.from(el.children);
+    // direct children only
+const children = Array.from(el.querySelectorAll("p"));
+    // longest line (excluding .exclude spans)
+    const longestLine = children
+      .map((x) => onlyText(x).length)
+      .reduce((a, b) => Math.max(a, b), 0);
 
-		const longestLine = children.map((x) => onlyText(x.textContent).length).reduce(((a, b) => Math.max(a, b)), 0);
-		// console.log(children.map((x) => onlyText(x.textContent)))
-		el.style.setProperty("font-size", `${((vw / singleCharacter) / longestLine) * 100}px`);
-	});
+    // set font size
+    el.style.setProperty("font-size", `${((vw / singleCharacter) / longestLine) * 100}px`);
+  });
 }
+
 
 setWidths();
 import("https://unpkg.com/zoom-level@2.5.0/dist/zoom-level.esm.js").then(({ zoomLevel }) => {

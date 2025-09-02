@@ -1,6 +1,10 @@
-import awa from "@util";
+import * as awa from "@util";
+import chroma from "chroma-js";
+import { River } from "./cells.js";
 
-// Things that need to be referenced by multiple files that reference eachother, to avoid circular dependencies!
+/*
+Things that need to be referenced by multiple files that reference eachother, to avoid circular dependencies!
+*/
 
 export const WIDTH = 100;
 export const HEIGHT = 100;
@@ -12,7 +16,19 @@ export const config = {
 
 	// User options, can change
 	perfanal: false,
+	i: 0,
 };
+
+export const CELL_COLORS : Record<string, string | ((index : number) => chroma.Color)> = {
+	NotMoving: "#f1f1f1",
+	Wall: "#4b4559",
+	Food: chroma.scale(["#66664a", "#76af4d"]),
+	MoveRandomly: "#eb7171",
+	Grow: "#1b620b",
+	Boom: "#c24c3f",
+	River: chroma.scale(["#6f8bd8", "#ababab"]),
+};
+
 
 
 // // Simple grid the size of the map, each cell a coordinate pair [x, y]
@@ -45,6 +61,7 @@ export function clr (hex : string, alpha ?: number) {
 		| (alpha !== undefined ? alpha : 255) << 24);
 }
 
+export const coordinateGrid = awa.generate2DArray(WIDTH, HEIGHT, (x, y) => [x, y]);
 
 export const symbols = {
 
@@ -58,3 +75,5 @@ export const symbols = {
 
 
 export const indexToXY = (index : number) : [number, number] => [index % WIDTH, Math.floor(index / WIDTH)];
+
+
