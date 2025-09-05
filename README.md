@@ -12,7 +12,7 @@
 	[-] image compression  
 	[X] live development server  
 	[/] builds for nekoweb and neocities separately (neocities does not support some advanced files like .wasm)  
-	[-]     
+	[x] Cachebusting - Vite - hash in filename     
 	[-]   
 	[-]   
 	[-]   
@@ -32,4 +32,6 @@ preact?
 https://github.com/drwpow/vite-plugin-lqip
 https://github.com/unplugin/unplugin-icons
 https://github.com/aphex/vite-plugin-ngrok
-https://github.com/vbenjs/vite-plugin-html injecting
+https://github.com/vbenjs/vite-plugin-html injecting1
+
+vite-imagetools : allow effects on any image url (super jpeg nyehehe)

@@ -20,6 +20,7 @@
 		"chalk": "^5.6.0",
 		"chroma-js": "^3.1.2",
 		"cross-env": "^10.0.0",
+		"fast-glob": "^3.3.3",
 		"gray-matter": "^4.0.3",
 		"lightningcss": "^1.30.1",
 		"react": "^19.1.1",

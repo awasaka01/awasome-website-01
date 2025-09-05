@@ -10,7 +10,6 @@
 		"**/eslint.config.mjs": true,
 		"**/tsconfig.json": true,
 		"**/.env": true,
-		"**/not_found.html": true,
 		"**/stylelint.config.mjs": true
 	},
 

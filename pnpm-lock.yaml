@@ -29,6 +29,9 @@ importers:
       cross-env:
         specifier: ^10.0.0
         version: 10.0.0
+      fast-glob:
+        specifier: ^3.3.3
+        version: 3.3.3
       gray-matter:
         specifier: ^4.0.3
         version: 4.0.3

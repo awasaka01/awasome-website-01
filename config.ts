@@ -10,19 +10,20 @@ namespace config {
 		"root": path("./src"),
 		"dist": path("./__production"),
 		"cache": path("./____cache"),
+		"public": path("./public"),
 
 		"copy": [], // vite-plugin-static-copy
 		"util": path("./util/main.ts"),
 
-		"scss": [path("./src/modules/styles")],
-		"includes": path("./src/modules/includes"),
+		"scss": [path("./src/_styles")],
+		"includes": path("./src/_includes"),
 	};
 	paths.copy = [{
 		src: path("./src/assets/**/*.*"),
 		dest: "./assets",
 		rename: (fileName : string, fileExtension : string, fullPath : string) => fileName + "." + fileExtension,
 	}];
-	console.log("Paths: ", paths);
+	// console.log("Paths: ", paths);
 
 
 	export const port = 8080;
