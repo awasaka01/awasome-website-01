@@ -1,14 +1,9 @@
 // emit a .d.ts file [https://www.typescriptlang.org/docs/handbook/declaration-files/dts-from-js.html]
 {
-	"include": ["src", "scripts/go/wasm_exec_types.d.ts", "scripts/wasm_exec.js"],
+	// "include": ["src", "scripts/go/wasm_exec_types.d.ts", "scripts/wasm_exec.js"],
 	"compilerOptions": {
-		"types": ["astro/client"],
 		"paths": {
 			// "@util": ["./awa-util/util.ts"]
-			"@layouts/*": ["./src/layouts/*"],
-			"@components/*": ["./src/components/*"],
-			"@body": ["./src/layouts/BaseBody.astro"],
-			"@head": ["./src/layouts/BaseHead.astro"]
 		} /* Specify a set of entries that re-map imports to additional lookup locations. */,
 		/* Visit https://aka.ms/tsconfig to read more about this file */
 
@@ -88,7 +83,7 @@
 		// "verbatimModuleSyntax": true,                     /* Do not transform or elide any imports or exports not marked as type-only, ensuring they are written in the output file's format based on the 'module' setting. */
 		// "isolatedDeclarations": true,                     /* Require sufficient annotation on exports so other tools can trivially generate declaration files. */
 		// "erasableSyntaxOnly": true,                       /* Do not allow runtime constructs that are not part of ECMAScript. */
-		// "allowSyntheticDefaultImports": true,             /* Allow 'import x from y' when a module doesn't have a default export. */
+		"allowSyntheticDefaultImports": true,             /* Allow 'import x from y' when a module doesn't have a default export. */
 		"esModuleInterop": true /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */,
 		// "preserveSymlinks": true,                         /* Disable resolving symlinks to their realpath. This correlates to the same flag in node. */
 		"forceConsistentCasingInFileNames": true /* Ensure that casing is correct in imports. */,

@@ -1,0 +1,4 @@
+Vite supports importing JSON files directly as ES modules: import data from './data.json' json.stringify 
+
+preload fonts?
+<link rel="preload" href="/fonts/my-font.woff2" as="font" type="font/woff2" crossorigin>
