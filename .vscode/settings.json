@@ -1,0 +1,41 @@
+{
+	"files.exclude": {
+		"**/.github/": true,
+		"**/____cache/": true,
+		"**/.gitignore": true,
+		"**/jsconfig.json": true,
+		"**/node_modules/": true,
+		"**/pnpm-lock.yaml": true,
+		"**/pnpm-workspace.yaml": true,
+		"**/eslint.config.mjs": true,
+		"**/tsconfig.json": true,
+		"**/.env": true,
+		"**/not_found.html": true,
+		"**/stylelint.config.mjs": true
+	},
+
+	// Buttons to run the commands easier (https://code.visualstudio.com/api/references/icons-in-labels)
+	"actionButtons": {
+		"commands": [
+			{
+				"name": "buildmin",
+				"command": "pnpm run buildmin"
+			},
+			{
+				"name": "build",
+				"command": "pnpm run build"
+			},
+			{
+				"name": "dev server",
+				"command": "pnpm run dev"
+			},
+			{
+				"name": "preview",
+				"command": "pnpm run preview"
+			}
+		],
+		"defaultColor": "none",
+		"reloadButton": "↻",
+		"loadNpmCommands": false
+	},
+}
