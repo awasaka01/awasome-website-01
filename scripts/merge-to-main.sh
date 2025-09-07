@@ -45,7 +45,7 @@ fi
 # --- Offer to auto-commit or push if there are pending changes ---
 if [[ -n $(git status --porcelain) ]]; then
     echo -e "${YELLOW}${tab}⚠️  You have uncommitted changes!${RESET}"
-    echo -e "${MAGENTA}${tab}Press ENTER to auto-commit and push them, or type anything else to cancel:${RESET}"
+    echo -e "${MAGENTA}${tab}❔ Press ENTER to auto-commit and push them, or type anything else to cancel:${RESET}"
     read -r CONFIRM_CHANGES
     if [[ -n "$CONFIRM_CHANGES" ]]; then
         echo -e "${RED}${tab}❌ Merge cancelled by user due to pending changes.${RESET}"
@@ -69,10 +69,11 @@ echo
 gradient_echo_rgb "$FANCY_LINE ⋆.˚ ⋆.˚ ⋆.˚" 255 105 180 0 0 0
 echo -e "${MAGENTA}${tab}✨ Merging current branch into main${RESET}"
 echo -e "${MAGENTA}${tab}🌸 Current branch: ${YELLOW}'$CURRENT_BRANCH'${RESET}"
+gradient_echo_rgb "$FANCY_LINE ⋆.˚ ⋆.˚ ⋆.˚" 255 105 180 0 0 0
 echo
 echo -e "${MAGENTA}${tab}❔ Press ENTER to confirm, or type anything else to cancel:${RESET}"
-gradient_echo_rgb "$FANCY_LINE ⋆.˚ ⋆.˚ ⋆.˚" 255 105 180 0 0 0
-
+echo
+echo
 # --- Confirm with user ---
 read -r CONFIRM
 if [[ -n "$CONFIRM" ]]; then
@@ -81,7 +82,6 @@ if [[ -n "$CONFIRM" ]]; then
 fi
 
 # --- Fetch and merge ---
-echo
 echo -e "${BLUE}${tab}⏳ Fetching latest main from remote...${RESET}"
 git fetch origin main
 
