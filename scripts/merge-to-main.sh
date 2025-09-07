@@ -32,7 +32,7 @@ RESET='\033[0m'
 
 # Fancy symbols
 FANCY_LINE=" ✿❀✧⋆∘✦ ⋆.˚ ᡣ.𖥔˚ ✦ "
-tab="        "
+tab=">-   "
 
 # --- Check branch ---
 CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
@@ -43,23 +43,27 @@ fi
 
 # --- Show header ---
 echo
+echo
 gradient_echo_rgb "$FANCY_LINE ⋆.˚ ⋆.˚ ⋆.˚" 255 105 180 0 0 0
 echo -e "${MAGENTA}${tab}✨ Merging '$CURRENT_BRANCH' into main${RESET}"
 echo -e "${MAGENTA}${tab}🌸 Current branch: ${YELLOW}'$CURRENT_BRANCH'${RESET}"
 gradient_echo_rgb "$FANCY_LINE ⋆.˚ ⋆.˚ ⋆.˚" 255 105 180 0 0 0
 echo
+echo
 
 # --- Fetch and merge ---
 echo -e "${BLUE}${tab}⏳ Fetching latest main from remote...${RESET}"
-git fetch origin main --quiet
+git fetch origin main
 
 # Save original branch to return later
 ORIGINAL_BRANCH="$CURRENT_BRANCH"
 
 # Checkout main and merge
+echo
 echo -e "${BLUE}${tab}🔀 Checking out 'main'...${RESET}"
 git checkout main
 
+echo
 echo -e "${BLUE}${tab}✨ Merging '$CURRENT_BRANCH' into main...${RESET}"
 if ! git merge --no-ff "$CURRENT_BRANCH"; then
     echo -e "${RED}❌ Merge conflict! Resolve conflicts manually.${RESET}"
@@ -69,6 +73,7 @@ if ! git merge --no-ff "$CURRENT_BRANCH"; then
 fi
 
 # --- Push merged main ---
+echo
 echo -e "${BLUE}${tab}🚀 Pushing merged 'main' to origin...${RESET}"
 git push origin main --quiet
 
@@ -76,7 +81,9 @@ git push origin main --quiet
 git checkout "$ORIGINAL_BRANCH"
 
 # --- Done message ---
+echo
+echo
 gradient_echo_rgb "$FANCY_LINE ⋆.˚ ⋆.˚ ⋆.˚" 255 105 180 0 0 0
-echo -e "${GREEN}${tab}✅ Merge complete! main has been updated with '$CURRENT_BRANCH'${RESET}"
+echo -e "${GREEN}${tab}✅ Merge complete! :3  main has been updated with ${YELLOW}'$CURRENT_BRANCH'${RESET}"
 gradient_echo_rgb "$FANCY_LINE ⋆.˚ ⋆.˚ ⋆.˚" 255 105 180 0 0 0
 echo
