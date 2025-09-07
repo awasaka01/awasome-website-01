@@ -4,6 +4,8 @@
 	"description": "",
 	"type": "module",
 	"scripts": {
+		"ansi": "node ./scripts/ansi.js",
+		"merge": "bash ./scripts/merge-to-main.sh",
 		"dev": "npm-run-all -s BB compile_config:dev 11ty:serve AB",
 		"//": "                                                                                                                                           ",
 		"build": "cross-env FULLBUILD=true npm-run-all -s BB compile_config 11ty:build AB",
@@ -13,8 +15,6 @@
 		"11ty:build": "eleventy",
 		"11ty:serve": "eleventy --serve --incremental",
 		"//": "                                                                                                                                           ",
-		"//": "                                                                                                                                           ",
-		"ansi": "node ./scripts/ansi.js",
 		"BB": "node ./scripts/beforeBuild.js",
 		"AB": "node ./scripts/afterBuild.js",
 		"//": "                                                                                                                                           ",
