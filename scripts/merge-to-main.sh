@@ -44,9 +44,11 @@ fi
 
 # --- Offer to auto-commit or push if there are pending changes ---
 if [[ -n $(git status --porcelain) ]]; then
+	gradient_echo_rgb "$FANCY_LINE ⋆.˚ ⋆.˚ ⋆.˚" 255 105 180 0 0 0
     echo -e "${YELLOW}${tab}⚠️  You have uncommitted changes!${RESET}"
     echo -e "${MAGENTA}${tab}❔ Press ENTER to auto-commit and push them, or type anything else to cancel:${RESET}"
-    read -r CONFIRM_CHANGES
+	gradient_echo_rgb "$FANCY_LINE ⋆.˚ ⋆.˚ ⋆.˚" 255 105 180 0 0 0
+	read -r CONFIRM_CHANGES
     if [[ -n "$CONFIRM_CHANGES" ]]; then
         echo -e "${RED}${tab}❌ Merge cancelled by user due to pending changes.${RESET}"
         exit 1
@@ -69,9 +71,8 @@ echo
 gradient_echo_rgb "$FANCY_LINE ⋆.˚ ⋆.˚ ⋆.˚" 255 105 180 0 0 0
 echo -e "${MAGENTA}${tab}✨ Merging current branch into main${RESET}"
 echo -e "${MAGENTA}${tab}🌸 Current branch: ${YELLOW}'$CURRENT_BRANCH'${RESET}"
-gradient_echo_rgb "$FANCY_LINE ⋆.˚ ⋆.˚ ⋆.˚" 255 105 180 0 0 0
-echo
 echo -e "${MAGENTA}${tab}❔ Press ENTER to confirm, or type anything else to cancel:${RESET}"
+gradient_echo_rgb "$FANCY_LINE ⋆.˚ ⋆.˚ ⋆.˚" 255 105 180 0 0 0
 echo
 echo
 # --- Confirm with user ---
