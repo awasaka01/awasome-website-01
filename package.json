@@ -4,6 +4,8 @@
 	"description": "",
 	"type": "module",
 	"scripts": {
+		"ansi": "node ./scripts/ansi.js",
+		"merge": "bash ./scripts/merge-to-main.sh",
 		"beforeBuild": "node ./scripts/beforeBuild.js",
 		"afterBuild": "node ./scripts/afterBuild.js",
 		"eleventy-build": "eleventy",
