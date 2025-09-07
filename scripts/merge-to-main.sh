@@ -23,7 +23,7 @@ gradient_echo_rgb() {
 }
 
 # --- Colors ---
-RED='\033[38;5;196m'
+RED='\033[38;5;197m'
 GREEN='\033[38;5;82m'
 YELLOW='\033[38;5;226m'
 BLUE='\033[38;5;63m'
@@ -37,21 +37,35 @@ tab=">-   "
 # --- Check branch ---
 CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 if [[ "$CURRENT_BRANCH" == "main" ]]; then
-    echo -e "${RED}❌ ERROR: You are on 'main'. Switch to a feature branch first.${RESET}"
-    exit 1
+    echo -e "${RED}${tab}❌ ERROR: You are on 'main'. Switch to a feature branch first.${RESET}"
+    exit
+fi
+
+# --- Check for uncommitted changes ---
+if [[ -n $(git status --porcelain) ]]; then
+    echo -e "${RED}${tab}❌ ERROR: You have uncommitted changes. Commit or stash them before merging.${RESET}"
+    exit
 fi
 
 # --- Show header ---
 echo
 echo
 gradient_echo_rgb "$FANCY_LINE ⋆.˚ ⋆.˚ ⋆.˚" 255 105 180 0 0 0
-echo -e "${MAGENTA}${tab}✨ Merging '$CURRENT_BRANCH' into main${RESET}"
+echo -e "${MAGENTA}${tab}✨ Merging current branch into main${RESET}"
 echo -e "${MAGENTA}${tab}🌸 Current branch: ${YELLOW}'$CURRENT_BRANCH'${RESET}"
+echo
+echo -e "${MAGENTA}${tab}❔ Press ENTER to confirm, or type anything else to cancel:${RESET}"
 gradient_echo_rgb "$FANCY_LINE ⋆.˚ ⋆.˚ ⋆.˚" 255 105 180 0 0 0
-echo
-echo
+
+# --- Confirm with user ---
+read -r CONFIRM
+if [[ -n "$CONFIRM" ]]; then
+    echo -e "${RED}${tab}❌ Merge cancelled by user.${RESET}"
+    exit
+fi
 
 # --- Fetch and merge ---
+echo
 echo -e "${BLUE}${tab}⏳ Fetching latest main from remote...${RESET}"
 git fetch origin main
 
@@ -66,10 +80,10 @@ git checkout main
 echo
 echo -e "${BLUE}${tab}✨ Merging '$CURRENT_BRANCH' into main...${RESET}"
 if ! git merge --no-ff "$CURRENT_BRANCH"; then
-    echo -e "${RED}❌ Merge conflict! Resolve conflicts manually.${RESET}"
+    echo -e "${RED}${tab}❌ Merge conflict! Resolve conflicts manually.${RESET}"
     # Checkout back to original branch even if merge fails
     git checkout "$ORIGINAL_BRANCH"
-    exit 1
+    exit
 fi
 
 # --- Push merged main ---
