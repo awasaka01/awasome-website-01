@@ -68,3 +68,30 @@ customizable output url
 minification
 		"buildfull-b": "cross-env DEBUG=Eleventy:Benchmark* && pnpm run buildfull"
 deleteion of unused files
+
+
+
+
+Option 3: GitHub Actions
+
+Use CI to automatically push dist/ to gh-pages on every commit.
+
+Keeps local repo clean; no need for scripts.
+
+Example:
+name: Deploy dist
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+      - run: pnpm install
+      - run: pnpm build
+      - uses: peaceiris/actions-gh-pages@v3
+        with:
+          publish_dir: ./dist

@@ -4,18 +4,34 @@
 	"description": "",
 	"type": "module",
 	"scripts": {
-		"beforeBuild": "node ./scripts/beforeBuild.js",
-		"afterBuild": "node ./scripts/afterBuild.js",
-		"eleventy-build": "eleventy",
-		"eleventy-serve": "eleventy --incremental --serve",
-		"dev": "npm-run-all -s beforeBuild eleventy-serve",
-		"dev2": "pnpm beforeBuild && eleventy --serve",
-		"devbuild": "npm-run-all -s beforeBuild eleventy-build afterBuild",
-		"build": "cross-env FULL_BUILD=1 npm-run-all -s beforeBuild eleventy-build afterBuild",
-		"build-neocities": "cross-env FULL_BUILD=1 BUILD_TARGET=neocities eleventy=1 npm-run-all -s beforeBuild eleventy-build afterBuild",
-		"buildauto": "cross-env FULL_BUILD=1 FULL_START=1 npm-run-all -s beforeBuild -p buildauto:1 buildauto:2",
-		"buildauto:1": "nodemon --watch .eleventy.js --watch src --ext \"*\" --exec \"pnpm run build\" --delay 4",
-		"buildauto:2": "serve __production -p 8080 -n"
+		"dev": "npm-run-all -s BB compile_config:dev 11ty:serve AB",
+		"//": "                                                                                                                                           ",
+		"build": "cross-env FULLBUILD=true npm-run-all -s BB compile_config 11ty:build AB",
+		"buildmin": "                      npm-run-all -s BB compile_config 11ty:build AB",
+		"//": "                                                                                                                                           ",
+		"buildneo": "cross-env NEOCITIES=true pnpm run build",
+		"11ty:build": "eleventy",
+		"11ty:serve": "eleventy --serve --incremental",
+		"//": "                                                                                                                                           ",
+		"//": "                                                                                                                                           ",
+		"ansi": "node ./scripts/ansi.js",
+		"BB": "node ./scripts/beforeBuild.js",
+		"AB": "node ./scripts/afterBuild.js",
+		"//": "                                                                                                                                           ",
+		"//": "                                                                                                                                           ",
+		"//": " Deprecated Commands:                                                                                                                                          ",
+		"//": "                                                                                                                                           ",
+		"_eleventy-build": "eleventy",
+		"_eleventy-serve": "eleventy --incremental --serve",
+		"_dev": "npm-run-all -s beforeBuild eleventy-serve",
+		"_dev2": "pnpm beforeBuild && eleventy --serve",
+		"_devbuild": "cross-env FLAG= eleventy",
+		"_buildmin": "eleventy",
+		"_build": "cross-env FULL_BUILD=1 npm-run-all -s beforeBuild eleventy-build afterBuild",
+		"_build-neocities": "cross-env FULL_BUILD=1 BUILD_TARGET=neocities eleventy=1 npm-run-all -s beforeBuild eleventy-build afterBuild",
+		"_buildauto": "cross-env FULL_BUILD=1 FULL_START=1 npm-run-all -s beforeBuild -p buildauto:1 buildauto:2",
+		"_buildauto:1": "nodemon --watch .eleventy.js --watch src --ext \"*\" --exec \"pnpm run build\" --delay 4",
+		"_buildauto:2": "serve __production -p 8080 -n"
 	},
 	"browserslist": "> 0.1%",
 	"keywords": [],
@@ -28,8 +44,11 @@
 		"@vitejs/plugin-react": "^4.7.0",
 		"ansis": "^4.1.0",
 		"bezier-easing": "^2.1.0",
+		"browserslist": "^4.25.4",
 		"chalk": "^5.4.1",
+		"chokidar-cli": "^3.0.0",
 		"chroma-js": "^3.1.2",
+		"concurrently": "^9.2.1",
 		"cross-env": "^10.0.0",
 		"dotenv": "^17.2.0",
 		"eleventy": "^1.0.7",
@@ -41,11 +60,10 @@
 		"react": "^19.1.0",
 		"react-dom": "^19.1.0",
 		"sass-embedded": "^1.89.2",
+		"tsc": "^2.0.4",
+		"tsx": "^4.20.5",
 		"vite": "^6.3.5",
 		"vite-plugin-image-optimizer": "^2.0.2"
-	},
-	"pnpm": {
-		"neverBuiltDependencies": []
 	},
 	"devDependencies": {
 		"11ty.ts": "^0.0.6",
@@ -63,5 +81,8 @@
 		"stylelint-define-config": "^16.19.0",
 		"ts-node": "^10.9.2",
 		"typescript": "^5.8.3"
+	},
+	"pnpm": {
+		"neverBuiltDependencies": []
 	}
 }
