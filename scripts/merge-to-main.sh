@@ -41,11 +41,27 @@ if [[ "$CURRENT_BRANCH" == "main" ]]; then
     exit
 fi
 
-# --- Check for uncommitted changes ---
+
+# --- Offer to auto-commit or push if there are pending changes ---
 if [[ -n $(git status --porcelain) ]]; then
-    echo -e "${RED}${tab}❌ ERROR: You have uncommitted changes. Commit or stash them before merging.${RESET}"
-    exit
+    echo -e "${YELLOW}${tab}⚠️  You have uncommitted changes!${RESET}"
+    echo -e "${MAGENTA}${tab}Press ENTER to auto-commit and push them, or type anything else to cancel:${RESET}"
+    read -r CONFIRM_CHANGES
+    if [[ -n "$CONFIRM_CHANGES" ]]; then
+        echo -e "${RED}${tab}❌ Merge cancelled by user due to pending changes.${RESET}"
+        exit 1
+    fi
+
+    # Commit all pending changes
+    git add -A
+    git commit -m "Auto-commit: pending changes before merging into main"
+
+    # Push current branch to origin
+    echo -e "${BLUE}${tab}🚀 Pushing current branch '$CURRENT_BRANCH' to origin...${RESET}"
+    git push origin "$CURRENT_BRANCH"
 fi
+
+
 
 # --- Show header ---
 echo
