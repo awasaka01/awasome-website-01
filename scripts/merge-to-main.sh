@@ -74,7 +74,6 @@ echo -e "${MAGENTA}${tab}🌸 Current branch: ${YELLOW}'$CURRENT_BRANCH'${RESET}
 echo -e "${MAGENTA}${tab}❔ Press ENTER to confirm, or type anything else to cancel:${RESET}"
 gradient_echo_rgb "$FANCY_LINE ⋆.˚ ⋆.˚ ⋆.˚" 255 105 180 0 0 0
 echo
-echo
 # --- Confirm with user ---
 read -r CONFIRM
 if [[ -n "$CONFIRM" ]]; then
