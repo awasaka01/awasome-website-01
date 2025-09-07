@@ -2,7 +2,6 @@
 set -e
 
 # --- Function: gradient_echo_rgb ---
-# Prints text with smooth gradient from start RGB to end RGB
 gradient_echo_rgb() {
     local text="$1"
     local R1=$2 G1=$3 B1=$4
@@ -32,7 +31,7 @@ MAGENTA='\033[38;5;205m'
 RESET='\033[0m'
 
 # Fancy symbols
-FANCY_LINE="✿❀✧⋆∘✦ ⋆.˚ ᡣ.𖥔˚ ✦"
+FANCY_LINE=" ✿❀✧⋆∘✦ ⋆.˚ ᡣ.𖥔˚ ✦ "
 tab="        "
 
 # --- Check branch ---
@@ -54,6 +53,9 @@ echo
 echo -e "${BLUE}${tab}⏳ Fetching latest main from remote...${RESET}"
 git fetch origin main --quiet
 
+# Save original branch to return later
+ORIGINAL_BRANCH="$CURRENT_BRANCH"
+
 # Checkout main and merge
 echo -e "${BLUE}${tab}🔀 Checking out 'main'...${RESET}"
 git checkout main
@@ -61,12 +63,17 @@ git checkout main
 echo -e "${BLUE}${tab}✨ Merging '$CURRENT_BRANCH' into main...${RESET}"
 if ! git merge --no-ff "$CURRENT_BRANCH"; then
     echo -e "${RED}❌ Merge conflict! Resolve conflicts manually.${RESET}"
+    # Checkout back to original branch even if merge fails
+    git checkout "$ORIGINAL_BRANCH"
     exit 1
 fi
 
 # --- Push merged main ---
 echo -e "${BLUE}${tab}🚀 Pushing merged 'main' to origin...${RESET}"
 git push origin main --quiet
+
+# Checkout back to original branch
+git checkout "$ORIGINAL_BRANCH"
 
 # --- Done message ---
 gradient_echo_rgb "$FANCY_LINE ⋆.˚ ⋆.˚ ⋆.˚" 255 105 180 0 0 0
