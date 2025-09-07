@@ -95,7 +95,7 @@ git checkout main
 
 echo
 echo -e "${BLUE}${tab}✨ Merging '$CURRENT_BRANCH' into main...${RESET}"
-if ! git merge --no-ff "$CURRENT_BRANCH"; then
+if ! git merge --no-ff "$CURRENT_BRANCH" -m "AutoMerge: $CURRENT_BRANCH -> main"; then
     echo -e "${RED}${tab}❌ Merge conflict! Resolve conflicts manually.${RESET}"
     # Checkout back to original branch even if merge fails
     git checkout "$ORIGINAL_BRANCH"
