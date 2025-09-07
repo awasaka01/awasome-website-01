@@ -54,7 +54,7 @@ if [[ -n $(git status --porcelain) ]]; then
 
     # Commit all pending changes
     git add -A
-    git commit -m "Auto-commit: pending changes before merging into main"
+    git commit
 
     # Push current branch to origin
     echo -e "${BLUE}${tab}🚀 Pushing current branch '$CURRENT_BRANCH' to origin...${RESET}"
