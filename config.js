@@ -45,7 +45,7 @@ const abs = (p) => fileURLToPath(new URL(p, import.meta.url)).replace(/\\/g, "/"
 
 export const paths = {
 	"source": abs("./src"),
-	"output": abs("./__production"),
+	"output": abs("./__dist"),
 	"util": abs("./awa-util/core.ts"),
 	"scss": abs("./src/_styles"),
 	"includes": abs("./src/_includes"),
