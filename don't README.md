@@ -1,16 +1,17 @@
 # abilities	
 
 
+_ means don't build to dist, unless it's an image then it means copy without minification
 
-
+### Fully supported languages:
+	js, jsx, ts, tsx, html, css, scss
 
 
 
 # commands
 
-▷ `devbuild` · Quickly build the project with minimal build steps for a working build, skipping minimization, full rollup, etc.
-
-▷ `dev` · Live development server, integrates Vite's dev server into Eleventy's
+▷ `build` · Build the project  
+▷ `dev` · Start the development server for quick preview changes in browser
 
 ▷ `build` · Full build for production, including everything
 

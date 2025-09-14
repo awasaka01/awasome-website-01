@@ -77,7 +77,7 @@ const globalRules = {
 	"@stylistic/generator-star-spacing": "error",
 	"@stylistic/no-mixed-spaces-and-tabs": "error",
 	"@stylistic/no-multi-spaces": "error",
-	"@stylistic/no-trailing-spaces": "error",
+	"@stylistic/no-trailing-spaces": ["error", { "ignoreComments": true }],
 	"@stylistic/no-whitespace-before-property": "error",
 	"@stylistic/object-curly-spacing": ["error", "always"],
 	"@stylistic/rest-spread-spacing": "error",

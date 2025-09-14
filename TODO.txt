@@ -21,7 +21,7 @@
 [x] Add 404 page 
 [ ] Make unimmportant characters on the main menu not selectable
 [ ] Copy old neocities + github link
-
+add cache
 
 # Framework:
 [ ] 
