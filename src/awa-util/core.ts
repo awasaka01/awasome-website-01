@@ -1,7 +1,7 @@
 import chroma from "chroma-js";
 
 
-// Forward the more complex modules
+// Forward the more complex modules from their individual files
 export * from "./matrix.js";
 export * from "./inputtracking.js";
 export * from "./updateloop.js";
@@ -47,7 +47,6 @@ export function arrayRandom<T> (array : T[]) { return array[Math.floor(Math.rand
 
 
 
-//
 
 
 
@@ -66,6 +65,7 @@ type Point2 = [number, number, number, number];
 export const distanceL1 = (...[x1, y1, x2, y2] : Point2) => Math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2);
 export const distanceL2 = (...[x1, y1, x2, y2] : Point2) => Math.hypot(x1 - x2, y1 - y2);
 export const distanceLInf = (...[x1, y1, x2, y2] : Point2) => Math.max(Math.abs(x1 - x2), Math.abs(y1 - y2));
+
 
 
 /* Store already computed coordinate offsets for a given radius + metric (L1, L2, LINF) */

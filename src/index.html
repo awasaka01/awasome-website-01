@@ -2,6 +2,8 @@
 title: Home
 description: silly little website
 favicon: /assets/images/favicon.ico
+replace: { "/𝓕/g": '<span class="spacer"></span>' }
+colorMatches: true
 ---
 {{ layout "main-base.vto" }} 
 {{#  ↓ Content to insert in <head> ↓  #}} {{ slot head }} 
@@ -9,8 +11,20 @@ favicon: /assets/images/favicon.ico
 
 {{#  ↓ Content to insert in <body> ↓  #}} {{ /slot }}     
 
+{{ image "/raw/rarimage.png" }}
+{{ image "images/rarimage.png" }}
+{{ image "/rarimage.png", { alt: "uwu" } }}
+{{ image "rara_image.gif", { priority: "high" } }}
+
+<picture>
+
+</picture>
+𝓒1:┃◺
+𝓕𝓕𝓕
 	<div>
 		<h1>⚠️wiork in progress! !</h1>
 	</div>
 
+
+<script>{{ include "./critical.js" }}</script> {{# Inline important Javascript #}} 
 {{ /layout }}

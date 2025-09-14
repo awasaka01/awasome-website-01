@@ -1,8 +1,10 @@
 # abilities	
 
 
+_ means don't build to dist, unless it's an image then it means copy without minification
 
-
+### Fully supported languages:
+	js, jsx, ts, tsx, html, css, scss
 
 
 
