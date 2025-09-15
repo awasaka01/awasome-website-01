@@ -51,7 +51,7 @@ jobs:
       # Instead of copying
       - name: Commit build folder silently
         run: |
-          git add "^~^ website"
+          git add -f "^~^ website"
           git commit --allow-empty -m "AutoBuild: update site"
           git push origin HEAD
       - run: echo "✅ Build folder committed silently"
