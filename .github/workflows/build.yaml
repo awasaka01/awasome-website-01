@@ -26,18 +26,27 @@ jobs:
       #  🛈  Add build folder to commit
       # ───────────────────────────────────────────────
       - run: |
+          BUILD_DIR="^~^ website"
+
+          # Configure git
           git config user.name "rawr!"
           git config user.email "rawr@users.noreply.github.com"
 
-          # force add ignored build folder
-          git add -f "^~^ website"
+          # Use a temporary git index
+          TMP_INDEX=$(mktemp)
+          export GIT_INDEX_FILE=$TMP_INDEX
 
-          # amend last commit message
-          GIT_COMMIT_MSG="$(git log -1 --pretty=%B)"
-          git commit --amend -m "${GIT_COMMIT_MSG}" || echo "No changes to commit"
+          # Stage only the build folder
+          git add -f "$BUILD_DIR"
 
-          # push to current branch safely
-          git push origin HEAD --force-with-lease
+          # Create a commit in the temporary index
+          git commit -m "chore: update build folder [skip ci]"
+
+          # Push the commit to the current branch on GitHub
+          git push origin HEAD:HEAD --force-with-lease
+
+          # Clean up temporary index
+          rm -f $TMP_INDEX
 
       # ───────────────────────────────────────────────
       #  🛈  Deploy to Nekoweb (only on main)
