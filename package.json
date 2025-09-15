@@ -16,11 +16,14 @@
 	"license": "ISC",
 	"packageManager": "pnpm@10.12.1",
 	"dependencies": {
+		"11ty.ts": "^0.0.6",
+		"@11ty/eleventy": "^3.1.2",
 		"@11ty/eleventy-img": "^6.0.4",
 		"browserslist": "^4.25.4",
 		"browserslist-to-esbuild": "^2.1.1",
 		"chalk": "^5.6.0",
 		"chroma-js": "^3.1.2",
+		"deepmerge": "^4.3.1",
 		"eleventy": "^1.0.7",
 		"eleventy-plugin-vento": "^4.6.0",
 		"esbuild": "^0.25.9",
@@ -31,11 +34,9 @@
 		"react-dom": "^19.1.1",
 		"rimraf": "^6.0.1",
 		"sass-embedded": "^1.92.1",
-		"ventojs": "^2.0.1",
-		"11ty.ts": "^0.0.6",
-		"@11ty/eleventy": "^3.1.2",
 		"ts-node": "^10.9.2",
-		"typescript": "^5.9.2"
+		"typescript": "^5.9.2",
+		"ventojs": "^2.0.1"
 	},
 	"devDependencies": {
 		"@stylistic/stylelint-config": "^3.0.1",

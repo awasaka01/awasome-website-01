@@ -1,6 +1,6 @@
 import { Image } from "@11ty/eleventy-img";
 import * as config from "./config.js";
-import path from "path";
+import path from "node:path";
 
 /**
  * @typedef {Object} PluginOptions
