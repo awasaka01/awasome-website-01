@@ -51,6 +51,8 @@ jobs:
       # Instead of copying
       - name: Commit build folder silently
         run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
           git add -f "^~^ website"
           git commit --allow-empty -m "AutoBuild: update site"
           git push origin HEAD
