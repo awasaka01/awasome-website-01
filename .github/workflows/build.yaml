@@ -2,89 +2,92 @@ name: Build and Deploy
 
 on:
   push:
-    branches:
-      - '**'    # all branches
-  pull_request:
-    types: [closed]
-
-concurrency:
-  group: deploy-to-web
-  cancel-in-progress: true
+    branches: ["**"]  # run on all branches
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Checkout repo
-      - uses: actions/checkout@v3
-      - run: echo "✅ Repository checked out"
+      # -------------------------
+      # Checkout code
+      # -------------------------
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Install pnpm
-        run: npm install -g pnpm
-
-      # 2️⃣ Setup Node
-      - uses: actions/setup-node@v3
+      # -------------------------
+      # Setup pnpm with caching
+      # -------------------------
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
         with:
-          node-version: '20'
-      - run: echo "✅ Node.js set up"
+          version: 9
+          run_install: false
 
-      # 3️⃣ Cache pnpm store
-      - name: Cache pnpm store
-        uses: actions/cache@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          path: ~/.pnpm-store
-          key: pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            pnpm-store-
-      - run: echo "✅ pnpm cache restored"
+          node-version: lts/*
+          cache: 'pnpm'
 
-      # 4️⃣ Install dependencies with pnpm
-      - run: pnpm install --frozen-lockfile --production
-      - run: echo "✅ Dependencies installed"
+      # -------------------------
+      # Install dependencies
+      # -------------------------
+      - name: Install dependencies
+        run: pnpm install --prod --frozen-lockfile
 
-      # 5️⃣ Main build
-      - run: npm run build
-      - run: echo "✅ Build complete"
+      # -------------------------
+      # Build site
+      # -------------------------
+      - name: Build site
+        run: pnpm run build
 
-      # 6️⃣ Copy build into folder and commit silently
-      # Instead of copying
-      - name: Amend commit with built site
+      - name: ✅ Build complete
+        run: echo "✅ Build complete"
+
+      # -------------------------
+      # Add build folder to repo
+      # -------------------------
+      - name: Add build folder to commit
         run: |
-          git config user.name "github-actions[bot]"
+          git config user.name "rawr!"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # force add ignored build folder
           git add -f "^~^ website"
-          # take the previous message and append " + AutoBuild"
-          git commit --amend -m "$(git log -1 --pretty=%B) + AutoBuild"
-          git push origin HEAD --force
-      - run: echo "✅ Build folder committed silently"
 
-      # 7️⃣ Deploy to Nekoweb (only on main)
-      # - if: github.ref == 'refs/heads/main'
-        # uses: mp-pinheiro/nekoweb-deploy@main
-        # with:
-        #   API_KEY: ${{ secrets.NEKOWEB_API_KEY }}
-        #   BUILD_DIR: '^~^ website'
-          # DEPLOY_DIR: '/'
-        #   CLEANUP: 'False'
-        #   DELAY: '0.5'
-        #   NEKOWEB_PAGENAME: 'your-page-name'
-        #   ENCRYPTION_KEY: ${{ secrets.NEKOWEB_ENCRYPTION_KEY }}
-      - if: github.ref == 'refs/heads/main'
-        run: echo "✅ Deployed to Nekoweb"
+          # amend last commit message
+          GIT_COMMIT_MSG="$(git log -1 --pretty=%B)"
+          git commit --amend -m "${GIT_COMMIT_MSG} + AutoBuild" || echo "No changes to commit"
 
-      # 8️⃣ Neocities build and deploy (only on main)
-      # - if: github.ref == 'refs/heads/main'
-      #   run: |
-      #     echo "🔹 Running buildneo for Neocities"
-      #     npm run buildneo
-      # - if: github.ref == 'refs/heads/main'
+          # push to current branch safely
+          git push origin HEAD --force-with-lease
+
+      # -------------------------
+      # Deploy (only on main)
+      # -------------------------
+      # - name: Deploy to Nekoweb
+      #   if: github.ref == 'refs/heads/main'
+      #   uses: mp-pinheiro/nekoweb-deploy@main
+      #   with:
+      #     API_KEY: ${{ secrets.NEKOWEB_API_KEY }}
+      #     BUILD_DIR: '^~^ website'
+      #     DEPLOY_DIR: '/'
+      #     CLEANUP: 'False'
+      #     DELAY: '0.5'
+      #     NEKOWEB_PAGENAME: 'fairfruit'
+      #     ENCRYPTION_KEY: ${{ secrets.NEKOWEB_ENCRYPTION_KEY }}
+
+      # - name: Build Neocities site
+      #   if: github.ref == 'refs/heads/main'
+      #   run: pnpm run buildneo
+
+      # - name: Deploy to Neocities
+      #   if: github.ref == 'refs/heads/main'
       #   uses: bcomnes/deploy-to-neocities@v3
       #   with:
       #     api_key: ${{ secrets.NEOCITIES_API_TOKEN }}
-      #     dist_dir: "^~^ website-neo"
+      #     dist_dir: 'dist'
       #     cleanup: false
       #     neocities_supporter: false
       #     preview_before_deploy: true
-      - if: github.ref == 'refs/heads/main'
-        run: echo "✅ Deployed to Neocities"
