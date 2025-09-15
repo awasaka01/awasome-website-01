@@ -1,18 +1,25 @@
 name: Build and Deploy :3
 
 on:
-  push: {}
-  pull_request: { types: ["closed"] }
-  workflow_dispatch: {} 
+  push:
+    branches: [main]
+  pull_request:
+    types: [closed]
+    branches: [main]
+  workflow_dispatch: {}
+
+concurrency: # prevent concurrent deploys doing strange things
+  group: deploy-to-sites
+  cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
 
-      # ───────────────────────────────────────────────
-      #  🛈  Checkout, Install dependencies, Build
-      # ───────────────────────────────────────────────
+      # ─────────────────────────────────────────────────── ─── ── ─
+      #  🛈  Checkout, Install dependencies
+      # ─────────────────────────────────────────────────── ─── ── ─
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
         with: { run_install: false }
@@ -20,62 +27,35 @@ jobs:
         with: { cache: "pnpm", node-version: "20" }
       - run: pnpm install --prod --frozen-lockfile
 
-      - run: pnpm run build --production
-
-      # ───────────────────────────────────────────────
-      #  🛈  Add build folder to commit
-      # ───────────────────────────────────────────────
-      - run: |
-          BUILD_DIR="^~^ website"
-
-          # Configure git
-          git config user.name "rawr!"
-          git config user.email "rawr@users.noreply.github.com"
-
-          # Use a temporary git index
-          TMP_INDEX=$(mktemp)
-          export GIT_INDEX_FILE=$TMP_INDEX
-
-          # Stage only the build folder
-          git add -f "$BUILD_DIR"
-
-          # Create a commit in the temporary index
-          git commit -m "chore: update build folder [skip ci]"
-
-          # Push the commit to the current branch on GitHub
-          git push origin HEAD:HEAD --force-with-lease
-
-          # Clean up temporary index
-          rm -f $TMP_INDEX
-
-      # ───────────────────────────────────────────────
-      #  🛈  Deploy to Nekoweb (only on main)
-      # ───────────────────────────────────────────────
+      # ─────────────────────────────────────────────────── ─── ── ─
+      #  🛈  Build and deploy to Nekoweb
+      # ─────────────────────────────────────────────────── ─── ── ─
+      - run: pnpm run build --production --cleardist
+      - name: List ^~^ website recursively
+        run: |
+          echo "Listing all files in ^~^ website:"
+          find "^~^ website" -type f
       # - name: Deploy to Nekoweb
-      #   if: github.ref == 'refs/heads/main'
-      #   uses: mp-pinheiro/nekoweb-deploy@main
-      #   with: {
-      #     API_KEY: "${{ secrets.NEKOWEB_API_KEY }}",
-      #     BUILD_DIR: "^~^ website",
-      #     DEPLOY_DIR: "/",
-      #     CLEANUP: "False",
-      #     DELAY: "0.5",
-      #     NEKOWEB_PAGENAME: "fairfruit",
-      #     ENCRYPTION_KEY: "${{ secrets.NEKOWEB_ENCRYPTION_KEY }}"
-      #   }
+      #   uses: indiefellas/deploy2nekoweb@main
+      #   with:
+      #     nekoweb-api-key: ${{ secrets.NEKOWEB_API_KEY }}
+      #     directory: ^~^ website
+      #     nekoweb-username: awasaka01
+      #     nekoweb-domain: awasaka01.nekoweb.org
 
-      # ───────────────────────────────────────────────
-      #  🛈  Deploy to Neocities (only on main)
-      # ───────────────────────────────────────────────
-      - if: github.ref == 'refs/heads/main'
-        run: pnpm run build --production --neocities
-
-      # - if: github.ref == 'refs/heads/main'
+      # ─────────────────────────────────────────────────── ─── ── ─
+      #  🛈  Build with Neocities flag and deploy to Neocities
+      # ─────────────────────────────────────────────────── ─── ── ─
+      - run: pnpm run build --neocities --cleardist
+      - name: List ^~^ website recursively
+        run: |
+          echo "Listing all files in ^~^ website:"
+          find "^~^ website" -type f
+      # - name: Deploy to Neocities
       #   uses: bcomnes/deploy-to-neocities@v3
-      #   with: {
-      #     api_key: "${{ secrets.NEOCITIES_API_TOKEN }}",
-      #     dist_dir: "dist",
-      #     cleanup: false,
-      #     neocities_supporter: false,
+      #   with:
+      #     api_key: ${{ secrets.NEOCITIES_API_TOKEN }}
+      #     dist_dir: ^~^ website
+      #     neocities_supporter: false
       #     preview_before_deploy: true
-      #   }
+      #     cleanup: true
