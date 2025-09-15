@@ -40,7 +40,7 @@ jobs:
       - run: echo "✅ pnpm cache restored"
 
       # 4️⃣ Install dependencies with pnpm
-      - run: pnpm install --frozen-lockfile
+      - run: pnpm install --frozen-lockfile --production
       - run: echo "✅ Dependencies installed"
 
       # 5️⃣ Main build
@@ -48,11 +48,9 @@ jobs:
       - run: echo "✅ Build complete"
 
       # 6️⃣ Copy build into folder and commit silently
-      - name: Copy build folder and commit
+      # Instead of copying
+      - name: Commit build folder silently
         run: |
-          echo "🔹 Copying build into folder '^~^ website'"
-          mkdir -p "^~^ website"
-          cp -r "^~^ website/." "^~^ website/"
           git add "^~^ website"
           git commit --allow-empty -m "AutoBuild: update site"
           git push origin HEAD
