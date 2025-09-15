@@ -114,6 +114,7 @@ git checkout "$ORIGINAL_BRANCH"
 echo
 echo
 gradient_echo_rgb "$FANCY_LINE ⋆.˚ ⋆.˚ ⋆.˚" 255 105 180 0 0 0
-echo -e "${GREEN}${tab}✅ Merge complete! :3  main has been updated with ${YELLOW}'$CURRENT_BRANCH'${RESET}"
+echo -e "${GREEN}${tab}✅ Merge complete! :3"
+echo -e "${GREEN}${tab}✅ ${YELLOW}'main' ${GREEN}has been updated with ${YELLOW}'$CURRENT_BRANCH'${RESET}"
 gradient_echo_rgb "$FANCY_LINE ⋆.˚ ⋆.˚ ⋆.˚" 255 105 180 0 0 0
 echo

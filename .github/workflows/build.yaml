@@ -1,84 +1,85 @@
-# #
-# name: Build site, deploy to Neocities
+name: Build and Deploy
 
-# on:
-#     # Run on push, merge, or manual trigger. only on main branch,
-#     push:
-#         branches:
-#             - main
-#     pull_request:
-#         branches:
-#             - main
-#         types: [closed]
-#     workflow_dispatch:
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [closed]
 
-# # Only allow 1 deploy at a time to prevent concurrent deploys doing strange things
-# concurrency:
-#     group: build-main
-#     cancel-in-progress: true
+concurrency:
+  group: deploy-to-web
+  cancel-in-progress: true
 
-# jobs:
-#     # Single deploy job since we're just deploying
-#     deploy:
-#         # Run only if:
-#         # - event is NOT a pull_request (like push or workflow_dispatch)
-#         # - OR if event IS a pull_request AND it was merged
-#         if: github.event.pull_request == null || github.event.pull_request.merged == true
+jobs:
+  build-and-deploy:
+    if: github.event.pull_request.merged == true || github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
 
+    steps:
+      # Checkout repo
+      - uses: actions/checkout@v3
+      - run: echo "✅ Repository checked out"
 
-#         runs-on: ubuntu-latest
-#         steps:
+      # Setup Node
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+      - run: echo "✅ Node.js set up"
 
-#             # dont know
-#             - name: Checkout
-#               uses: actions/checkout@v4
+      # Cache npm modules
+      - uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: npm-cache
+          restore-keys: npm-cache
+      - run: echo "✅ npm cache restored"
 
-#             - name: Log after checkout
-#               run: echo "✅ Checked out code at commit $GITHUB_SHA"
+      # Install dependencies
+      - run: npm ci
+      - run: echo "✅ Dependencies installed"
 
+      # Main build
+      - run: npm run build
+      - run: echo "✅ Build complete"
 
-#             # Install Node.js
-#             - uses: actions/setup-node@v4
-#               with:
-#                   node-version: 'latest' # Or your desired Node.js version
+      # Copy build into folder and commit silently
+      - name: Copy build folder and commit
+        run: |
+          echo "🔹 Copying build into folder '^~^ website'"
+          mkdir -p "^~^ website"
+          cp -r "^~^ website/." "^~^ website/"
+          git add "^~^ website"
+          git commit --allow-empty -m "AutoBuild: update site"
+          git push origin HEAD
+      - run: echo "✅ Build folder committed silently"
 
-#             - name: Log Node version
-#               run: node -v
+      # # Deploy to Nekoweb
+      # - if: github.ref == 'refs/heads/main'
+      #   uses: mp-pinheiro/nekoweb-deploy@main
+      #   with:
+      #     API_KEY: ${{ secrets.NEKOWEB_API_KEY }}
+      #     BUILD_DIR: '^~^ website'
+      #     DEPLOY_DIR: '/'
+      #     CLEANUP: 'False'
+      #     DELAY: '0.5'
+      #     NEKOWEB_PAGENAME: 'your-page-name'
+      #     ENCRYPTION_KEY: ${{ secrets.NEKOWEB_ENCRYPTION_KEY }}
+      # - if: github.ref == 'refs/heads/main'
+      #   run: echo "✅ Deployed to Nekoweb"
 
-
-#             # Install pnpm ? i think
-#             - uses: pnpm/action-setup@v3
-#               with:
-#                   version: '10' # Or your desired pnpm version
-#                   cache: 'pnpm' # This enables caching of the pnpm store
-#             - name: Log pnpm version
-#               run: pnpm -v
-
-
-#             # Install dependencies
-#             - name: Install dependencies
-#               run: pnpm install
-
-#             - name: Log after dependencies install
-#               run: echo "✅ Dependencies installed"
-
-
-#             # Run build command
-#             - name: Build
-#               run: pnpm run build
-
-#             - name: Log after build
-#               run: echo "✅ Build completed"
-
-
-#             # Deploy to Neocities
-#             - name: Deploy to Neocities
-#               if: github.event_name != 'workflow_dispatch'
-#               uses: bcomnes/deploy-to-neocities@v3
-#               with:
-#                   api_key: ${{ secrets.NEOCITIES_API_TOKEN }}
-#                   cleanup: true
-#                   dist_dir: __production
-
-#             - name: Log after deploy
-#               run: echo "✅ Deployment to Neocities completed"
+      # # Neocities build and deploy
+      # - if: github.ref == 'refs/heads/main'
+      #   run: |
+      #     echo "🔹 Running buildneo for Neocities"
+      #     npm run buildneo
+      # - if: github.ref == 'refs/heads/main'
+      #   uses: bcomnes/deploy-to-neocities@v3
+      #   with:
+      #     api_key: ${{ secrets.NEOCITIES_API_TOKEN }}
+      #     dist_dir: "^~^ website-neo"
+      #     cleanup: false
+      #     neocities_supporter: false
+      #     preview_before_deploy: true
+      # - if: github.ref == 'refs/heads/main'
+      #   run: echo "✅ Deployed to Neocities"

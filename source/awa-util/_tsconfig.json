@@ -1,0 +1,17 @@
+// config for files in awa-util
+{
+	"include": ["*.ts"],
+	"exclude": ["node_modules"],
+	"compilerOptions": {
+		"outDir": "../../__awa-util",
+		"rootDir": ".",
+		"declaration": true,
+		"target": "es2024",
+		"module": "nodenext",
+		"esModuleInterop": true,
+		"strict": false,
+		"noEmitOnError": false,  
+    	"skipLibCheck": true,
+		"allowJs": true
+	}
+}
