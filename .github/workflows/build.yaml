@@ -26,16 +26,18 @@ jobs:
           node-version: '20'
       - run: echo "✅ Node.js set up"
 
-      # 3️⃣ Cache npm modules
-      - uses: actions/cache@v3
+      # 3️⃣ Cache pnpm store
+      - name: Cache pnpm store
+        uses: actions/cache@v3
         with:
-          path: ~/.npm
-          key: npm-cache
-          restore-keys: npm-cache
-      - run: echo "✅ npm cache restored"
+          path: ~/.pnpm-store
+          key: pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            pnpm-store-
+      - run: echo "✅ pnpm cache restored"
 
-      # 4️⃣ Install dependencies
-      - run: npm ci
+      # 4️⃣ Install dependencies with pnpm
+      - run: pnpm install --frozen-lockfile
       - run: echo "✅ Dependencies installed"
 
       # 5️⃣ Main build
