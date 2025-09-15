@@ -3,7 +3,7 @@ name: Build and Deploy
 on:
   push:
     branches:
-      - main
+      - '**'    # all branches
   pull_request:
     types: [closed]
 
@@ -13,21 +13,20 @@ concurrency:
 
 jobs:
   build-and-deploy:
-    if: github.event.pull_request.merged == true || github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout repo
+      # 1️⃣ Checkout repo
       - uses: actions/checkout@v3
       - run: echo "✅ Repository checked out"
 
-      # Setup Node
+      # 2️⃣ Setup Node
       - uses: actions/setup-node@v3
         with:
           node-version: '20'
       - run: echo "✅ Node.js set up"
 
-      # Cache npm modules
+      # 3️⃣ Cache npm modules
       - uses: actions/cache@v3
         with:
           path: ~/.npm
@@ -35,15 +34,15 @@ jobs:
           restore-keys: npm-cache
       - run: echo "✅ npm cache restored"
 
-      # Install dependencies
+      # 4️⃣ Install dependencies
       - run: npm ci
       - run: echo "✅ Dependencies installed"
 
-      # Main build
+      # 5️⃣ Main build
       - run: npm run build
       - run: echo "✅ Build complete"
 
-      # Copy build into folder and commit silently
+      # 6️⃣ Copy build into folder and commit silently
       - name: Copy build folder and commit
         run: |
           echo "🔹 Copying build into folder '^~^ website'"
@@ -54,21 +53,21 @@ jobs:
           git push origin HEAD
       - run: echo "✅ Build folder committed silently"
 
-      # # Deploy to Nekoweb
+      # 7️⃣ Deploy to Nekoweb (only on main)
       # - if: github.ref == 'refs/heads/main'
-      #   uses: mp-pinheiro/nekoweb-deploy@main
-      #   with:
-      #     API_KEY: ${{ secrets.NEKOWEB_API_KEY }}
-      #     BUILD_DIR: '^~^ website'
-      #     DEPLOY_DIR: '/'
-      #     CLEANUP: 'False'
-      #     DELAY: '0.5'
-      #     NEKOWEB_PAGENAME: 'your-page-name'
-      #     ENCRYPTION_KEY: ${{ secrets.NEKOWEB_ENCRYPTION_KEY }}
-      # - if: github.ref == 'refs/heads/main'
-      #   run: echo "✅ Deployed to Nekoweb"
+        # uses: mp-pinheiro/nekoweb-deploy@main
+        # with:
+        #   API_KEY: ${{ secrets.NEKOWEB_API_KEY }}
+        #   BUILD_DIR: '^~^ website'
+          # DEPLOY_DIR: '/'
+        #   CLEANUP: 'False'
+        #   DELAY: '0.5'
+        #   NEKOWEB_PAGENAME: 'your-page-name'
+        #   ENCRYPTION_KEY: ${{ secrets.NEKOWEB_ENCRYPTION_KEY }}
+      - if: github.ref == 'refs/heads/main'
+        run: echo "✅ Deployed to Nekoweb"
 
-      # # Neocities build and deploy
+      # 8️⃣ Neocities build and deploy (only on main)
       # - if: github.ref == 'refs/heads/main'
       #   run: |
       #     echo "🔹 Running buildneo for Neocities"
@@ -81,5 +80,5 @@ jobs:
       #     cleanup: false
       #     neocities_supporter: false
       #     preview_before_deploy: true
-      # - if: github.ref == 'refs/heads/main'
-      #   run: echo "✅ Deployed to Neocities"
+      - if: github.ref == 'refs/heads/main'
+        run: echo "✅ Deployed to Neocities"
