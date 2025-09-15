@@ -20,6 +20,9 @@ jobs:
       - uses: actions/checkout@v3
       - run: echo "✅ Repository checked out"
 
+      - name: Install pnpm
+        run: npm install -g pnpm
+
       # 2️⃣ Setup Node
       - uses: actions/setup-node@v3
         with:
