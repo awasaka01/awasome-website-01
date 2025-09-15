@@ -1,8 +1,8 @@
 name: Build and Deploy :3
 
 on:
-  push: { branches: ["**"] }
-  pull_request: { types: [closed], branches: ["**"] }
+  push: { branches: [main] }
+  pull_request: { types: [closed], branches: [main] }
   workflow_dispatch: {}
 
 concurrency: # prevent concurrent deploys doing strange things
@@ -32,13 +32,13 @@ jobs:
         run: |
           echo "Listing all files in ^~^ website:"
           find "^~^ website" -type f
-      # - name: Deploy to Nekoweb
-      #   uses: indiefellas/deploy2nekoweb@main
-      #   with:
-      #     nekoweb-api-key: ${{ secrets.NEKOWEB_API_KEY }}
-      #     directory: ^~^ website
-      #     nekoweb-username: awasaka01
-      #     nekoweb-domain: awasaka01.nekoweb.org
+      - name: Deploy to Nekoweb
+        uses: indiefellas/deploy2nekoweb@main
+        with:
+          nekoweb-api-key: ${{ secrets.NEKOWEB_API_KEY }}
+          directory: ^~^ website
+          nekoweb-username: awasaka01
+          nekoweb-domain: awasaka01.nekoweb.org
 
       # ─────────────────────────────────────────────────── ─── ── ─
       #  🛈  Build with Neocities flag and deploy to Neocities
@@ -48,11 +48,11 @@ jobs:
         run: |
           echo "Listing all files in ^~^ website:"
           find "^~^ website" -type f
-      # - name: Deploy to Neocities
-      #   uses: bcomnes/deploy-to-neocities@v3
-      #   with:
-      #     api_key: ${{ secrets.NEOCITIES_API_TOKEN }}
-      #     dist_dir: ^~^ website
-      #     neocities_supporter: false
-      #     preview_before_deploy: true
-      #     cleanup: true
+      - name: Deploy to Neocities
+        uses: bcomnes/deploy-to-neocities@v3
+        with:
+          api_key: ${{ secrets.NEOCITIES_API_KEY }}
+          dist_dir: ^~^ website
+          neocities_supporter: false
+          preview_before_deploy: true
+          cleanup: true
