@@ -1,82 +1,72 @@
-name: Build and Deploy
+name: Build and Deploy :3
 
 on:
-  push:
-    branches: ["**"]  # run on all branches
+  push: {}
+  pull_request: { types: ["closed"] }
+  workflow_dispatch: {} 
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          run_install: false
+      # ───────────────────────────────────────────────
+      #  🛈  Checkout, Install dependencies, Build
+      # ───────────────────────────────────────────────
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { run_install: false }
+      - uses: actions/setup-node@v4
+        with: { cache: "pnpm", node-version: "20" }
+      - run: pnpm install --prod --frozen-lockfile
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          cache: 'pnpm'
+      - run: pnpm run build --production
 
-      - name: Install dependencies
-        run: pnpm install --prod --frozen-lockfile
-
-      # -------------------------
-      # Build site
-      # -------------------------
-      - name: Build site
-        run: pnpm run build
-
-      - name: ✅ Build complete
-        run: echo "✅ Build complete"
-
-      # -------------------------
-      # Add build folder to repo
-      # -------------------------
-      - name: Add build folder to commit
-        run: |
+      # ───────────────────────────────────────────────
+      #  🛈  Add build folder to commit
+      # ───────────────────────────────────────────────
+      - run: |
           git config user.name "rawr!"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.email "rawr@users.noreply.github.com"
 
           # force add ignored build folder
           git add -f "^~^ website"
 
           # amend last commit message
           GIT_COMMIT_MSG="$(git log -1 --pretty=%B)"
-          git commit --amend -m "${GIT_COMMIT_MSG} + AutoBuild" || echo "No changes to commit"
+          git commit --amend -m "${GIT_COMMIT_MSG}" || echo "No changes to commit"
 
           # push to current branch safely
           git push origin HEAD --force-with-lease
 
-      # -------------------------
-      # Deploy (only on main)
-      # -------------------------
+      # ───────────────────────────────────────────────
+      #  🛈  Deploy to Nekoweb (only on main)
+      # ───────────────────────────────────────────────
       # - name: Deploy to Nekoweb
       #   if: github.ref == 'refs/heads/main'
       #   uses: mp-pinheiro/nekoweb-deploy@main
-      #   with:
-      #     API_KEY: ${{ secrets.NEKOWEB_API_KEY }}
-      #     BUILD_DIR: '^~^ website'
-      #     DEPLOY_DIR: '/'
-      #     CLEANUP: 'False'
-      #     DELAY: '0.5'
-      #     NEKOWEB_PAGENAME: 'fairfruit'
-      #     ENCRYPTION_KEY: ${{ secrets.NEKOWEB_ENCRYPTION_KEY }}
+      #   with: {
+      #     API_KEY: "${{ secrets.NEKOWEB_API_KEY }}",
+      #     BUILD_DIR: "^~^ website",
+      #     DEPLOY_DIR: "/",
+      #     CLEANUP: "False",
+      #     DELAY: "0.5",
+      #     NEKOWEB_PAGENAME: "fairfruit",
+      #     ENCRYPTION_KEY: "${{ secrets.NEKOWEB_ENCRYPTION_KEY }}"
+      #   }
 
-      # - name: Build Neocities site
-      #   if: github.ref == 'refs/heads/main'
-      #   run: pnpm run buildneo
+      # ───────────────────────────────────────────────
+      #  🛈  Deploy to Neocities (only on main)
+      # ───────────────────────────────────────────────
+      - if: github.ref == 'refs/heads/main'
+        run: pnpm run build --production --neocities
 
-      # - name: Deploy to Neocities
-      #   if: github.ref == 'refs/heads/main'
+      # - if: github.ref == 'refs/heads/main'
       #   uses: bcomnes/deploy-to-neocities@v3
-      #   with:
-      #     api_key: ${{ secrets.NEOCITIES_API_TOKEN }}
-      #     dist_dir: 'dist'
-      #     cleanup: false
-      #     neocities_supporter: false
+      #   with: {
+      #     api_key: "${{ secrets.NEOCITIES_API_TOKEN }}",
+      #     dist_dir: "dist",
+      #     cleanup: false,
+      #     neocities_supporter: false,
       #     preview_before_deploy: true
+      #   }
