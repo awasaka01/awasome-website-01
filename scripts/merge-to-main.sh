@@ -92,22 +92,21 @@ git fetch origin main
 # Save original branch to return later
 ORIGINAL_BRANCH="$CURRENT_BRANCH"
 
-# Checkout main and merge
-echo
-echo -e "${BLUE}${tab}🔀 Checking out 'main'...${RESET}"
+# --- Checkout main ---
 git checkout main
+git pull origin main
 
-echo
-echo -e "${BLUE}${tab}✨ Merging '$CURRENT_BRANCH' into main...${RESET}"
-if ! git -c user.name="rawr" -c user.email="rawr@example.com" \
-       merge --no-ff "$CURRENT_BRANCH" \
-       --author="rawr <rawr@example.com>" \
-       -m "merged $CURRENT_BRANCH" \
-       -X theirs; then
-    echo -e "${RED}${tab}❌ Merge failed for some reason.${RESET}"
+# --- Force merge using 'theirs' strategy ---
+echo -e "${BLUE}${tab}🔀 Merging '$CURRENT_BRANCH' into main (force conflicts to branch)...${RESET}"
+GIT_COMMITTER_NAME="$RAW_NAME" GIT_COMMITTER_EMAIL="$RAW_EMAIL" \
+git merge --no-ff "$CURRENT_BRANCH" -m "rawr: $CURRENT_BRANCH -> main" -X theirs || {
+    echo -e "${RED}${tab}❌ Merge failed. Please check manually.${RESET}"
     git checkout "$ORIGINAL_BRANCH"
-    exit
-fi
+    exit 1
+}
+
+# --- Amend merge commit to set Rawr as author ---
+git commit --amend --author="$RAW_NAME <$RAW_EMAIL>" --no-edit
 
 # --- Push merged main ---
 echo
