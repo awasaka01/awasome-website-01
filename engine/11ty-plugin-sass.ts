@@ -1,3 +1,13 @@
+// engine/11ty-plugin-sass.js
+
+
+// - my config
+import * as config from "./config.js";
+const { log, err, colors, paths, absPaths } = config;
+const { blue: b, pink: p, white: w } = colors;
+const env = process.env as import("./config.js").env_type & NodeJS.ProcessEnv;
+
+// - node modules
 import * as sass from "sass-embedded";
 import deepmerge from "deepmerge";
 import chalk from "chalk";
@@ -43,8 +53,9 @@ export default function (options) {
 				const result = sass.compileString(content, options.sassOptions);
 				content = result.css;
 
-				// Map dependencies for incremental builds [https://www.11ty.dev/docs/dependencies/]
-				this.addDependencies(inputPath, result.loadedUrls);
+				// [https://www.11ty.dev/docs/languages/custom/#registering-dependencies]
+				// console.log(result.loadedUrls);
+				this.addDependencies(inputPath, []);
 
 				// Encode the source map into base64 and append it to the output CSS
 				if (result.sourceMap) {

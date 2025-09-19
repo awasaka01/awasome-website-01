@@ -12,7 +12,7 @@
 └─┴─┘
 ╭╮
 ╰╯
-
+dont update "eleventy-plugin-vento": "4.6.0",
 
 
 // TODO - Actually TODO:
@@ -147,3 +147,121 @@ The build process runs as follows:
 
 
 ---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---yaml
+title: Home
+description: silly little website
+favicon: /assets/images/favicon.ico
+replace: { "𝓕/g": '<span class="spacer"></span>' }
+colorMatches: true
+---
+{{ layout "main-base.vto" }} 
+{{#  ↓ Content to insert in <head> ↓  #}} {{ slot head }} 
+<title>overwr</title>
+
+{{#  ↓ Content to insert in <body> ↓  #}} {{ /slot }}     
+
+{{ image "miku.png" }}
+{{# {{ image "S1060032.JPG", { alt: "uwu" } }}
+{{ image "oh-no-riv-dont-look-d-v0-trs5vm61jhqd1.webp", { priority: "high" } }} #}}
+{{ image "raw/S1080001.JPG" }}
+<picture>
+
+</picture>
+𝓒1:┃◺
+𝓕𝓕𝓕
+	<div>
+		<h1>⚠️wiork in progress! !</h1>
+	</div>
+
+
+<script>{{ include "./critical.js" }}</script> {{# Inline important Javascript #}} 
+{{ /layout }}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---yaml
+title: Home
+description: silly little website
+favicon: /assets/images/favicon.ico
+replace: { "𝓕/g": '<span class="spacer"></span>' }
+colorMatches: true
+---
+{{ layout "main-base.vto" }} 
+{{#  ↓ Content to insert in <head> ↓  #}} {{ slot head }} 
+<title>overwr</title>
+<script type="importmap">{ "imports": { 
+	"chroma": "https://unpkg.com/chroma-js@3.1.2/index.js",
+	"react": "https://unpkg.com/react@18.2.0/umd/react.production.min.js",
+	"react-dom/client": "https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js",
+	"bezier-easing": "https://unpkg.com/bezier-easing@2.1.0/dist/bezier-easing.min.js",
+	"pathfinding": "https://cdn.jsdelivr.net/npm/pathfinding@0.0.1/pathfinding.min.js",
+	"use-sound": "https://unpkg.com/use-sound@5.0.0/dist/use-sound.cjs.production.min.js"
+} }</script>
+
+{{#  ↓ Content to insert in <body> ↓  #}} {{ /slot }}  
+   
+<div id="boop-root"></div>
+<script type="module" src="./react.js"></script>
+
+{{# {{ image "Pink_Slime_SP.webp", { classes: ["slime"]} }}
+{{ image "Puddle_Slime_SP.webp", { classes: ["slime"]} }}
+{{ image "Saber_Slime_SP.webp", { classes: ["slime"]} }}
+ {{ image "Tabby_Slime_SP.webp", { classes: ["slime"]} }}
+{{ image "Phosphor_Slime_SP.webp", { classes: ["slime"]} }}
+{{ image "Honey_Slime_SP.webp", { classes: ["slime"]} }}
+{{ image "S1060032.JPG", { alt: "uwu" } }}
+{{ image "miku.png" }}
+{{ image "oh-no-riv-dont-look-d-v0-trs5vm61jhqd1.webp" }}
+{{ image "raw/S1080001.JPG" }} #}}
+
+
+{{# <img src="" alt=""> #}}
+
+{{# <img src="images/raw/S1080001.JPG" alt="" fetchpriority="low"> #}}
+
+
+
+
+
+	<div>
+		<h1>⚠️wiork in progress! !</h1>
+	</div>
+
+
+<script>{{ include "./critical.js" }}</script> {{# Inline important Javascript #}} 
+{{ /layout }}

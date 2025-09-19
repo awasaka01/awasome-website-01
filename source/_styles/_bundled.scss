@@ -1,7 +1,7 @@
-@forward "./_colors";
-@forward "./_functions";
-@forward "./_fonts";
-@forward "./_mixins";
-@forward "./_reset";
-// @forward "./_variables";
-@forward "./theme";
+@forward "./_colors.scss";
+@forward "./_functions.scss";
+@forward "./_fonts.scss";
+@forward "./_mixins.scss";
+@forward "./_reset.scss";
+@forward "./_theme.scss";
+@forward "./_animations.scss";

@@ -27,7 +27,7 @@ jobs:
       # ─────────────────────────────────────────────────── ─── ── ─
       #  🛈  Build and deploy to Nekoweb
       # ─────────────────────────────────────────────────── ─── ── ─
-      - run: pnpm run build --production --cleardist
+      - run: pnpm run build
       - name: List ^~^ website recursively
         run: |
           echo "Listing all files in ^~^ website:"
@@ -43,7 +43,7 @@ jobs:
       # ─────────────────────────────────────────────────── ─── ── ─
       #  🛈  Build with Neocities flag and deploy to Neocities
       # ─────────────────────────────────────────────────── ─── ── ─
-      - run: pnpm run build --neocities --cleardist
+      - run: pnpm run buildneo
       - name: List ^~^ website recursively
         run: |
           echo "Listing all files in ^~^ website:"

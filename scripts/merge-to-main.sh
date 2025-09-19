@@ -1,4 +1,8 @@
 #!/bin/bash
+# scripts/merge-to-main.sh
+# AI GENERATED CODE!! :[
+# AI GENERATED CODE!! :[
+
 set -e
 
 # --- Function: gradient_echo_rgb ---
@@ -95,7 +99,10 @@ git checkout main
 
 echo
 echo -e "${BLUE}${tab}✨ Merging '$CURRENT_BRANCH' into main...${RESET}"
-if ! git merge --no-ff "$CURRENT_BRANCH" -m "AutoMerge: $CURRENT_BRANCH -> main"; then
+if ! git -c user.name="rawr" -c user.email="rawr@example.com" \
+       merge --no-ff "$CURRENT_BRANCH" \
+       --author="rawr <rawr@example.com>" \
+       -m "rawr: merge $CURRENT_BRANCH"; then
     echo -e "${RED}${tab}❌ Merge conflict! Resolve conflicts manually.${RESET}"
     # Checkout back to original branch even if merge fails
     git checkout "$ORIGINAL_BRANCH"

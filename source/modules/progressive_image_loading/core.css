@@ -1,0 +1,18 @@
+.progressive-image {
+	content-visibility: auto;
+	position: relative;
+}
+.progressive-image .min + .full {
+	position: absolute;
+	inset: 0;
+}
+.progressive-image .full {
+	transition: opacity 300ms ease-in;
+	opacity: 0;
+}
+.progressive-image .min {
+	position: relative;
+	z-index: -5;
+	user-select: none;
+	pointer-events: none;
+}

@@ -3,9 +3,9 @@ import chalk from "chalk";
 
 
 // Forward the more complex modules from their individual files
-export * from "./matrix.js";
-export * from "./inputtracking.js";
-export * from "./updateloop.js";
+export * from "./_matrix.js";
+export * from "./_inputtracking.js";
+export * from "./_updateloop.js";
 
 
 /** Generate a random whole number between min and max */
@@ -13,6 +13,7 @@ export const rr = (min : number, max : number) => Math.floor(Math.random() * (ma
 
 /** A promise that resolves after t milliseconds */
 export const delay = async (t = 1000) : Promise<void> => new Promise((resolve) => setTimeout(resolve, t));
+export const sleep = delay;
 
 /** Return the longest element of the given array */
 export const longestIn = <T extends { length : number }> (array : T[]) : T => {

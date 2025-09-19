@@ -1,4 +1,4 @@
-@use "colors" as *;
+@use "colors.scss" as *;
 #theme-select {
 	$elements-in-dropdown: 2;
 	$opening-speed: 100ms * $elements-in-dropdown;

@@ -8,14 +8,19 @@
 <br>
 
 ## Folder structure
-☰ `website` - Output folder, files to be served on the site  
-☰ `source` - The uncompiled source files for the site  
-☰ `source/pages` -   
-☰ `source/_includes` -   
-☰ `source/` -   
-☰ `source/` -   
+☰ `^~^ website` - Output folder, files to be served on the site  
 ☰ `engine` - Build tools, plugins, etc.  
 ☰ `scripts` - Arbitrary scripts that aren't used in in builds  
+☰ `source` - The uncompiled source files for the site  
+
+☰ `source/pages` - Folders for each individual page  
+☰ `source/fonts` - Fonts  
+☰ `source/images` - Images  
+☰ `source/_styles` - SCSS Components for '@use'-ing  
+☰ `source/scripts` - JavaScript files that are used on multiple pages  
+☰ `source/awa-util` - My utility scripts and helper functions  
+☰ `source/_templates` - Templates / Partials to be used in .html files  
+
 
 <br>
 
@@ -38,6 +43,23 @@ Flags | Description
 `p` / `production`| Overrides the other flags
 
 
+# env variables
+Consistency Rule: env variables only affect what their name explicitly says, but can be set by others, see below which env variables automatically enable sub-flags:
+```
+NEOCITIES
+DRY_RUN
+
+SERVE
+- SOURCE_MAPS
+
+CLEAN
+- CLEAR_CACHE
+- CLEAR_DIST
+
+PRODUCTION
+- MINIFY_FILES
+- MINIFY_IMAGES
+```
 <br><br><br><br><br><br><br><br><br>
 
 ---
