@@ -102,9 +102,9 @@ echo -e "${BLUE}${tab}✨ Merging '$CURRENT_BRANCH' into main...${RESET}"
 if ! git -c user.name="rawr" -c user.email="rawr@example.com" \
        merge --no-ff "$CURRENT_BRANCH" \
        --author="rawr <rawr@example.com>" \
-       -m "rawr: merge $CURRENT_BRANCH"; then
-    echo -e "${RED}${tab}❌ Merge conflict! Resolve conflicts manually.${RESET}"
-    # Checkout back to original branch even if merge fails
+       -m "merged $CURRENT_BRANCH" \
+       -X theirs; then
+    echo -e "${RED}${tab}❌ Merge failed for some reason.${RESET}"
     git checkout "$ORIGINAL_BRANCH"
     exit
 fi
