@@ -1,46 +1,124 @@
-# abilities	
-
-
-_ means don't build to dist, unless it's an image then it means copy without minification
-
-### Fully supported languages:
-	js, jsx, ts, tsx, html, css, scss
 
 
 
-# commands
+## Languages
+⌬ `html` - Treated as a Vento.vto template file  
+⌬ `scss`, `css`, `js`, `ts`, `jsx`, `tsx`
 
-▷ `build` · Build the project  
-▷ `dev` · Start the development server for quick preview changes in browser
+<br>
 
-▷ `build` · Full build for production, including everything
+## Folder structure
+☰ `^~^ website` - Output folder, files to be served on the site  
+☰ `engine` - Build tools, plugins, etc.  
+☰ `scripts` - Arbitrary scripts that aren't used in in builds  
+☰ `source` - The uncompiled source files for the site  
 
-▷ `autobuild` · Runs `buildfull` when changes in src folder, also hosts the site for easy preview
+☰ `source/pages` - Folders for each individual page  
+☰ `source/fonts` - Fonts  
+☰ `source/images` - Images  
+☰ `source/_styles` - SCSS Components for '@use'-ing  
+☰ `source/scripts` - JavaScript files that are used on multiple pages  
+☰ `source/awa-util` - My utility scripts and helper functions  
+☰ `source/_templates` - Templates / Partials to be used in .html files  
 
-<!-- ▷ `build-b` / `startfull-b` /... · Same as abovee but with 11ty's benchmarking enabled -->
 
-notyet▷ `BUILD-FINAL` · Same as `buildfull` but for running in places like github actions, reduced logging and other human things
+<br>
+
+## Commands
+▷ `build` - Quick minimal working build of the site, no minifying etc.  
+▷ `dev` - Launch a local server to view changes  
+▷ `merge` - Helper to automatically merge the current git branch to main  
+▷ `bot:build` - Build for production, used by github actions  
+▷ `bot:buildneo` - Same but with the '--neocities' flag
+
+
+You can also add certain flags to the build command ~ *example:* `pnpm build serve n cleardist` 
+
+Flags | Description 
+-|-
+`f` / `fullbuild` | Enable unnecessary build features like minifying
+`s` / `serve`     | Launch a local server to view changes instantly
+`n` / `neocities` | Disable specific features limited by Neocities 
+`c` / `cleardist` | Clear output folder before building
+`p` / `production`| Overrides the other flags
+
+
+# env variables
+Consistency Rule: env variables only affect what their name explicitly says, but can be set by others, see below which env variables automatically enable sub-flags:
+```
+NEOCITIES
+DRY_RUN
+
+SERVE
+- SOURCE_MAPS
+
+CLEAN
+- CLEAR_CACHE
+- CLEAR_DIST
+
+PRODUCTION
+- MINIFY_FILES
+- MINIFY_IMAGES
+```
+<br><br><br><br><br><br><br><br><br>
 
 ---
 
-The build process runs as follows:  
-`src`━ 11ty ━➤`temp`━ Vite ━➤`production/dev`
+# `build.js` Overview
+
+`build.js` automates building the project and running Eleventy with environment variables and CLI flags.
+
+### Steps:
+1. **Compile `awa-util`**  
+   - Output `dist/awa-util/core.js` (minimized & rolled up, no types)  
+   - Output `awa-util/js` with `.d.ts` files (not minimized)  
+   - Skip compilation if output would be identical  
+
+2. **Parse CLI arguments**  
+   - Set environment variables for: `FULLBUILD`, `SERVE`, `NEOCITIES`, `CLEARDIST`, `PRODUCTION`
+
+3. **Clear output folder**  
+   - If `--cleardist` flag is set, remove all files from `dist/`
+
+4. **Run Eleventy**  
+   - Pass along flags based on environment variables  
 
 ---
 
 
-### folder structure
-
-☰ `/src/` · Contains all source files, including HTML, CSS, JS, and assets
-
-☰ `/____temp/` · Used as an intermediary folder, as Vite runs on 11ty's output  
-☰ `/__dev/` · Final output folder when using `build` or `start`  
-☰ `/__production/` · Final output folder when using `buildfull` or `startfull`
 
 
-☰ `/scripts/` · Scripts used during the build process, seperated from .eleventy.js for readability  
-☰ `/scripts/misc/` · Random, probably unused, stuff
+
+> **Note:** The `-` is optional. You can run `node build.js f` instead of `node build.js -f`.  
 
 
+> **Note:** The `-` is optional. You can run `node build.js f` instead of `node build.js -f`.  
 
 ---
+
+### Internal Features
+
+- **Hash-based compilation**: Only recompiles `awa-util` if source files have changed  
+- **File operations**: Uses `fast-glob` and `fs/promises` to manage files  
+- **Environment handling**: Combines CLI flags into `env` object  
+- **Eleventy integration**: Launches Eleventy with proper flags & environment  
+
+---
+
+### Example Usage
+
+```bash
+# Full build with cleared dist folder
+node build.js --fullbuild --cleardist
+# or without dashes
+node build.js fullbuild cleardist
+
+# Start dev server
+node build.js --serve
+# or
+node build.js serve
+
+# Production build (used in CI/CD)
+node build.js --production
+# or
+node build.js production

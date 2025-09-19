@@ -1,0 +1,54 @@
+---yaml
+title: Home
+description: silly little website
+favicon: /assets/images/favicon.ico
+replace: { "𝓕/g": '<span class="spacer"></span>' }
+colorMatches: true
+---
+{{ layout "main-base.vto" }} 
+{{#  ↓ Content to insert in <head> ↓  #}} {{ slot head }} 
+
+{{#  ↓ Content to insert in <body> ↓  #}} {{ /slot }}  
+
+
+
+<!-- Slime Rancher Scrolling Track -->
+<div id="slimes-track"><div id="slimes">
+	<div class="hover-detect"></div>
+	{{> const slimes = ["Boom_Slime_SP", "Chickadoo", "Crystal_Slime_SP", "Dervish_Slime_SP", "Fire_Slime_SP", "Glitch_Slime_SP", "Gold_Slime_SP", "Hen_hen", "Honey_Slime_SP", "Hunter_Slime_SP", "Lucky_Slime_SP", "Mosaic_Slime_SP", "Phosphor_Slime_SP", "Pink_Slime_SP", "Pink&GordoSP", "Puddle_Slime_SP", "Quantum_Slime_SP", "Rad_Slime_SP", "Rock_Slime_SP", "Roostro", "Saber_Slime_SP", "Tabby_Slime_SP", "Tangle_Slime_SP", "The_Tarr_SP"]; }}
+	{{ for slime of slimes }}
+		{{> const name = slime.replace(/_?SP/g, "").replace(/_|&/g, " ") }}
+		<div class="image-wrapper" title="{{ name }}">
+			{{ image `slimes/${slime.replace("&", "")}.webp`, { classes: [], alt: name, att: { title: name, loading: "eager" } } }}
+		</div>
+	{{ /for }}
+</div></div>
+
+
+{{# {{ image "Pink_Slime_SP.webp", { classes: ["slime"]} }}
+{{ image "Puddle_Slime_SP.webp", { classes: ["slime"]} }}
+{{ image "Saber_Slime_SP.webp", { classes: ["slime"]} }}
+{{ image "Tabby_Slime_SP.webp", { classes: ["slime"]} }}
+{{ image "Phosphor_Slime_SP.webp", { classes: ["slime"]} }}
+{{ image "Honey_Slime_SP.webp", { classes: ["slime"]} }} #}}
+{{# {{ image "S1060032.JPG", { alt: "uwu" } }}
+{{ image "miku.png" }}
+{{ image "oh-no-riv-dont-look-d-v0-trs5vm61jhqd1.webp" }}
+{{ image "raw/S1080001.JPG" }} #}}
+
+
+{{# <img src="" alt=""> #}}
+
+{{# <img src="images/raw/S1080001.JPG" alt="" fetchpriority="low"> #}}
+
+
+
+
+
+	<div>
+		<h1>⚠️wiork in progress! !</h1>
+	</div>
+
+
+<script>{{ include "./critical.js" }}</script> {{# Inline important Javascript #}} 
+{{ /layout }}

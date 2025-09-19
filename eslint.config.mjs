@@ -42,7 +42,7 @@ const globalRules = {
 	"no-obj-calls": "error",
 	"no-self-compare": "error",
 	"no-setter-return": "error",
-	"no-sparse-arrays": "error",
+	// "no-sparse-arrays": "error",
 	"no-template-curly-in-string": "error",
 	"no-this-before-super": "error",
 	"no-unexpected-multiline": "error",

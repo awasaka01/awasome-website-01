@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+	{{# Meta #}}
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	{{# Local CSS and JS #}}
+	<script src="./main.js"></script>
+	<link rel="stylesheet" href="./main.css">
+
+	{{# Display #}}
+	<title>{{ title || "default title" }}</title>
+	<link rel="shortcut icon" href="/images/raw/favicon.ico" type="image/x-icon">
+
+	{{# Module : progressive image loading #}}
+	<link rel="stylesheet" href="/modules/progressive_image_loading/core.css">
+	<script src="/modules/progressive_image_loading/core.js"></script>
+
+
+	{{# Import map for dependencies ignored in bundle #}}
+	<script type="importmap">{ "imports": { 
+		"chroma": "https://unpkg.com/chroma-js@3.1.2/index.js",
+		"react": "https://esm.sh/react@18",
+		"react-dom/client": "https://esm.sh/react-dom@18/client",
+		"react/jsx-runtime": "https://esm.sh/react@18/jsx-runtime",
+		"bezier-easing": "https://unpkg.com/bezier-easing@2.1.0/dist/bezier-easing.min.js",
+		"pathfinding": "https://cdn.jsdelivr.net/npm/pathfinding@0.0.1/pathfinding.min.js",
+		"use-sound": "https://unpkg.com/use-sound@5.0.0/dist/use-sound.cjs.production.min.js"
+	} }</script>
+
+	{{# User defined additional head content #}}
+	{{ head }}
+</head>
+<body>
+	{{# Main content #}}
+	{{ content }}
+</body>
+</html>
