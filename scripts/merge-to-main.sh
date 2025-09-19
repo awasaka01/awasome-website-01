@@ -3,7 +3,17 @@
 # AI GENERATED CODE!! :[
 # AI GENERATED CODE!! :[
 
+
+# --- Rawr identity ---
+
+
 set -e
+
+
+export GIT_AUTHOR_NAME="rawr"
+export GIT_AUTHOR_EMAIL="rawr@example.com"
+export GIT_COMMITTER_NAME="rawr"
+export GIT_COMMITTER_EMAIL="rawr@example.com"
 
 # --- Function: gradient_echo_rgb ---
 gradient_echo_rgb() {
