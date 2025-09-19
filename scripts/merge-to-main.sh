@@ -3,18 +3,20 @@
 # Automated Rawr merge script
 set -e
 
+
 # ————————————————————————————————————————————————————————————
-#  Identity: Rawr
+#  Identity:
 # ————————————————————————————————————————————————————————————
-RAW_NAME="rawr"
-RAW_EMAIL="rawr@example.com"
+RAW_NAME="[rawrbot]"
+RAW_EMAIL="rawrbot@example.com"
 export GIT_AUTHOR_NAME="$RAW_NAME"
 export GIT_AUTHOR_EMAIL="$RAW_EMAIL"
 export GIT_COMMITTER_NAME="$RAW_NAME"
 export GIT_COMMITTER_EMAIL="$RAW_EMAIL"
 
+
 # ————————————————————————————————————————————————————————————
-#  Fancy Functions & Colors
+#  Fancy Functions & Colors:
 # ————————————————————————————————————————————————————————————
 gradient_echo_rgb() {
     local text="$1"
@@ -44,42 +46,48 @@ RESET='\033[0m'
 FANCY_LINE=" ✿❀✧⋆∘✦ ⋆.˚ ᡣ.𖥔˚ ✦ "
 tab=">-   "
 
+
 # ————————————————————————————————————————————————————————————
-#  Detect current branch
+#  Detect current branch:
 # ————————————————————————————————————————————————————————————
 CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 if [[ "$CURRENT_BRANCH" == "main" ]]; then
-    echo -e "${RED}${tab}❌ ERROR: You are on 'main'. Switch to a feature branch first.${RESET}"
+    echo -e "${RED}${tab}❌ ERROR: You are already on main, you can't merge main to main silly${RESET}"
     exit 1
 fi
+ORIGINAL_BRANCH="$CURRENT_BRANCH" # Store the original branch, it will change
+
 
 # ————————————————————————————————————————————————————————————
-#  Auto-commit pending changes
+#  Auto-commit pending changes:
 # ————————————————————————————————————————————————————————————
 if [[ -n $(git status --porcelain) ]]; then
     gradient_echo_rgb "$FANCY_LINE ⋆.˚ ⋆.˚ ⋆.˚" 255 105 180 0 0 0
-    echo -e "${YELLOW}${tab}⚠️  Pending changes detected. Auto-committing...${RESET}"
-    git add -A
-    git commit -m "rawr: auto-commit pending changes"
-    git push origin "$CURRENT_BRANCH"
+    echo -e "${YELLOW}${tab}⚠️ You have uncommitted changes!${RESET}"
+    echo -e "${MAGENTA}${tab}❔ Press ENTER to commit them manually, or anything else to cancel:${RESET}"
+    gradient_echo_rgb "$FANCY_LINE ⋆.˚ ⋆.˚ ⋆.˚" 255 105 180 0 0 0
+    read -r CONFIRM_CHANGES
+    if [[ -n "$CONFIRM_CHANGES" ]]; then
+        echo -e "${RED}${tab}❌ Merge cancelled by user due to pending changes.${RESET}"
+        exit 1
+    fi
+
+    git add -A # Stage all changes
+    git commit # Manual commit: user types the commit message
 fi
 
+
 # ————————————————————————————————————————————————————————————
-#  Fetch latest main
+#  Switch to main branch:
 # ————————————————————————————————————————————————————————————
-echo -e "${BLUE}${tab}⏳ Fetching latest main from origin...${RESET}"
+echo -e "${BLUE}${tab}⏳ Switching to 'main'...${RESET}"
 git fetch origin main
-
-ORIGINAL_BRANCH="$CURRENT_BRANCH"
-
-# ————————————————————————————————————————————————————————————
-#  Checkout main
-# ————————————————————————————————————————————————————————————
 git checkout main
 git pull origin main
 
+
 # ————————————————————————————————————————————————————————————
-#  Force merge with 'theirs' strategy
+#  Force merge, priority to current branch:
 # ————————————————————————————————————————————————————————————
 echo -e "${BLUE}${tab}🔀 Merging '$CURRENT_BRANCH' into main (force conflicts to branch)...${RESET}"
 git merge --no-ff "$CURRENT_BRANCH" -m "rawr: $CURRENT_BRANCH -> main" -X theirs || {
@@ -88,20 +96,19 @@ git merge --no-ff "$CURRENT_BRANCH" -m "rawr: $CURRENT_BRANCH -> main" -X theirs
     exit 1
 }
 
+
 # ————————————————————————————————————————————————————————————
-#  Push merged main
+#  Push the merged main:
 # ————————————————————————————————————————————————————————————
 echo -e "${BLUE}${tab}🚀 Pushing merged 'main' to origin...${RESET}"
 git push origin main --quiet
 
+
 # ————————————————————————————————————————————————————————————
-#  Return to original branch
+#  Return to original branch:
 # ————————————————————————————————————————————————————————————
 git checkout "$ORIGINAL_BRANCH"
 
-# ————————————————————————————————————————————————————————————
-#  Done message
-# ————————————————————————————————————————————————————————————
 echo
 gradient_echo_rgb "$FANCY_LINE ⋆.˚ ⋆.˚ ⋆.˚" 255 105 180 0 0 0
 echo -e "${GREEN}${tab}✅ Merge complete! 'main' updated with '$CURRENT_BRANCH'.${RESET}"
