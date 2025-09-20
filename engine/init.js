@@ -57,8 +57,8 @@ process.argv.slice(2).forEach((arg) => {
 	env[name] = "true";
 	enable.forEach((k) => { if (env[k] === undefined) env[k] = "true"; });
 });
-process.env = { ...process.env, ...env };
 for (const k of Object.keys(env_key)) { if (env[k] === undefined) env[k] = "false"; }
+process.env = { ...process.env, ...env };
 
 if (env.WATCH === "true") log(`—— ${p(`> Press ${b.bold("Q")} to shutdown! <`)}`);
 log(`—— Environment Variables: [ ${Object.entries(env).filter(([, v]) => v === "true").map(([k]) => k).join(", ")} ]`);
@@ -89,7 +89,7 @@ async function build () {
 	console.log(divider());
 	const buildProcess = fork("./__compiled/engine/build.js", [], {
 		stdio: ["inherit", "inherit", "pipe", "ipc"],
-		env: { ...process.env },
+		env: { ...process.env, ...env },
 		detached: process.platform !== "win32", // detach only on Unix
 	});
 	registerChildProcess(buildProcess.pid);

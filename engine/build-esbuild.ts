@@ -11,7 +11,7 @@ import * as util from "__util__";
 import * as config from "./config.js";
 const { log, err, colors, paths, absPaths } = config;
 const { blue: b, pink: p, white: w } = colors;
-const env = process.env as import("./config.js").env_type & NodeJS.ProcessEnv;
+const env = process.env as config.env_type & NodeJS.ProcessEnv;
 
 
 
