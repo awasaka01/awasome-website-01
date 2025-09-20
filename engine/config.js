@@ -1,4 +1,6 @@
 // engine/config.js
+chalk.level = 3;
+process.env.FORCE_COLOR = "1";
 
 // ✧ process.env is modified by the build script, so correct the types:
 const env = /** @type {NodeJS.ProcessEnv & import('./config.js').env_type} */ (process.env);
@@ -52,8 +54,24 @@ export const env_key = {
 	CLEAN: { flags: ["c", "clean"], enable: ["CLEAR_CACHE", "CLEAR_DIST"] },
 		CLEAR_CACHE: { },
 		CLEAR_DIST: { flags: ["clear-dist", "cleardist"] },
+	// CLEAR_IMAGES: { },
 };
 /** @typedef {Record<keyof typeof env_key, 'true' | 'false' | undefined>} env_type */
+
+
+/* ~~~~~ External Dependencies ~~~~~ */
+/** Import map to be included in each page's \<script type="importmap"> */
+const importmap = { "imports": {
+	"chroma-js": "https://unpkg.com/chroma-js@3.1.2/index.js",
+	"react": "https://esm.sh/react@18",
+	"react-dom/client": "https://esm.sh/react-dom@18/client",
+	"react/jsx-runtime": "https://esm.sh/react@18/jsx-runtime",
+	"bezier-easing": "https://unpkg.com/bezier-easing@2.1.0/dist/bezier-easing.min.js",
+	"pathfinding": "https://cdn.jsdelivr.net/npm/pathfinding@0.0.1/pathfinding.min.js",
+	// "use-sound": "https://unpkg.com/use-sound@5.0.0/dist/use-sound.cjs.production.min.js",
+} };
+/** Imports to ignore whilst bundling source .ts files */
+export const external_dependencies = [...Object.keys(importmap.imports)];
 
 
 
@@ -113,6 +131,7 @@ export const scss = {
 export const vento = { dataVarname: "global", includes: paths.includes };
 export const vento_data = { // data to pass to Vento templates, then can be accessd with {{ key }}:
 	"env": { ...env },
+	"importmap": JSON.stringify(importmap),
 };
 
 

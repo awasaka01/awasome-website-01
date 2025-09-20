@@ -1,5 +1,6 @@
 // engine/build.ts
-
+chalk.level = 3;
+process.env.FORCE_COLOR = "1";
 
 // - node modules
 import { rm, readFile, writeFile, mkdir } from "node:fs/promises";
@@ -16,6 +17,7 @@ import startEsbuild from "./build-esbuild.js";
 import customLogger from "./build-logger.js";
 
 // - my config
+import * as util from "__util__";
 import * as config from "./config.js";
 import { paths, absPaths, log, err, colors, env_type } from "./config.js";
 const { blue: b, pink: p, white: w } = colors;
@@ -30,7 +32,7 @@ const env = process.env as env_type & NodeJS.ProcessEnv;
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
-const eleventy_cli_args = [`--config=${paths.compiled}/${paths.engine}/eleventy.js`];
+const eleventy_cli_args = [`--config=./${paths.compiled}/${paths.engine}/eleventy.js`];
 if (env.DISABLE_INCREMENTAL === "false") eleventy_cli_args.push("--incremental");
 if (env.SERVE === "true") eleventy_cli_args.push("--serve");
 
@@ -53,7 +55,6 @@ console.log("");
 // - esbuild
 const esbuild_context = await startEsbuild(glob.sync(`${absPaths.source}/**/!(_)*.{js,jsx,ts,tsx}`), paths.output);
 
-console.log(env, process.env);
 
 // - eleventy
 const command = env.USE_NPX === "true" ? "npx eleventy" : "eleventy";
@@ -100,6 +101,6 @@ async function sizeOfFolder (path) {
 /** Recursively delete all files and folders inside a directory */
 async function clearDirectory (path : string) {
 	return Promise.all((await glob(`**/*`,
-		{ cwd: path, absolute: true, onlyFiles: false, markDirectories: true })
+		{ cwd: path, absolute: true, onlyFiles: false, markDirectories: true, ignore: ["images/**"] })
 	).map((f) => rm(f, { recursive: true })));
 }

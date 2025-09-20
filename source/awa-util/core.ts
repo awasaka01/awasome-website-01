@@ -22,14 +22,15 @@ export const longestIn = <T extends { length : number }> (array : T[]) : T => {
 	return longest;
 };
 
-/** Strip ANSI escape codes from a string */
+/** Removes all ANSI escape codes from a string */
 export const removeANSI = (str : string) => str.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/gi, "");
 
+/** Escapes all ANSI escape codes, so they can be shown in the terminal */
+export const showANSI = (str : string) => str.replace(/\x1b(\[[0-9;]+m)/g, "$&\\x1b$1\x1b[0m");
 
 
 
-
-
+/** Returns a random value from an array of [weight, value] pairs */
 export function weightedRandom (pairs : [number, any][], returnArray = false) {
 
 	// Create array with n number of each value
@@ -45,14 +46,13 @@ export function weightedRandom (pairs : [number, any][], returnArray = false) {
 	return ar[Math.floor(Math.random() * ar.length)];
 }
 
+/** Returns a random value from an array */
 export function arrayRandom<T> (array : T[]) { return array[Math.floor(Math.random() * array.length)]; }
 
-
-
-
-
-
+/** Returns the average of the given array */
 export function average (arr : number[]) { return arr.reduce((a, b) => a + b, 0) / arr.length; }
+
+/** Returns true if the given number is a power of 2 */
 export const isPowerOf2 = (n : number) : boolean => n > 0 && (n & (n - 1)) === 0;
 
 

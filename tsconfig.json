@@ -6,7 +6,7 @@
 	"compilerOptions": {
 		/* Visit https://aka.ms/tsconfig to read more about this file */
 		"paths": {
-			"@util": ["./source/awa-util/core.ts"]
+			"__util__": ["./source/awa-util/core.ts"]
 		},
 		"outDir": "./__what",
 		"allowJs": true,

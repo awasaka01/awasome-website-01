@@ -9,7 +9,8 @@
    - To kill them:
      taskkill /F /IM node.exe
 */
-
+chalk.level = 3;
+process.env.FORCE_COLOR = "1";
 
 
 // - node modules
@@ -17,10 +18,13 @@ import { fork } from "node:child_process";
 import crypto from "node:crypto";
 import path from "node:path";
 import fs from "node:fs";
+import { fileURLToPath } from "url";
 
 import treeKill from "tree-kill";
 import chokidar from "chokidar";
 import esbuild from "esbuild";
+import { replace as esbuildPluginReplace } from "esbuild-plugin-replace";
+import externalizeAllPackagesExcept from "esbuild-plugin-noexternal";
 import glob from "fast-glob";
 import chroma from "chroma-js";
 import chalk from "chalk";
@@ -28,6 +32,7 @@ import chalk from "chalk";
 
 // ! only import config that doesn't depend on env variables
 import { paths, absPaths, env_key, log, err, colors, divider } from "./config.js";
+import { fail } from "node:assert";
 const { blue: b, pink: p, white: w, warn } = colors;
 
 
@@ -75,10 +80,9 @@ async function build () {
 
 
 	/* ~~~~~ 2. Compile the other engine files to JS ~~~~~ */
-	try { await Promise.all([
-		compileTS(paths.engine, `${paths.compiled}/${paths.engine}`),
-		compileTS(paths.util, `${paths.compiled}/awa-util`),
-	]); } catch (error) { console.log(divider()); err(`esbuild failed:`, 0, false); return console.log(`${error}`); }
+	await compileTS(paths.util, `${paths.compiled}/awa-util`, { minify: true }),
+	await compileTS(paths.engine, `${paths.compiled}/${paths.engine}`),
+
 
 	/* ~~~~~ 3. Run build.js ~~~~~ */
 	log(`🟢 Running ${b("build.js")}...`, p);
@@ -202,6 +206,7 @@ function registerChildProcess (pid) {
  * @returns {Promise<esbuild.BuildResult>}
  */
 async function compileTS (inputPath, outputPath, options = {}) {
+	// env.CLEAR_CACHE = "true";
 
 	// - Get all the .ts and .js files in the input path
 	const files = await glob(`${inputPath}/**/*!(_).{ts,js}`);
@@ -220,7 +225,6 @@ async function compileTS (inputPath, outputPath, options = {}) {
 	// @ Return and don't recompile if the old and new hashes are the same
 	if (oldHash !== null && hash.equals(oldHash)) return;
 
-
 	// - Log the start message
 	const reason
 		= env.CLEAR_CACHE === "true" ? "the cache was cleared"
@@ -233,8 +237,14 @@ async function compileTS (inputPath, outputPath, options = {}) {
 	return esbuild.build({
 		entryPoints: files,
 		outdir: outputPath,
-		logLevel: "error",
+		logLevel: "info",
 		sourcemap: false, bundle: false,
+		minify: options.minify ?? false,
 		format: "esm", platform: "node", target: "node24",
+		plugins: [
+			// externalizeAllPackagesExcept(["__util__"]),
+			esbuildPluginReplace({ "__util__": `../awa-util/core.js` }),
+		],
 	});
+	const MAX_BUNDLE_SIZE = 50 * 1024;
 }

@@ -1,4 +1,4 @@
-import * as util from "@util";
+import * as util from "./awa-util/core.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
 	slimey();

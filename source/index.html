@@ -19,7 +19,7 @@ colorMatches: true
 	{{ for slime of slimes }}
 		{{> const name = slime.replace(/_?SP/g, "").replace(/_|&/g, " ") }}
 		<div class="image-wrapper" title="{{ name }}">
-			{{ image `slimes/${slime.replace("&", "")}.webp`, { classes: [], alt: name, att: { title: name, loading: "eager" } } }}
+			{{ image `slimes/${slime.replace("&", "")}.webp`, { maxwidth: 128, classes: [], alt: name, att: { title: name, loading: "eager" } } }}
 		</div>
 	{{ /for }}
 </div></div>

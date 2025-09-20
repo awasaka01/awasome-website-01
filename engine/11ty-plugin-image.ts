@@ -1,8 +1,7 @@
-// engine/11ty-plugin-image.js
 // @ts-nocheck
 
-/* ~~~~~ Imports ~~~~~ */
 // - my config
+import * as util from "__util__";
 import * as config from "./config.js";
 const { log, err, colors, paths, absPaths } = config;
 const { blue: b, pink: p, white: w } = colors;
@@ -18,7 +17,8 @@ import glob from "fast-glob";
 // let verbose = true;
 env.MINIFY_IMAGES = "true";
 
-
+const arr = ["apple", "banana", "cherry"];
+console.log(util.arrayRandom(arr));
 
 
 const MAX_WIDTH_WEBP = 32; // Max width for the small min. images 

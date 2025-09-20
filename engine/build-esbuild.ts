@@ -1,12 +1,14 @@
 // - node modules
 import fs from "node:fs";
 import esbuild from "esbuild";
+import externalizeAllPackagesExcept from "esbuild-plugin-noexternal";
+import { replace as esbuildPluginReplace } from "esbuild-plugin-replace";
 import browserslist_esbuild from "browserslist-to-esbuild";
 const supported_browsers_esbuild = browserslist_esbuild(config.supported_browsers); // < convert browserslist to an esbuild compatible format
 
 // - my config
+import * as util from "__util__";
 import * as config from "./config.js";
-import { nodeVersions } from "browserslist";
 const { log, err, colors, paths, absPaths } = config;
 const { blue: b, pink: p, white: w } = colors;
 const env = process.env as import("./config.js").env_type & NodeJS.ProcessEnv;
@@ -26,7 +28,7 @@ export default async function startEsbuildClient (entryPoints : string[], outdir
 
 	const options : esbuild.BuildOptions = {
 		loader: { ".png": "file", ".jpg": "file", ".svg": "file", ".mp3": "file" },
-		external: ["react", "react-dom", "react-dom/client"],
+		external: config.external_dependencies,
 		logLevel: "error",
 
 		format: "esm", platform: "browser",
@@ -34,6 +36,10 @@ export default async function startEsbuildClient (entryPoints : string[], outdir
 		entryPoints: entryPoints, outdir: outdir,
 		bundle: true, minify: env.MINIFY_FILES === "true",
 		sourcemap: env.SOURCE_MAPS === "true" ? "inline" : undefined,
+		plugins: [
+			// externalizeAllPackagesExcept(config.bundled_packages),
+			esbuildPluginReplace({ "__util__": "/awa-util/core.js" }),
+		],
 	};
 
 	if (env.SERVE === "false") {

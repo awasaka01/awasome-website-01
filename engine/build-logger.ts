@@ -3,12 +3,15 @@
 //  Modify Eleventy's log output
 //
 // ──────────────────────────────────────────────────────────────────────────────────────────────────
+chalk.level = 3;
+process.env.FORCE_COLOR = "1";
 
 // - node modules
 import chroma from "chroma-js";
 import chalk from "chalk";
 
 // - my config
+import * as util from "__util__";
 import * as config from "./config.js";
 const { log, err, colors, paths, absPaths } = config;
 const { blue: b, pink: p, white: w } = colors;
@@ -69,6 +72,7 @@ function pretty_eleventy_log (m) {
 	m = `${chalk.hex("#8f7da3")(" 11ty ")}${config.timestamp()} ${channel} ${m}`;
 	console.log(m);
 }
+
 
 
 /* ~~~~~~ Helper Functions ~~~~~~ */

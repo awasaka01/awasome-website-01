@@ -77,7 +77,7 @@ fi
 # ————————————————————————————————————————————————————————————
 if [[ -n $(git status --porcelain) ]]; then
     gradient_echo_rgb "$FANCY_LINE ⋆.˚ ⋆.˚ ⋆.˚" 255 105 180 0 0 0
-    echo -e "${YELLOW}${tab}⚠️ You have uncommitted changes!${RESET}"
+    echo -e "${YELLOW}${tab}⚠️  You have uncommitted changes!${RESET}"
     echo -e "${MAGENTA}${tab}❔ Press ENTER to commit them manually, or type anything else to cancel:${RESET}"
     gradient_echo_rgb "$FANCY_LINE ⋆.˚ ⋆.˚ ⋆.˚" 255 105 180 0 0 0
     read -r CONFIRM_CHANGES
