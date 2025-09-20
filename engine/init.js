@@ -85,7 +85,7 @@ async function build () {
 	console.log(divider());
 	const buildProcess = fork("./__compiled/engine/build.js", [], {
 		stdio: ["inherit", "inherit", "pipe", "ipc"],
-		env: { ...env },
+		env: { ...process.env },
 		detached: process.platform !== "win32", // detach only on Unix
 	});
 	registerChildProcess(buildProcess.pid);
