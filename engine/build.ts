@@ -56,7 +56,8 @@ const esbuild_context = await startEsbuild(glob.sync(`${absPaths.source}/**/!(_)
 
 
 // - eleventy
-const eleventy_process = spawn(`eleventy ${eleventy_cli_args.join(" ")}`, {
+const command = process.env.CI === "true" ? "npx eleventy" : "eleventy";
+const eleventy_process = spawn(`${command} ${eleventy_cli_args.join(" ")}`, {
 	stdio: ["inherit", "pipe", "pipe"],
 	env: { ...env, ...process.env, FORCE_COLOR: "1" },
 	shell: true,
