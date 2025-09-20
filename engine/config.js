@@ -38,6 +38,8 @@ export const env_key = {
 	NEOCITIES: { flags: ["neo", "neocities"] },
 	DRY_RUN: { flags: ["d", "dry", "dryrun", "test"] },
 	DISABLE_INCREMENTAL: { flags: ["no-inc", "no-incremental"] },
+	USE_NPX: { flags: ["npx"] },
+	MAX_QUALITY: { flags: ["quality"] },
 
 	SERVE: { flags: ["s", "serve", "dev"], enable: ["SOURCE_MAPS", "WATCH"] },
 		SOURCE_MAPS: { },
@@ -46,7 +48,6 @@ export const env_key = {
 	PRODUCTION: { flags: ["p", "prod", "production", "full"], enable: ["MINIFY_FILES", "MINIFY_IMAGES"] },
 		MINIFY_FILES: { },
 		MINIFY_IMAGES: { },
-	MAX_QUALITY: { flags: ["quality"] },
 
 	CLEAN: { flags: ["c", "clean"], enable: ["CLEAR_CACHE", "CLEAR_DIST"] },
 		CLEAR_CACHE: { },
