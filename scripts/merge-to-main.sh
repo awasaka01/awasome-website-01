@@ -59,12 +59,26 @@ ORIGINAL_BRANCH="$CURRENT_BRANCH" # Store the original branch, it will change
 
 
 # ————————————————————————————————————————————————————————————
+#  Confirm correct branch:
+# ————————————————————————————————————————————————————————————
+gradient_echo_rgb "$FANCY_LINE ⋆.˚ ⋆.˚ ⋆.˚" 255 105 180 0 0 0
+echo -e "${YELLOW}${tab}⚠️  You are about to merge $ORIGINAL_BRANCH to main!${RESET}"
+echo -e "${MAGENTA}${tab}❔ Press ENTER to confirm, or type anything else to cancel:${RESET}"
+gradient_echo_rgb "$FANCY_LINE ⋆.˚ ⋆.˚ ⋆.˚" 255 105 180 0 0 0
+read -r CONFIRM_MAIN
+if [[ -n "$CONFIRM_MAIN" ]]; then
+	echo -e "${RED}${tab}❌ Merge cancelled by user.${RESET}"
+	exit 1
+fi
+
+
+# ————————————————————————————————————————————————————————————
 #  Auto-commit pending changes:
 # ————————————————————————————————————————————————————————————
 if [[ -n $(git status --porcelain) ]]; then
     gradient_echo_rgb "$FANCY_LINE ⋆.˚ ⋆.˚ ⋆.˚" 255 105 180 0 0 0
     echo -e "${YELLOW}${tab}⚠️ You have uncommitted changes!${RESET}"
-    echo -e "${MAGENTA}${tab}❔ Press ENTER to commit them manually, or anything else to cancel:${RESET}"
+    echo -e "${MAGENTA}${tab}❔ Press ENTER to commit them manually, or type anything else to cancel:${RESET}"
     gradient_echo_rgb "$FANCY_LINE ⋆.˚ ⋆.˚ ⋆.˚" 255 105 180 0 0 0
     read -r CONFIRM_CHANGES
     if [[ -n "$CONFIRM_CHANGES" ]]; then
@@ -90,7 +104,7 @@ git pull origin main
 #  Force merge, priority to current branch:
 # ————————————————————————————————————————————————————————————
 echo -e "${BLUE}${tab}🔀 Merging '$CURRENT_BRANCH' into main (force conflicts to branch)...${RESET}"
-git merge --no-ff "$CURRENT_BRANCH" -m "rawr: $CURRENT_BRANCH -> main" -X theirs || {
+git merge --no-ff "$CURRENT_BRANCH" -m "merged '$CURRENT_BRANCH'" -X theirs || {
     echo -e "${RED}${tab}❌ Merge failed. Resolve conflicts manually.${RESET}"
     git checkout "$ORIGINAL_BRANCH"
     exit 1
