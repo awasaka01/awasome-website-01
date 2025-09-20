@@ -53,8 +53,6 @@
 		"@types/node": "^24.3.1",
 		"@types/react": "^19.1.13",
 		"@types/react-dom": "^19.1.9",
-		"cli-highlight": "^2.1.11",
-		"nodemon": "^3.1.10",
 		"stylelint": "^16.24.0",
 		"stylelint-config-sass-guidelines": "^12.1.0",
 		"stylelint-config-standard-scss": "^15.0.1",
