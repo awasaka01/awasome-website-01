@@ -5,7 +5,7 @@
 	"type": "module",
 	"scripts": {
 		"build": "node ./engine/init.js",
-		"dev": "  node ./engine/build.js --serve --watch",
+		"dev": "  node ./engine/init.js --serve --watch",
 		"ansi": "node ./scripts/ansi.js",
 		"merge": "bash ./scripts/merge-to-main.sh",
 		"kill": "taskkill /F /IM node.exe",

@@ -22,11 +22,39 @@
 	{{# Import map for dependencies ignored in bundle #}}
 	<script type="importmap">{{ importmap }}</script>
 
+
+	{{# Load theme before anything else #}}
+	<script>
+		const theme = localStorage.getItem("theme");
+		if (theme) { document.documentElement.setAttribute("data-theme", theme); }
+	</script>
+
 	{{# User defined additional head content #}}
 	{{ head }}
 </head>
 <body>
 	{{# Main content #}}
 	{{ content }}
+
+	{{# Handle the theme dropdown #}}
+	<script>
+		const dropdown = document.querySelector("#theme-select");
+		if (dropdown){
+		const dropdownValueDisplay = dropdown.querySelector("output");
+		const values = [...dropdown.querySelector("ul").children];
+		if (theme) {
+			const result = values.find((li) => li.dataset.id === theme)?.textContent
+			if (!result) { localStorage.removeItem("theme"); document.documentElement.setAttribute("data-theme", "default"); }
+			dropdownValueDisplay.value = result ?? "Default"; 
+		}
+
+		values.forEach((li) => {
+			li.addEventListener("mousedown", (e) => {
+				localStorage.setItem("theme", li.dataset.id);
+				document.documentElement.setAttribute("data-theme", li.dataset.id);
+				dropdownValueDisplay.value = li.textContent;
+			});
+		});}
+	</script>
 </body>
 </html>

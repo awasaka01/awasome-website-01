@@ -2,8 +2,8 @@
 // ~ forwarded in _bundled.scss ~ \\
 // -------------------------------\\
 
-@use "colors" as *;
-@use "fonts" as *;
+@use "colors.scss" as *;
+@use "fonts.scss" as *;
 
 @mixin base {
 	body {
