@@ -9,14 +9,21 @@ colorMatches: true
 {{#  ↓ Content to insert in <head> ↓  #}} {{ slot head }} 
 
 {{#  ↓ Content to insert in <body> ↓  #}} {{ /slot }}  
+<div id="logo-text">{{ include "logo-text.vto" }}</div>
 
-{{ include "logo-text.vto" }}
+<br><br><br>
 
-{{ include "theme-select.vto" }}
+
+<main>
+<h1>website</h1>
+
+<label for="theme-select">Select Theme: </label>{{ include "theme-select.vto" }}
+
+
+<a href="./imagetotext/">aaaaaaaaaaaaaaaaa</a>
 
 <!-- Slime Rancher Scrolling Track -->
-<div id="slimes-track"><div id="slimes">
-	<div class="hover-detect"></div>
+<div id="slimes-track"><div class="hover-detect"></div><div id="slimes">
 	{{> const slimes = ["Boom_Slime_SP", "Chickadoo", "Crystal_Slime_SP", "Dervish_Slime_SP", "Fire_Slime_SP", "Glitch_Slime_SP", "Gold_Slime_SP", "Hen_hen", "Honey_Slime_SP", "Hunter_Slime_SP", "Lucky_Slime_SP", "Mosaic_Slime_SP", "Phosphor_Slime_SP", "Pink_Slime_SP", "Pink&GordoSP", "Puddle_Slime_SP", "Quantum_Slime_SP", "Rad_Slime_SP", "Rock_Slime_SP", "Roostro", "Saber_Slime_SP", "Tabby_Slime_SP", "Tangle_Slime_SP", "The_Tarr_SP"]; }}
 	{{ for slime of slimes }}
 		{{> const name = slime.replace(/_?SP/g, "").replace(/_|&/g, " ") }}
@@ -50,6 +57,7 @@ colorMatches: true
 	<div>
 		<h1>⚠️wiork in progress! !</h1>
 	</div>
+</main>
 
 
 <script>{{ include "./critical.js" }}</script> {{# Inline important Javascript #}} 

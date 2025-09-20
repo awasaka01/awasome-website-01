@@ -2,7 +2,28 @@ import * as util from "./awa-util/core.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
 	slimey();
+	shimmerLogo();
 });
+
+
+
+
+
+
+
+
+// ----------------------------------------------------------------
+//  Shimmer Logo
+// ---------------------------------------------------------------- 
+function shimmerLogo () {
+	const logo = document.getElementById("logo-text");
+	const cooldown = () => util.rr(1000, 5000);
+
+
+
+}
+
+
 
 
 // ----------------------------------------------------------------
@@ -42,7 +63,9 @@ const elements = track.querySelectorAll(".image-wrapper") as NodeListOf<HTMLElem
 const total = elements.length;
 let animationProgress = 0;
 
-track.style.transform = `translateX(-${5 * safetyMargin}rem)`;
+// - Offset initial position
+// track.style.transform = `translateX(-${5 * safetyMargin}rem)`;
+// track.style.left = `${5 * safetyMargin}rem`;
 
 // - Store each element in a Map
 const slimes : Map<HTMLElement, { index : number, animating ?: boolean }> = new Map();
@@ -63,7 +86,7 @@ track.style.opacity = "1";
 await new Promise((resolve) => track.addEventListener("transitionend", resolve));
 
 function updatePositions (iteration = 0) {
-	if (hoverDetect.matches(":hover") || iteration % frameSkip !== 0) return requestAnimationFrame(() => updatePositions(iteration + 1));
+	if (/* hoverDetect.matches(":hover") || */iteration % frameSkip !== 0) return requestAnimationFrame(() => updatePositions(iteration + 1));
 
 	slimes.forEach(({ index }, el) => {
 		animate(el);

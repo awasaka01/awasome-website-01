@@ -62,9 +62,9 @@ const eleventy_process = spawn(`${command} ${eleventy_cli_args.join(" ")}`, {
 	stdio: ["inherit", "pipe", "pipe"],
 	env: { ...env, ...process.env, FORCE_COLOR: "1" },
 	shell: true,
-
 });
 process.send({ type: "child_process", pid: eleventy_process.pid });
+
 // - Capture and modify eleventy's output to look better
 customLogger(eleventy_process);
 

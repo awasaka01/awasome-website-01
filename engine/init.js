@@ -134,7 +134,7 @@ if (env.WATCH === "true") {
 		if (restartTimeout) clearTimeout(restartTimeout);
 		restartTimeout = setTimeout(async () => {
 			log(`🔧 Restarting ${b("build.js")} due to file changes in ${b(path)}...`, p, "\n");
-			await KILLALLCHILDREN(0);
+			await KILLALLCHILDREN();
 			build();
 		}, TIMEOUT);
 	});
@@ -158,12 +158,13 @@ process.on("SIGTERM", () => SHUTDOWN());
 
 
 /* ~~~~~ Terminate all stored child processes ~~~~~ */
-async function KILLALLCHILDREN (code = 0) {
-	child_processes.forEach((pid) => {
+async function KILLALLCHILDREN () {
+	const promises = Array.from(child_processes.values()).map((pid) => {
 		child_processes.delete(pid);
 		log(`💀 Terminated PID:${(pid)}`, w);
 		return new Promise((res) => treeKill(pid, "SIGTERM", () => res()));
 	});
+	return Promise.all(promises);
 }
 
 

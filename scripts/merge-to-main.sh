@@ -1,6 +1,5 @@
 #!/bin/bash
 # scripts/merge-to-main.sh
-# Automated Rawr merge script
 set -e
 
 
