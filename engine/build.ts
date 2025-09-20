@@ -53,7 +53,7 @@ console.log("");
 // - esbuild
 const esbuild_context = await startEsbuild(glob.sync(`${absPaths.source}/**/!(_)*.{js,jsx,ts,tsx}`), paths.output);
 
-
+console.log(env, process.env);
 
 // - eleventy
 const command = env.USE_NPX === "true" ? "npx eleventy" : "eleventy";
