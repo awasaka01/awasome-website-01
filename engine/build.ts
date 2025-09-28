@@ -52,8 +52,6 @@ console.log("");
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
-// - esbuild
-const esbuild_context = await startEsbuild(glob.sync(`${absPaths.source}/**/!(_)*.{js,jsx,ts,tsx}`), paths.output);
 
 
 // - eleventy
@@ -69,10 +67,13 @@ process.send({ type: "child_process", pid: eleventy_process.pid });
 customLogger(eleventy_process);
 
 
+// - esbuild
+const esbuild_context = await startEsbuild(glob.sync(`${absPaths.source}/**/!(_)*.{js,jsx,ts,tsx}`), paths.output);
 
 
 // - After build: Log folder size (in kB and mB)
 eleventy_process.on("exit", async (code = 0) => {
+
 	if (esbuild_context) esbuild_context.dispose();
 	if (env.SERVE === "true") return;
 

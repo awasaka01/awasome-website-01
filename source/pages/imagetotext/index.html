@@ -1,0 +1,132 @@
+---yaml
+title: Template Page
+description: silly little website
+# favicon: /images/raw/favicon.ico
+---
+{{ layout "main-base.vto" }} 
+{{#  ↓ Content to insert in <head> ↓  #}} {{ slot head }} 
+
+
+{{#  ↓ Content to insert in <body> ↓  #}} {{ /slot }}  
+
+
+<a href="/">../homepage/</a>
+<p><br></p>
+<main class="flexcol">
+
+
+{{# <div id="theme-buttons">
+	<button id="1">default</button>
+	<button id="2">snow</button>
+</div>
+
+<script>
+
+const setTheme = (theme) => {
+	document.documentElement.dataset.theme = theme;
+	localStorage.setItem("theme", theme);
+}
+document.getElementById("1").addEventListener("click", () => setTheme("default"));
+document.getElementById("2").addEventListener("click", () => setTheme("snow"));
+</script> #}}
+
+	<section class="upload flexrow">
+		<div class="side-decoration">ooooooo</div>
+		<div class="flexcol">
+			<div class="flexrow">
+				<button id="browseButton"> Paste an image, or click here to upload from device </button>
+				<button id="convertButton" disabled> Convert </button>
+			</div>
+			<p><br></p>
+			<p>File Selected: <output id="currentFile"><span id="upload-demo">use demo image</span></output></p>	
+			<p><br></p>
+		</div>
+	
+	</section>
+	
+	{{# <div class="separator"></div> #}}
+	<section class="options flexcol">
+		<div class="flexrow"> {{# Options #}}
+			<div class="side-decoration">ooooooo</div>
+			<div class="text-inputs">
+
+				<p><br></p>
+				<p><br></p>
+				<label for="characters" title="List of characters to use in the drawing">Characters: </label>
+				<input type="text" name="characters" id="characters" value="aw">
+
+				<label for="spaceCharacter" title="What to print for fully transparent pixels">Space Character: </label>
+				<input type="text" name="spaceCharacter" id="spaceCharacter" value="&amp;nbsp;">
+
+				<label for="characterSelection" title="Rule to determine which character to pick from the character list">Character Selection: </label>
+				<div class="awa-dropdown input" id="characterSelection" data-value="skip-space">
+					<button> Skip Spaces </button>
+					<ul>
+						<li tabindex="0" data-value="skip-space"> Skip Spaces </li>
+						<li tabindex="0" data-value="random"> Random </li>
+						<li tabindex="0" data-value="cycle"> Cycle </li>
+					</ul> 
+				</div>
+
+				<label for="minifyHTML" title="Group same-colored characters together, or have each individual character in it's own span">MinifyHTML: </label>
+				<input type="checkbox" name="minifyHTML" id="minifyHTML" checked>
+
+				<label for="charactersPerPixel" title="Number of characters to repeat horizontally per pixel, useful for ansi or places where you can't set the line height">Characters per Pixel: </label>
+				<input type="number" name="charactersPerPixel" inputMode="numeric" pattern="[0-9]*" id="charactersPerPixel" value="1" min="1">
+
+				<p><br></p>
+				<p><br></p>
+				
+			</div>
+		</div>
+
+	</section>
+	
+	
+
+	<section class="output flexcol">
+		<div class="flexcol output-header"> {{# Copy Buttons #}}
+			<div class="flexrow">
+				<button id="view-as-text" class="selected"> TEXT </button>
+				<button id="view-as-ansi"> ANSI </button> 
+				<button id="view-as-html"> HTML </button>
+			</div>
+			<p class="divider">═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═╍═ ═ ═══════════════════════════════════════════════════════════════════════════════</p>
+			<div class="flexrow copy">
+				<button id="copy-button"> Copy to clipboard  </button>
+				<div id="copy-notification" class="hidden"> Copied to clipboard! </div>
+			</div>
+		</div>
+		<div id="output-container">
+			<output id="output-text" class="selected">text...</output>
+			<output id="output-ansi">ansi...</output>
+			<output id="output-html">html...</output>
+		</div>
+		<style id="output-style"></style>
+	</section>
+
+
+	
+	
+{{# <link rel="stylesheet" href="https://unpkg.com/@speed-highlight/core/dist/themes/default.css"> #}}
+
+	<!-- and it's easy to individually load additional languages -->
+	{{# <scrip src="https://unpkg.com/@highlightjs/cdn-assets@11.11.1/languages/go.min.js"></scrip	t> #}}
+	<script>
+		
+	</script>
+
+</main>
+
+
+
+
+
+
+
+
+
+
+{{# <script>{{ include "./critical.js" }}</script> {{# Inline important Javascript #}}
+{{ /layout }}
+

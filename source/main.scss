@@ -1,16 +1,21 @@
-@use "sass:color";
+// @use "sass:color";
+// @use "sass:list";
+// @use "sass:map";
+// @use "sass:math";
+// @use "sass:meta";
+// @use "sass:selector";
+// @use "sass:string";
 
 @use "bundled.scss" as *;
-@use "theme.scss";
-
+@include base-styles;
 @include reset;
-
+///////////////////////////////////////////////////////////////////////////////////
 
 
 body {
 	font-family: "gohu11", monospace;
-	color: c(fg, 500, 500);
-	background-color: c(bg, 200, 100);
+	color: c(fg, 500);
+	background-color: c(bg, 500);
 	box-sizing: border-box;
 	padding: 2rem;
 }
@@ -29,13 +34,19 @@ br {
 
 
 
+.good {
+	transform-origin: center center;
+	position: sticky;
+	z-index: 1000;
+}
 
 
-// ----------------------------------------------------------------
-//  Main
-// ----------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////////
+// - Main
+
 main {
-	background-color: cl(bg, 500, 500, 0.6);
+	background-color: c(bg, 500);
 	max-width: 80ch;
 	margin: 0 auto;
 }
@@ -43,29 +54,27 @@ main {
 
 
 
-// ----------------------------------------------------------------
-//  Logo
-// ----------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////////
+// - Logo
+
 #logo-text {
 	line-height: 1ch;
 	white-space: pre;
 	margin: auto;
 	* { display: inline; }
 	.left { margin-right: auto; }
-	.a { color: c(hi, 600, 550); }
-	.b { color: c(hi, 500, 500); }
-	.c { color: c(hi, 400, 450); }
-	.d { color: c(hi, 222, 222, 0.5); }
-	.e { color: c(hi, 222, 222, 0.2); }
+	.a { color: c(hi, 600); }
+	.b { color: c(hi, 500); }
+	.c { color: c(hi, 400); }
+	.d { color: c(hi, 222); }
+	.e { color: c(hi, 222); }
 }
 
 
 
+///////////////////////////////////////////////////////////////////////////////////
+// - Slime Rancher Scrolling Track
 
-
-// ----------------------------------------------------------------
-//  Slime Rancher Scrolling Track
-// ----------------------------------------------------------------
 // #region
 $slime-height: 5rem;
 $slime-space: 5rem;
@@ -90,7 +99,7 @@ $slime-space: 5rem;
 	z-index: 2;
 	height: $slime-height;
 	$distance: 1%;
-	background: linear-gradient(to right, c(bg, 400, 500) 0%, transparent $distance, transparent 100% - $distance, c(bg, 400, 500) 100%);
+	background: linear-gradient(to right, c(bg, 400) 0%, transparent $distance, transparent 100% - $distance, c(bg, 400) 100%);
 	cursor: url("./images/raw/heartbeet.png") 7 2, auto; 
 }
 #slimes {
@@ -101,7 +110,7 @@ $slime-space: 5rem;
 	align-items: flex-end;
 	height: $slime-height;
 	position: relative;
-	background-color: c(bg, 400, 500);
+	background-color: c(bg, 400);
 	
 	opacity: 0;
 	transition: opacity 500ms ease-in;

@@ -1,28 +1,18 @@
-// engine/11ty-plugin-sass.js
+// engine/11ty-plugin-sass.ts
 
-
-// - my config
 import * as util from "__util__";
 import * as config from "./config.js";
 const { log, err, colors, paths, absPaths } = config;
 const { blue: b, pink: p, white: w } = colors;
 const env = process.env as import("./config.js").env_type & NodeJS.ProcessEnv;
 
-// - node modules
 import * as sass from "sass-embedded";
 import deepmerge from "deepmerge";
 import chalk from "chalk";
 import { parse } from "node:path";
+import type { EleventyConfig, EleventyScope } from "11ty.ts";
 
-/**
- * @typedef {Object} PluginOptions
- * @property {(content: string, data: import("11ty.ts").EleventyScope["eleventy"]) => string} [postprocess] - Function to postprocess the compiled CSS however you want.
- * @property {import("sass-embedded").StringOptions} [sassOptions] - Options to be passed to `sass.compileString`.
- */
-
-
-/** @type {PluginOptions} */
-const default_options = {
+const default_options : PluginOptions = {
 	sassOptions: {
 		sourceMap: true,
 	},
@@ -30,114 +20,85 @@ const default_options = {
 
 
 
-/**
- * Eleventy Sass plugin - Handles compiling SCSS to CSS, and optionally postprocessing  
- * Sourcemaps are included in a base64 encoded data URI (when sourceMap: true)  
- * @param {PluginOptions} options
- * @returns {(eleventyConfig: import("11ty.ts").EleventyConfig) => void}
+export interface PluginOptions {
+	postprocess ?: (content : string, data : EleventyScope, sourceMap ?: sass.CompileResult["sourceMap"]) => string;
+	sassOptions ?: sass.StringOptions<"async">;
+}
+/** Eleventy Sass compiler plugin    
+ * Includes inline source maps when sourceMap: true
  */
-export default function (options) {
-
-	// Set default options
+export default function (options : PluginOptions) {
 	options = deepmerge(default_options, options);
 
-	// Return the plugin
-	return function (eleventyConfig) {
+	return function (eleventyConfig : EleventyConfig) {
 		eleventyConfig.addTemplateFormats("scss");
-		eleventyConfig.addExtension("scss", {
+		eleventyConfig.addExtension("scss", { // [https://www.11ty.dev/docs/languages/custom/]
 			outputFileExtension: "css",
-			useLayouts: false, // opt-out of Eleventy Layouts
-			compile: async function (inputContent, inputPath) {
-				let content = inputContent;
-
-				// Compile SCSS to CSS
-				const result = sass.compileString(content, options.sassOptions);
-				content = result.css;
-
-				// [https://www.11ty.dev/docs/languages/custom/#registering-dependencies]
-				// console.log(result.loadedUrls);
-				this.addDependencies(inputPath, []);
-
-				// Encode the source map into base64 and append it to the output CSS
-				if (result.sourceMap) {
-					const sourcemap64 = Buffer.from(JSON.stringify(result.sourceMap)).toString("base64");
-					content += `\n/*# sourceMappingURL=data:application/json;base64,${sourcemap64}*/`;
-				}
-
-				return async (data) => {
-
-					// Run the user’s own postprocess function
-					if (options.postprocess) {
-						content = options.postprocess(content, data);
-						if (!content && content !== "") throw Error(chalk.red("❌ User-supplied postprocess function did not return anything."));
-					}
-
-					return content;
+			useLayouts: false,
+			compile: async function (inputContent : string, inputPath : string) {
+				const { addDependencies } = this;
+				return async function (data : EleventyScope) {
+					return await compile(options, inputContent, inputPath, data, addDependencies);
 				};
 			},
 		});
 	};
 }
 
+async function compile (options : PluginOptions, inputContent : string, inputPath : string, data : EleventyScope, addDependencies : Function) {
 
-/*
+	const result = await sass.compileStringAsync(inputContent, { ...options.sassOptions });
 
+	addDependencies(inputPath, result.loadedUrls); // [https://www.11ty.dev/docs/languages/custom/#registering-dependencies]
 
-
-inputPath:
- ./src/main.scss
-
-
-data:
-
-{
-  eleventy: {
-    version: '3.1.2',
-    generator: 'Eleventy v3.1.2',
-    env: {
-      source: 'cli',
-      runMode: 'build',
-      config: 'C:/Users/awa/Documents/coding/awasomewebsitey/awasome-website-01/.eleventy.js',
-      root: 'C:/Users/awa/Documents/coding/awasomewebsitey/awasome-website-01'
-    },
-    directories: {
-      input: 'C:/Users/awa/Documents/coding/awasomewebsitey/awasome-website-01/src/',
-      inputFile: undefined,
-      inputGlob: undefined,
-      data: 'C:/Users/awa/Documents/coding/awasomewebsitey/awasome-website-01/src/_data/',
-      includes: 'C:/Users/awa/Documents/coding/awasomewebsitey/awasome-website-01/src/C:/Users/awa/Documents/coding/awasomewebsitey/awasome-website-01/src/_includes/',
-      layouts: 'C:/Users/awa/Documents/coding/awasomewebsitey/awasome-website-01/src/modules/_layouts/',
-      output: 'C:/Users/awa/Documents/coding/awasomewebsitey/awasome-website-01/__production/'
-    }
-  },
-  pkg: {
-    ...
-  },
-  page: {
-    inputPath: './src/main.scss',
-    fileSlug: 'main',
-    fileSlug: 'main',
-    filePathStem: '/src/main',
-    outputFileExtension: 'css',
-    outputFileExtension: 'css',
-    templateSyntax: 'scss',
-    templateSyntax: 'scss',
-    date: 2025-09-07T11:46:46.543Z,
-    rawInput: '@function random-color() {\r\n' +
-      '\t@return rgb(\r\n' +
-      '\t\trandom(255),\r\n' +
-      '\t\trandom(255),\r\n' +
-      '\t\trandom(255)\r\n' +
-      '\t);\r\n' +
-      '}\r\n' +
-      '\r\n' +
-      '\r\n' +
-      '.random-background {\r\n' +
-      '\tbackground-color: random-color();\r\n' +
-      '}\r\n',
-    url: '/main.css',
-    outputPath: 'C:/Users/awa/Documents/coding/awasomewebsitey/awasome-website-01/__production/main.css'
-  },
-  collections: { all: [ [Object], [Object] ] }
+	if (options.postprocess !== undefined) { return options.postprocess(result.css, data, result.sourceMap); }
+	else { return result.css + (result.sourceMap ? `\n/*# sourceMappingURL=data:application/json;base64,${Buffer.from(JSON.stringify(result.sourceMap)).toString("base64")}*/` : ""); }
 }
-*/
+
+
+
+// data: {
+//   sourceMap: false,
+//   alertColor: true,
+//   loadPaths: [
+//     'C:/Users/awa/Documents/coding/awasome-website-01/source/_styles',
+//     './source/main.scss'
+//   ],
+//   style: 'expanded'
+// } {
+//   eleventy: {
+//     version: '3.1.1',
+//     generator: 'Eleventy v3.1.1',
+//     env: {
+//       source: 'cli',
+//       runMode: 'build',
+//       config: 'C:/Users/awa/Documents/coding/awasome-website-01/__compiled/engine/eleventy.js',
+//       root: 'C:/Users/awa/Documents/coding/awasome-website-01/__compiled/engine'
+//     },
+//     directories: {
+//       input: './source/',
+//       inputFile: undefined,
+//       inputGlob: undefined,
+//       data: './source/_data/',
+//       includes: './source/source/_templates/',
+//       layouts: undefined,
+//       output: './^~^ website/'
+//     }
+//   },
+//   pkg: {
+//     ...
+//   },
+//   page: {
+//     inputPath: './source/main.scss',
+//     fileSlug: 'main',
+//     filePathStem: '/main',
+//     outputFileExtension: 'css',
+//     templateSyntax: 'scss',
+//     date: 2025-09-20T14:38:06.789Z,
+//     rawInput: '// @use "sass:color";\r\n' +
+//       ...
+//     url: '/main.css',
+//     outputPath: './^~^ website/main.css'
+//   },
+//   collections: { all: [ [Object], [Object], [Object], [Object] ] }
+// }

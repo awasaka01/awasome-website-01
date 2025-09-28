@@ -36,23 +36,25 @@ export default defineConfig({
 		"scss/at-function-pattern": null,
 		"scss/at-mixin-pattern": null,
 		"scss/comment-no-empty": null,
+		"scss/at-if-no-null": null,
 
 		// : @stylistic/stylelint-config
 		"@stylistic/declaration-block-semicolon-newline-after": null,
+		"@stylistic/function-parentheses-newline-inside": null,
 		"@stylistic/block-closing-brace-newline-before": null,
+		"@stylistic/function-parentheses-space-inside": null,
 		"@stylistic/selector-list-comma-newline-after": null,
 		"@stylistic/block-closing-brace-newline-after": null,
+		"@stylistic/no-missing-end-of-source-newline": null,
 		"@stylistic/at-rule-semicolon-newline-after": null,
 		"@stylistic/declaration-colon-newline-after": null,
 		"@stylistic/declaration-colon-space-after": null,
 		"@stylistic/no-empty-first-line": null,
+		"@stylistic/string-quotes": "double",
 		"@stylistic/no-eol-whitespace": null,
 		"@stylistic/max-empty-lines": null,
 		"@stylistic/max-line-length": null,
 		"@stylistic/indentation": "tab",
-		"@stylistic/string-quotes": "double",
-		"@stylistic/function-parentheses-newline-inside": null,
-		"@stylistic/function-parentheses-space-inside": null,
 		"font-family-name-quotes": null,
 
 		// : styelint-config-sass-guidelines
@@ -63,7 +65,8 @@ export default defineConfig({
 		"at-rule-allowed-list": null,
 		"color-hex-length": null,
 
-
+		"block-no-empty": null,
+		"selector-type-case": null,
 		"no-empty-source": null,
 		"hue-degree-notation": null,
 		"at-rule-disallowed-list": null,
@@ -72,7 +75,11 @@ export default defineConfig({
 		"number-max-precision": null, // why is this even the default
 		"shorthand-property-no-redundant-values": null, // (top: 0; left: 0; bottom: 0;	right: 0;) is not redundant
 		"font-family-no-missing-generic-family-keyword": null, // [possibly untrue:] the fontface has the defaults anyway???
-	},
+
+		"property-no-unknown": null,
+
+		"selector-no-qualifying-type": null, // < I THINK STYLELINT DEVS AREW INSANE WHY IS input[type='button'] BANNED BY DEFAULT
+	},	
 });
 
 

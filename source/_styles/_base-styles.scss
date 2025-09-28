@@ -1,0 +1,55 @@
+
+@use "colors.scss" as *;
+
+@mixin base-styles {
+	body {
+		font-family: "gohu11", monospace;
+		color: c(fg, 500);
+		background-color: c(bg, 500);
+	}
+	a {
+		color: c(hi, 500);
+		text-decoration: underline;
+		text-underline-offset: 0.15em;
+		text-decoration-thickness: 0.1em;
+		text-decoration-color: c(hi, 500);
+
+		position: relative !important;
+	
+		&:hover {
+			color: c(hi, 700);
+			text-decoration: none;
+			&::after {
+				background-color: c(hi, 700);
+				content: "";
+				left: 0;
+				bottom: -7px;
+				position: absolute;
+				width: 100%;
+				height: 0.5em;
+				pointer-events: none;
+			
+				mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%20-0.5%206%203%22%20shape-rendering%3D%22crispEdges%22%3E%3Cpath%20stroke%3D%22currentColor%22%20d%3D%22M1%200h2M0%201h1M3%201h1M4%202h2%22%20%2F%3E%3C%2Fsvg%3E");
+				mask-size: 0.6em;
+				mask-repeat: repeat-x;
+				fill: currentcolor;
+			}
+		}
+	}
+}
+
+
+.awa-labels-inputs-columns {
+	display: grid;
+	grid-template-columns: [labels] 1fr [inputs] 1fr;
+	grid-template-rows: auto;
+	> input, > select, > .input {
+		grid-column: inputs / span 1;
+	}
+	> label {
+		grid-column: labels / span 1;
+	}
+	> * {
+		grid-column: span 2;
+	}
+}

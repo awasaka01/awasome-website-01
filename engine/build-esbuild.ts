@@ -1,4 +1,5 @@
 // - node modules
+import {} from "node:path";
 import fs from "node:fs";
 import esbuild from "esbuild";
 import externalizeAllPackagesExcept from "esbuild-plugin-noexternal";
@@ -26,6 +27,17 @@ export default async function startEsbuildClient (entryPoints : string[], outdir
 	if (bad_entryPoints.length > 0) err(`🥣 esbuild: unsupported entry files: [ ${bad_entryPoints.join(", ")} ]`);
 
 
+	// - Reformat entryPoints to an object of pairs
+	const entryPointsIO : { in : string, out : string }[] = entryPoints.map((entry) => {
+		const out = entry
+			.replace(absPaths.source, absPaths.output)
+			.replace(".ts", "") // .js is added automatically by esbuild
+			.replace(".js", "")
+			.replace("pages/", "");
+		return { in: entry, out: out };
+	});
+
+
 	const options : esbuild.BuildOptions = {
 		loader: { ".png": "file", ".jpg": "file", ".svg": "file", ".mp3": "file" },
 		external: config.external_dependencies,
@@ -33,7 +45,7 @@ export default async function startEsbuildClient (entryPoints : string[], outdir
 
 		format: "esm", platform: "browser",
 		target: supported_browsers_esbuild,
-		entryPoints: entryPoints, outdir: outdir,
+		entryPoints: entryPointsIO, outdir: outdir,
 		bundle: true, minify: env.MINIFY_FILES === "true",
 		sourcemap: env.SOURCE_MAPS === "true" ? "inline" : undefined,
 		plugins: [

@@ -2,121 +2,251 @@
 // ~ forwarded in _bundled.scss ~ \\
 // -------------------------------\\
 
-// how2use:
-// cl(bg) -> var(--bg-500-500)
-// cl(bg, 100) -> var(--bg-100-500)
-// cl(bg, 100, 200) -> var(--bg-100-200)
-// ! REQUIRED AT END OF FILE: 
-// @include compile-colors;
 
-// How much to adjust each color type by, and min/max (multiplied by n-500)
+/* ──────────── Ｕｓｅｒ　Ｃｏｎｆｉｇ： ──────────── */
+
+@use "sass:string";
+@use "sass:color";
+@use "sass:list";
+@use "sass:math";
+@use "sass:map";
+
+// ? Color adjustments overrides for each theme role, and their min/max bounds
+//  (l ightness, c hroma, h ue), will be multiplied based on $tone's distance from 500
 $themes: (
 	snowy: (
-		fg: (color: #e1e3f4, l: 0.05, c: 0.0002, h: 0.1), 
-		bg: (color: #2f485c, l: 0.05, c: -0.00005, h: 0.04),
-		hi: (color: #53e4db, l: 0.05, c: 0.00016, h: -0.01), 
-	),
-	greyy: (
-		fg: (color: #ffffff, l: 0.1, c: 0, h: 0), 
-		bg: (color: #414141, l: 0.007, c: 0, h: 0),
-		hi: (color: #839383, l: 0.04, c: 0, h: 0), 
+		fg: (color: #e1e3f4), 
+		bg: (color: #283f52),
+		hi: (color: #53e4db), 
 	),
 	default: (
-		fg: (color: #eeeaf3, l: 0.1, c: 0.0001, h: -0.05), 
-		bg: (color: #322734, l: 0.05, c: -0.00001, h: -0.08),
-		hi: (color: #f43877, l: 0.05, c: 0.00016, h: 0.04), 
+		fg: (color: #fddbff, cmin: 0.02, cmax: 0.13, l: 0.1), 
+		bg: (color: oklch(30.208% 0.037 331.063), l: 0.035),
+		hi: (color: #d7617f, cmin: 0.1, cmax: 0.13), 
 	)
 );
 
 
 
-// Default values for $adjustment params if not specified
+// ? Default options applied to every role in all themes
 $DEFAULT-color-options: (
-	/* Lightness adjustment factor: */ l: 0.007,
-	/*    Chroma adjustment factor: */ c: 0.0001,
+	// Adjustment factor means (n-500 * factor)
+	/* Lightness adjustment factor: */ l: 0.07,
+	/*    Chroma adjustment factor: */ c: -0.00002,
 	/*       Hue adjustment factor: */ h: 0.05,
-	/*           Minimum lightness: */ lmin: -999,
-	/*           Maximum lightness: */ lmax: 100, 
+	/*           Minimum lightness: */ lmin: 0,
+	/*           Maximum lightness: */ lmax: 100,
 	/*              Minimum chroma: */ cmin: 0,
-	/*              Maximum chroma: */ cmax: 0.4,
+	/*              Maximum chroma: */ cmax: 0.5,
 	/*     Minimum hue, in degrees: */ hmin: -360,
 	/*     Maximum hue, in degrees: */ hmax: 360,
+	/* Override lightness when moving towards left/black */ l-left: null,
 );
 
+// ? Color space during adjustments will always be in oklch, but they can be converted on output
+//   Accepted values: oklch, lch, oklab, lab, hsl, rgb (turns into hex)
+$OUTPUT_COLOR_SPACE: oklch;
+
+// ? Enable validation and warnings of all invalid options and values passed, ?maybe slower? but otherwise issues will be confusing and often silent
+$ENABLE_SAFETY_CHECKS: true;
 
 
-@use "sass:map";
-@use "sass:list";
-@use "sass:math";
-@use "sass:color";
 
-// Fill in default values for each color type in each theme using $DEFAULT-adjustment-params
-@each $theme, $colors in $themes { @each $type, $options in $colors { @each $key, $default in $DEFAULT-color-options { @if not map.has-key($options, $key) { $options: map.merge($options, ($key: $default)); } }		$colors: map.merge($colors, ($type: $options)); }	$themes: map.merge($themes, ($theme: $colors)); }
+@function c($args...) { @return generate-color($args...); }
+@function cl($args...) { @return generate-color($args...); }
+                                          
+/* ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁ */ 
+/* ╠╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳ code ╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╳╣ */ 
+/* ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔ */
 
-$colorsToCompile: ();
-@each $theme-id, $colors in $themes { $colorsToCompile: map.set($colorsToCompile, $theme-id, []); }
 
-@function cl($id, $number: 500, $lightness: 500, $alpha: 1) {
+$all-role-names: (); // < List of every role in the first theme, used for option and user input validation
 
-	$varname: "--#{$id}-#{$number}-#{$lightness}-#{$alpha * 100}";
-	// Generate colors for each theme 
-	$colorsGenerated: ();
+// - Check user options
+@if $ENABLE_SAFETY_CHECKS == true {
 
-	// if colorsToCompile.light.$id does not exist, create it:
-	@if not map.has-key(map.get($colorsToCompile, default), $varname) {
-		@each $theme-id, $color-types in $themes {
-			$color-options: map.get($color-types, $id);
-			$color: map.get($color-options, color);
-			// @debug "";
-			// @debug "clrs";
-			// @debug $color;
-			$l: map.get($color-options, l); $lmin: map.get($color-options, lmin); $lmax: map.get($color-options, lmax);
-			$c: map.get($color-options, c); $cmin: map.get($color-options, cmin); $cmax: map.get($color-options, cmax);
-			$h: map.get($color-options, h); $hmin: map.get($color-options, hmin); $hmax: map.get($color-options, hmax);	
-			// @debug $l $c $h;
-			$L: math.clamp($lmin * 100%, color.channel($color, "lightness", $space: oklch) + (($number - 500) * $l), $lmax * 100%);
-			$C: math.clamp($cmin, color.channel($color, "chroma", $space: oklch) + ((500 - $number) * $c), $cmax);
-			$H: math.clamp($hmin * 1deg, color.channel($color, "hue", $space: oklch) + (($number - 500) * $h), $hmax * 1deg);
-			// @debug $L $C $H;
-			
-			// Create color from variables above, adjust brightness, adjust opacity
-			$out-color: color.change(lch(0% 0 0deg), $lightness: $L, $chroma: $C, $hue: $H, $space: oklch, $alpha: $alpha);
-			// @debug $out-color;
-			$out-color: color.scale($out-color, $lightness: (($lightness - 500) * 0.001) * 100%, $space: oklch);
-			// @debug $out-color;
-			$out-color: color.change($out-color, $alpha: $alpha);
-			// @debug $out-color;
-
-			$colorsGenerated: map.merge($colorsGenerated, ($theme-id: $out-color));
-			$colorsToCompile: map.set($colorsToCompile, $theme-id, map.set(map.get($colorsToCompile, $theme-id), $varname, $out-color)) !global;
+	// - Validate that all themes have the same role names
+	$all-role-names: map.keys(map.get($themes, list.nth(map.keys($themes), 1))); // < fill $all-role-names with first theme's
+	@each $theme, $roles in $themes {
+		@if map.keys($roles) != $all-role-names {
+			@error "❌ Some of your themes have unique roles, they must all have the same. ${map.keys($roles)} != $all-role-names";
 		}
 	}
-	@return var(#{$varname}); 
-}
-@function c($id, $number: 500, $lightness: 500, $alpha: 1) { @return cl($id, $number, $lightness, $alpha); }
 
+	// - Verify output color space is an accepted format
+	$allowed-spaces: (oklch, lch, oklab, lab, hsl, rgb);
+	@if list.index($allowed-spaces, $OUTPUT_COLOR_SPACE) == null {
+		@error "#{$OUTPUT_COLOR_SPACE} is not a valid color space, must be 'oklch', 'lch', 'oklab', 'lab', 'hsl', or 'rgb'";
+	}
+
+	// - Ensure 'default' theme exists
+	@if map.get($themes, default) == null { @error "❌ You must have a theme named 'default'"; }
+}
+
+
+// - Fill in default options for each role in each theme
+@each $theme-key, $color-roles in $themes {
+	@each $role-key, $settings in $color-roles {
+		$color-roles: map.set($color-roles, $role-key, map.deep-merge($DEFAULT-color-options, $settings));
+	}
+	$themes: map.set($themes, $theme-key, $color-roles);
+}
+
+
+// - Global variables, staying between calls
+$names-of-variables-generated: (); /* [ varname, varname, varname ] */
+$color-variables-to-append: (); /* { theme: { varname: color, varname: color }, theme: {...} } */
+
+
+/* ~~~~~ Main function to call ~~~~~ */
+@function generate-color(
+	$role,         /* - Which role to generate the color from, e.g. "fg" "bg" "hi" */
+	$tone: 500,    /* - Main offset/tone/level of the color to pick from the palette generated using the variables above, 500 is default, 0 is darkest, 1000 is lightest */
+	$lightness: 0, /* - Additional lightness offset to add to the color, negative numbers darken */
+	$alpha: 1,     /* - Opacity of the color, 0 to 1, with 1 being fully visible, 0 being fully transparent */
+) {
+	
+	/* ~~~~~ Validate the inputs: ~~~~~ */
+	@if $ENABLE_SAFETY_CHECKS == true {
+
+		// - Ensure role exists
+		$rename: list.nth($all-role-names, list.index($all-role-names, $role));
+		@if $rename == null { @error "❌ Color role '#{$role}' role doesn't exist"; }
+
+		// - Ensure numbers are within ranges
+		@if $tone > 1000 { @warn "⚠️  Tone must be between 0 and 1000, #{$tone} given"; $tone: 1000; }
+		@if $tone < 0 { @warn "⚠️  Tone must be between 0 and 1000, #{$tone} given"; $tone: 0; }
+		@if $alpha > 1 { @warn "⚠️  Alpha must be between 0 and 1, #{$alpha} given"; $alpha: 1; }
+		@if $alpha < 0 { @warn "⚠️  Alpha must be between 0 and 1, #{$alpha} given"; $alpha: 0; }
+		@if $lightness > 100 { @warn "⚠️  Lightness must be between -100 and 100, #{$lightness} given"; $lightness: 100; }
+		@if $lightness < -100 { @warn "⚠️  Lightness must be between -100 and 100, #{$lightness} given"; $lightness: -100; }
+		
+		// - Ensure tone and lightness are whole integers
+		$fixed-tone: math.round($tone);
+		$fixed-lightness: math.round($lightness);
+		
+		@if $fixed-tone != $tone { @warn "⚠️  Tone only accepts whole integer values, rounded automatically. value: #{$tone}"; }
+		@if $fixed-lightness != $lightness { @warn "⚠️  Lightness only accepts whole integer values, rounded automatically value: #{$lightness}"; }
+
+		$tone: $fixed-tone;	$lightness: $fixed-lightness;
+	}
+
+
+	/* ~~~~~ Generate the CSS variable name: ~~~~~ */
+	$alpha-without-dp: string.split("#{$alpha}", ".");
+	@if list.length($alpha-without-dp) == 1 { $alpha-without-dp: list.nth($alpha-without-dp, 1); } @else { $alpha-without-dp: "#{list.nth($alpha-without-dp, 1)}#{list.nth($alpha-without-dp, 2)}"; }
+	$varname: "--#{$role}-#{$tone}-#{$lightness}-#{$alpha-without-dp}";
+	
+
+	/* ~~~~~ Generate the color: ~~~~~ */
+
+	// - Just return the varname if it already exists
+	@if list.index($names-of-variables-generated, $varname) != null { @return var(#{$varname}); }
+
+	$tone: $tone - 500; // < normalize tone to a base of 0, for easier math, range now -500 to 500
+	@each $theme-id, $theme-roles in $themes {
+		 
+		// - Extract all the options as variables, for ease of use
+		$options: map.get($theme-roles, $role);
+		$lmod: map.get($options, l); $lmin: map.get($options, lmin); $lmax: map.get($options, lmax);
+		$cmod: map.get($options, c); $cmin: map.get($options, cmin); $cmax: map.get($options, cmax);
+		$hmod: map.get($options, h); $hmin: map.get($options, hmin); $hmax: map.get($options, hmax);
+		$l-left: map.get($options, l-left);
+		@if $l-left != null and $tone < 0 { $lmod: $l-left; }
+		
+		// - Extract LCH from the base color in the theme
+		$base-color: map.get($options, color);
+		$lbase: color.channel($base-color, "lightness", $space: oklch);
+		$cbase: color.channel($base-color, "chroma", $space: oklch);
+		$hbase: color.channel($base-color, "hue", $space: oklch);
+		
+
+
+
+		// interpolate between min and max
+		
+		// - Apply the Chroma and Hue modifiers
+		$L: $lbase + ($lmod * $tone);
+		$C: $cbase + ($tone * $cmod);
+		$H: $hbase + ($tone * $hmod);
+
+		// - Clamp LCH to min/max
+		$L: math.clamp($lmin * 1%, $L, $lmax * 1%);
+		$C: math.clamp($cmin, $C, $cmax);
+		$H: math.clamp($hmin * 1deg, $H, $hmax * 1deg);
+
+		// - Create the color based on LCH generated above
+		$color: color.change(oklch(0% 0 0 / 100%), $space: oklch, $lightness: $L, $chroma: $C, $hue: $H, $alpha: $alpha);
+
+		// - Apply the additional lightness % offset, scaling, not linear
+		$color: color.scale($color, $lightness: $lightness * 1%, $space: oklch);
+      
+		// - Convert to the desired output color space
+		@if $OUTPUT_COLOR_SPACE != oklch {
+			$color: color.to-space(color.to-gamut($color, $space: $OUTPUT_COLOR_SPACE, $method: local-minde), $OUTPUT_COLOR_SPACE);
+		}
+
+		// - Create the map for the theme if it doesn't exist
+		$obj: map.get($color-variables-to-append, $theme-id);
+		@if $obj == null {
+			$color-variables-to-append: map.set($color-variables-to-append, $theme-id, ()); 
+			$obj: ();
+		}
+
+		// - Add the generated color to the theme
+		$color-variables-to-append: map.set($color-variables-to-append, $theme-id, map.set($obj, $varname, $color)) !global;
+	}
+
+	// - Add the variable to the list of generated variables, to avoid duplicates
+	$names-of-variables-generated: list.append($names-of-variables-generated, $varname) !global;
+	@return var(#{$varname});
+}
+
+
+
+
+
+/* ~~~~~ Append all generated color variables as CSS variables ~~~~~ */
+$compiled: false;
 @mixin compile-colors {
-	@each $theme-id, $colors in $colorsToCompile {
-		/* Color variables for '#{$theme-id}' theme, only used ones are compiled */
-		@if $theme-id == "default" {
-			[data-theme="default"], html:not([data-theme]) { // default, applied when no data-theme in localstorage
-				@each $varname, $color in $colors { #{$varname}: #{$color}; }
-			}
-		} @else {
-			[data-theme="#{$theme-id}"] {
-				@each $varname, $color in $colors { #{$varname}: #{$color}; }
+
+	// - Only run once
+	@if $compiled == false {
+		$compiled: true !global;
+
+		// - Output all color variables for each theme
+		@each $theme-id, $variables in $color-variables-to-append {
+			/* Color variables for '#{$theme-id}' theme, only used ones are compiled */
+			@if $theme-id == "default" {
+				[data-theme="default"], html:not([data-theme]) { // < default, applied when no data-theme in html root
+					@each $varname, $color in $variables { #{$varname}: #{$color}; }
+				}
+			} @else {
+				[data-theme="#{$theme-id}"] {
+					@each $varname, $color in $variables { #{$varname}: #{$color}; }
+				}
 			}
 		}
+	} @else { @warn "'@include compile-colors;' only needs to be used once, at the end of the file!"; }
+}
+
+
+
+@function ease-out-in($t) {
+	$x: math.div($t, 100%);
+	$y: 0;
+
+	@if $x < 0.5 {
+		// first half: ease-out
+		$y: 1 - math.pow(1 - (2 * $x), 3) / 2;
+	} @else {
+		// second half: ease-in
+		$y: math.pow((2 * $x - 1), 3) / 2 + 0.5;
 	}
 
-	// Add overall light/dark knowledge
-	[data-theme="default"] {
-		--theme-type: "dark";
-	}	
-	[data-theme="wet"] {
-		--theme-type: "dark";
-	}
-	[data-theme="sun"] {
-		--theme-type: "light";
-	}
+	@return $y * 100%;
 }
+
+
+
+// @include compile-colors;

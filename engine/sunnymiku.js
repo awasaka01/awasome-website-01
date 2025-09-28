@@ -1,13 +1,13 @@
 // @ts-check
 
-/* ~~~~~ init.js ~~~~~
+/* ~~~~~ sunnymiku.js ~~~~~
    - Entrypoint for building the engine and utilities.
    - Press Q or Ctrl+C in the terminal to gracefully stop everything.
 
    - Command to check all running node processes:
      Get-Process | Where-Object {$_.ProcessName -eq "node"}
    - To kill them:
-     taskkill /F /IM node.exe
+     taskkill /F /IM node.exe   or   pnpm kill
 */
 chalk.level = 3;
 process.env.FORCE_COLOR = "1";
@@ -36,6 +36,8 @@ import { fail } from "node:assert";
 const { blue: b, pink: p, white: w, warn } = colors;
 
 
+
+
 const TIMEOUT = 500; // < time for watcher to wait before restarting
 console.log("");
 
@@ -60,7 +62,14 @@ process.argv.slice(2).forEach((arg) => {
 for (const k of Object.keys(env_key)) { if (env[k] === undefined) env[k] = "false"; }
 process.env = { ...process.env, ...env };
 
-if (env.WATCH === "true") log(`—— ${p(`> Press ${b.bold("Q")} to shutdown! <`)}`);
+if (env.WATCH === "true") {
+	const width = process.stdout.columns || 80;
+	console.log(chalk.bgBlack.hex("#78ff60").bold("◢◤".repeat(~~(width / 2))));
+	log(`—— Running in watch mode!`);
+	log(`—— ${p(`> Press ${b.bold("Q")} to shutdown! or ${b.bold("R")} to restart! <`)}`);
+	console.log(chalk.bgBlack.hex("#78ff60").bold("◢◤".repeat(~~(width / 2))));
+	console.log("");
+}
 log(`—— Environment Variables: [ ${Object.entries(env).filter(([, v]) => v === "true").map(([k]) => k).join(", ")} ]`);
 
 
@@ -84,6 +93,7 @@ async function build () {
 	await compileTS(paths.engine, `${paths.compiled}/${paths.engine}`),
 
 
+
 	/* ~~~~~ 3. Run build.js ~~~~~ */
 	log(`🟢 Running ${b("build.js")}...`, p);
 	console.log(divider());
@@ -97,7 +107,7 @@ async function build () {
 	/* ~~~~~ 4. Accept and register child processes sent up from build.js ~~~~~ */
 	buildProcess.on("message", /** @param {Record<string, any>} msg */ (msg) => {
 		if (msg.type === "child_process") {
-			console.log(chalk.italic.hex("#47404e")(`⫷ registered child process '${msg.pid}' ⫸`));
+			// console.log(chalk.italic.hex("#47404e")(`⫷ registered child process '${msg.pid}' ⫸`));
 			registerChildProcess(msg.pid);
 		}
 		else { return err(`Why message me? ${msg}`); }
@@ -105,7 +115,7 @@ async function build () {
 
 	/* ~~~~~ 5. Handle build.js exit ~~~~~ */
 	buildProcess.on("exit", (code, signal) => {
-		console.log(divider());
+		console.log(divider(true));
 		if (code === 0) log(`✅ ${b("build.js")} finished with code ${b.bold(code)}`, p);
 		else log(`❌ ${b("build.js")} failed with code ${colors.red.bold(code)}`, p);
 		if (env.WATCH === "false") SHUTDOWN();
@@ -134,20 +144,26 @@ if (env.WATCH === "true") {
 		if (restartTimeout) clearTimeout(restartTimeout);
 		restartTimeout = setTimeout(async () => {
 			log(`🔧 Restarting ${b("build.js")} due to file changes in ${b(path)}...`, p, "\n");
-			await KILLALLCHILDREN();
-			build();
+			RESTART();
 		}, TIMEOUT);
 	});
 }
 
 
 
+/* ~~~~~ Restart build.js ~~~~~ */
+async function RESTART () {
+	await KILLALLCHILDREN();
+	build();
+}
+
+
 /* ~~~~~ Properly terminate this process and cleanup ~~~~~ */
 let dead = false;
 async function SHUTDOWN () {
 	if (dead) { return; } dead = true; // < only run once
-	log(`🛑 Stopping ${b("init.js")} and all children...`, w);
-	if (watcher?.close) { log(`💀 Closing file watcher...`); watcher.close(); }
+	log(`🛑 Shutting down all processes...`, w);
+	if (watcher?.close) { log(`—— Closing file watcher...`); watcher.close(); }
 	await KILLALLCHILDREN();
 	process.exit(0); // < bug solfed: DO NOT DO THIS WITHOUT WAIT, KILLS PROCESS BEFORE CHILDREN ARE KILLED
 
@@ -161,7 +177,7 @@ process.on("SIGTERM", () => SHUTDOWN());
 async function KILLALLCHILDREN () {
 	const promises = Array.from(child_processes.values()).map((pid) => {
 		child_processes.delete(pid);
-		log(`💀 Terminated PID:${(pid)}`, w);
+		// log(`—— Terminated PID:${(pid)}`, w);
 		return new Promise((res) => treeKill(pid, "SIGTERM", () => res()));
 	});
 	return Promise.all(promises);
@@ -185,6 +201,11 @@ if (process.stdin.isTTY && !process.env.CI) {
 			process.stdin.pause();
 			log(`🛑 ${b.bold(key === "q" ? "Q" : "CTRL+C")} pressed...`, p);
 			SHUTDOWN();
+		}
+		else if (key === "r") {
+			log(`🛑 ${b.bold("R")} pressed...`, p);
+			log(`🔧 Restarting ${b("build.js")}...`, p, "\n");
+			RESTART();
 		}
 	});
 }
@@ -231,14 +252,14 @@ async function compileTS (inputPath, outputPath, options = {}) {
 		= env.CLEAR_CACHE === "true" ? "the cache was cleared"
 		: !oldHash ? `${b(cacheFilePath)} didn't exist`
 		: "the files have changed";
-	log(p(`${chalk.bold.hex("#2f74c0")("TS")} Recompiling ${b(inputPath + "/")}`) + ` because ${reason}`, w);
+	log(p(`${chalk.bold.hex("#2f74c0")("TS")} Recompiling ${b(inputPath + "/")}`) + ` because ${reason}...`, w);
 
 	// - Write the new hash and recompile
 	await fs.promises.writeFile(cacheFilePath, hash);
 	return esbuild.build({
 		entryPoints: files,
 		outdir: outputPath,
-		logLevel: "info",
+		logLevel: "error",
 		sourcemap: false, bundle: false,
 		minify: options.minify ?? false,
 		format: "esm", platform: "node", target: "node24",

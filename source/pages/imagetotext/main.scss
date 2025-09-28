@@ -1,0 +1,501 @@
+// @use "sass:color";
+// @use "sass:list";
+// @use "sass:map";
+// @use "sass:math";
+// @use "sass:meta";
+// @use "sass:selector";
+// @use "sass:string";
+
+@use "bundled.scss" as *;
+@include reset;
+@include base-styles;
+@include target-reset(html input button, true);
+
+
+/* ✿ ╟━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╢ ✿ */
+
+
+// - Root Properties
+$base-font-size: 18px;
+$base-line-height: 1.2;
+
+// - Character-based units, tied to the root element to be consistent
+:root {
+	font-size: $base-font-size;
+	line-height: $base-line-height;
+
+	--character-width: 1ch;
+	--character-height: 1cap;
+	--line-height: 1lh;
+}
+// rcw(1): var(--character-width); // Root character width
+// rch(1): var(--character-height); // Root character height
+// rlh(1): var(--line-height); // Root line height
+@function rcw($amount: 1, $rem: 0.5) { @return calc(#{$amount}ch / #{$rem * 2}); }
+@function rch($amount: 1, $rem: 1) { @return calc(#{$amount}cap / #{$rem}); }
+@function rlh($amount: 1, $rem: 1) { @return calc(#{$amount}lh / #{$rem}); }
+// @function rcw($amount: 1) { @return calc(var(--character-width) * #{$amount}); }
+// @function rch($amount: 1) { @return calc(var(--character-height) * #{$amount}); }
+// @function rlh($amount: 1) { @return calc(var(--line-height) * #{$amount}); }
+
+$padding: rlh(1) rcw(2); // Padding that is like having a character all around
+
+// - Colors
+$button-disabled-fg: c(fg, 400, 0, 0.5);
+$button-disabled-bg: c(bg, 400, -5);
+
+
+/* ❀ ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴ ❀ */
+
+
+body {
+	padding: 20px;
+	background-color: c(bg, 300) !important;
+}
+
+p { cursor: default; }
+
+// - Generic utility classes
+.flexcol { display: flex; flex-direction: column; }
+.flexrow { display: flex; flex-direction: row; }
+.faded { color: $button-disabled-fg; }
+
+// - The oooooo's down the side
+.side-decoration {
+	font-size: 1.2rem;
+	margin-right: rcw(1, 1.2);
+	writing-mode: vertical-lr;
+	text-orientation: upright;
+	white-space: pre;
+	color: c(bg, 800);
+}
+
+
+/* ✿ ╟━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╢ ✿ */
+
+
+// - Decorative lines like a notebook
+@mixin lines {
+	$line-gradient-size: 94%;
+	background: linear-gradient(0deg, transparent $line-gradient-size, rgb(0 0 0 / 13.9%) $line-gradient-size 100%);
+	background-repeat: repeat-y;
+	background-size: calc(100% - 2 * rcw(1)) rch(1);
+	background-position: center calc(rch(1) * 0.5);
+}
+
+main {
+
+	margin: auto;
+	// zoom: calc(1 / var(--device-pixel-ratio));
+	// transform: scale(var(--device-pixel-ratio));
+	transform-origin: 0 0;
+  
+
+
+	position: relative;
+	display: inline-flex;
+	flex-direction: column;
+	width: min-content;
+	max-width: 100%;
+	background-color: c(bg, 400);
+
+	gap: rlh(1);
+	padding: $padding;
+	font-family: "gohu11", "Courier New", Courier, monospace;
+	* { font-family: inherit; }
+
+
+	// - Base button styles
+	button:not(.copy-button) {
+		white-space: pre;
+		color: c(fg, 500);
+		background-color: c(bg, 600);
+		cursor: pointer;
+		
+		outline: none;
+		border: none;
+
+		&:hover:not(:disabled) { background-color: c(hi, 500); }
+		&:disabled {
+			color: $button-disabled-fg;
+			background-color: $button-disabled-bg;
+			cursor: not-allowed;
+		}
+	}
+}
+
+
+/* ✿ ╟━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╢ ✿ */
+
+
+main > section.upload {
+	@include lines;
+	background-color: c(bg, 500);
+	padding-right: rcw(1);
+	button {
+		margin-top: rlh(1);
+		margin-right: rcw(1);
+		padding: $padding;
+		&:hover:not(:disabled) {
+			box-shadow: rcw(1) rlh(1) rgb(0 0 0 / 45%);
+		}
+	}
+	#upload-demo {
+		cursor: pointer;
+		color: c(fg, 300);
+		&:hover { color: c(fg, 400); }
+	}
+}
+
+
+/* ✿ ╟━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╢ ✿ */
+
+
+main > section.options {
+	@include lines;
+	background-color: c(bg, 500);
+
+	.text-inputs {
+		width: 100%;
+		padding-right: calc(#{rcw(1)} * 2);
+		display: grid;
+		grid-template-columns: [labels] max-content [inputs] auto;
+		grid-template-rows: auto;
+		label {
+			cursor: help;
+			white-space: pre;
+		}
+		> input, > .input {
+			width: 100%;
+			grid-column: inputs / span 1;
+		}
+		> label {
+			text-align: right;
+			grid-column: labels / span 1;
+		}
+
+
+
+		> input[type="checkbox"] {
+			appearance: none;
+			cursor: pointer;
+			background-color: c(bg, 350);
+			accent-color: c(hi, 500);
+			position: relative;
+			&::before {
+				content: " ♥ ";
+				white-space: pre;
+				color: c(hi, 500);
+				opacity: 0;
+			}
+			&:hover::before {
+				// opacity: 0.3;
+			}
+			&:hover::after {
+				color: c(fg, 500);
+			}
+			&:checked::before {
+				opacity: 1;
+			}
+			&:checked:hover::before {
+				color: c(hi, 400);
+			}
+			&::after {
+				color: c(fg, 300);
+				position: absolute;
+				inset: 0;
+				content: "[   ]";
+			}
+		}
+
+		> input[type="text"], > input[type="number"] {
+			padding-left: 1ch;
+			background-color: c(bg, 350);
+			&:hover {
+				background-color: c(hi, 500);
+			}
+			&:focus {
+				
+				background-color: c(hi, 200);
+				box-shadow: 0 0 0 2px c(fg, 500, 0, 0.8) inset;
+			}
+		}
+	}
+}
+
+
+/* ✿ ╟━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╢ ✿ */
+
+
+main > section.output {
+	background-color: c(bg, 350);
+	output {
+		white-space: pre;
+		padding: $padding;
+		display: none;
+		overflow: scroll hidden;
+		contain: inline-size;
+		min-height: 80px;
+	}
+	output#output-text {
+		padding: 2.8lh 2ch;
+		line-height: 1ch;
+	}
+	output.selected {
+		display: block;
+	}
+
+	.output-header {
+		.divider {
+			opacity: 0.5;
+			height: 1lh;
+			overflow: hidden;
+			contain: inline-size;
+			margin: 0 1ch;
+			color: c(fg, 200, -15);
+		}
+
+
+		background-color: c(bg, 500);
+		// - 
+		.copy {
+			background-color: c(bg, 550);
+			position: relative;
+
+			#copy-button {
+				background-color: transparent;
+				&:hover { background-color: c(hi, 500); }
+			}
+
+			// - 
+			#copy-notification {
+				user-select: none;
+				z-index: 999999;
+				background-color: c(hi, 300);
+				inset: 0;
+				cursor: default;
+				position: absolute;
+				text-align: center;
+
+				pointer-events: all;
+				opacity: 1;
+				transition-duration: 2ms;
+				transition-delay: 0ms;
+				transition-property: opacity pointer-events;
+			}
+			#copy-notification.hidden {
+				opacity: 0;
+				pointer-events: none;
+				transition-duration: 2000ms;
+			}
+		}
+
+		// - 
+		button {
+			user-select: none;
+			text-align: center;
+			flex-grow: 1;
+		}
+		button.selected {
+			pointer-events: none;
+			cursor: default;
+			background-color: c(hi, 300);
+			&::before, &::after {
+				position: absolute;
+				content: ">";
+				color: c(fg, 500);
+			}
+			&::before { transform: translateX(-100%); }
+			&::after { content: "<"; }
+		}
+	}
+} 
+
+
+/* ✿ ╟━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╢ ✿ */
+
+@mixin awa-dropdown($items, $speed-open: 100ms, $speed-close: 40ms, $z-index: 10, $shadow-color: rgba(0, 0, 0, 0.135), $instant-first: true) {
+	@if $speed-close == null { $speed-close: $speed-open; }
+
+	position: relative;
+	z-index: $z-index + 0;
+	* { user-select: none; }
+
+	height: 1lh;
+	button {
+		width: 100%;
+		transition-property: box-shadow;
+		transition-delay: $speed-close *( $items - 1);
+		z-index: $z-index + 1;
+	}
+	&:focus-within > ul {
+		opacity: 1;
+		max-height: $items * 1lh;
+		transition: max-height $speed-open * $items steps($items);
+		li {
+			visibility: visible;
+			// transform: translateY(0);
+		}
+		@for $i from 1 through $items { li:nth-child(#{$i}) { transition-delay: $speed-open * $i; } }
+	}
+	button::after {
+		pointer-events: none;
+		content: "↓";
+		position: absolute;
+		right: 1ch;
+		z-index: $z-index + 2;
+	}
+	&:focus-within > button::after {
+		content: "↑";
+	}
+	button:hover {
+		background-color: c(hi, 500);
+	}
+	&:focus-within > button {
+		background-color: c(hi, 300);
+		transition-delay: 0ms;
+		box-shadow: 1ic 1lh $shadow-color;
+	}
+	&:focus-within::before {
+		content: "";
+		// cursor: row-resize;
+		position: absolute;
+		inset: 0;
+		z-index: $z-index + 2;
+	}
+	ul {
+		background-color: $shadow-color;
+		transition: max-height $speed-close * $items steps($items, start);
+		max-height: 0;
+		// background-color: red;
+		// overflow: visible hidden;
+		top: 0;
+		box-shadow: 1ic 1lh $shadow-color;
+		position: relative;
+		z-index: 44440;
+		> * { white-space: pre; }
+	}
+
+	@for $i from 1 through $items { li:nth-child(#{$i}) { transition-delay: $speed-close * ($items - $i); } }
+
+	// - Transform each item individually for the stepping animation
+
+	li {
+		transition: visibility linear;
+		visibility: hidden;
+		background-color: c(bg, 650);
+		cursor: pointer;
+		&:hover { background-color: c(hi, 500); }
+	}
+}
+
+.awa-dropdown {
+	@include awa-dropdown(3);
+
+	li {
+		height: rlh(1);
+	}
+}
+
+/* ✿ ╟━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╢ ✿ */
+@include compile-colors;
+
+
+
+/*
+	#buttons {
+		display: flex;
+		align-items: end;
+		background-color: c(bg, 500);
+
+		> *:nth-child(2) {
+			// height: rlh(1) * 6;
+			padding: $padding;
+			padding-bottom: 0;
+			box-sizing: border-box;
+		}
+		button {
+			// height: rlh(1) * 3;
+			&:hover:not(:disabled) {
+				box-shadow: rcw(1) rlh(1) rgb(0 0 0 / 45%);
+			}
+		}
+	}
+
+	#options {
+		position: relative;
+		display: flex;
+		// height: rlh(1) * 6;
+		background-color: c(bg, 500);
+
+		.text-inputs {
+			height: max-content;
+
+			> * {
+				height: rch(1);
+			}
+		}
+	}
+
+	#output-wrapper {
+		background-color: c(bg, 400);
+
+		#copy-buttons {
+			position: relative;
+			margin-top: auto;
+			white-space: pre;
+			background-color: c(bg, 600);
+
+			&:has(> button:disabled) {
+				color: $button-disabled-fg;
+				background-color: $button-disabled-bg;
+				cursor: not-allowed;
+			}
+	 
+			> button {
+				display: flex;
+				flex-grow: 1;
+				justify-content: center;
+			}
+
+			> #copy-notification {
+				$fade-duration: 400ms;
+				$fade-delay: 700ms;
+				position: absolute;
+				right: 0;
+				bottom: 0;
+				z-index: 2;
+				text-align: center;
+				user-select: none;
+				visibility: visible;
+				opacity: 1;
+				background-color: c(hi);
+				cursor: default;
+				
+				&.fade-out {
+					visibility: hidden;
+					opacity: 0;
+					transition: opacity $fade-duration ease-in $fade-delay,
+ 
+						visibility 0s linear ($fade-duration + $fade-delay);
+				}
+			}
+		}
+
+		.codeblock {
+			display: block;
+			padding: $padding;
+			overflow: auto visible;
+			contain: inline-size;
+			white-space: pre;
+			font-family: inherit;
+			line-height: 1.2ex;
+			background-color: c(bg, 400);
+
+			output {
+				font-family: inherit;
+				line-height: 1px;
+			}
+		}
+	}
+	*/

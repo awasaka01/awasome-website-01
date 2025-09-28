@@ -3,12 +3,31 @@ import * as util from "./awa-util/core.js";
 document.addEventListener("DOMContentLoaded", async () => {
 	slimey();
 	shimmerLogo();
+
+
+	good();
+
 });
 
 
 
 
+// ----------------------------------------------------------------
+//  good
+// ---------------------------------------------------------------- 
+function good () {
+	const good = document.querySelectorAll(".good") as NodeListOf<HTMLLinkElement>;
+	const transforms = () => [
+		`rotate(${util.rr(0, 360)}deg)`,
+		`scale(${util.rr(-1, 1, false)})`,
+		`translate(${util.rr(-5, 5, false)}px, ${util.rr(-5, 5, false)}px)`,
+		`skew(${util.rr(-10, 10, false)}deg, ${util.rr(-10, 10, false)}deg)`,
+	].join(" ");
 
+	good.forEach((el) => {
+		el.style.transform = transforms();
+	});
+}
 
 
 
@@ -18,9 +37,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 function shimmerLogo () {
 	const logo = document.getElementById("logo-text");
 	const cooldown = () => util.rr(1000, 5000);
-
-
-
 }
 
 

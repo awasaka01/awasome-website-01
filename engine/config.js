@@ -42,13 +42,13 @@ export const env_key = {
 	DISABLE_INCREMENTAL: { flags: ["no-inc", "no-incremental"] },
 	USE_NPX: { flags: ["npx"] },
 	MAX_QUALITY: { flags: ["quality"] },
+	SOURCE_MAPS: { flags: ["source-maps", "sourcemaps", "map", "maps", "sourcemap", "source-map"] },
 
-	SERVE: { flags: ["s", "serve", "dev"], enable: ["SOURCE_MAPS", "WATCH"] },
-		SOURCE_MAPS: { },
+	SERVE: { flags: ["s", "serve", "dev"], enable: ["WATCH"] },
 		WATCH: { flags: ["w", "watch"] }, // < different to serve! enables auto reloading of config instead of only running once
 
 	PRODUCTION: { flags: ["p", "prod", "production", "full"], enable: ["MINIFY_FILES", "MINIFY_IMAGES"] },
-		MINIFY_FILES: { },
+		MINIFY_FILES: { flags: ["minify", "min"] },
 		MINIFY_IMAGES: { },
 
 	CLEAN: { flags: ["c", "clean"], enable: ["CLEAR_CACHE", "CLEAR_DIST"] },
@@ -68,6 +68,7 @@ const importmap = { "imports": {
 	"react/jsx-runtime": "https://esm.sh/react@18/jsx-runtime",
 	"bezier-easing": "https://unpkg.com/bezier-easing@2.1.0/dist/bezier-easing.min.js",
 	"pathfinding": "https://cdn.jsdelivr.net/npm/pathfinding@0.0.1/pathfinding.min.js",
+	"@speed-highlight/core": "https://unpkg.com/@speed-highlight/core/dist/index.js",
 	// "use-sound": "https://unpkg.com/use-sound@5.0.0/dist/use-sound.cjs.production.min.js",
 } };
 /** Imports to ignore whilst bundling source .ts files */
@@ -123,6 +124,8 @@ export const scss = {
 	loadPaths: [absPaths.scss],
 	style: env.MINIFY_FILES === "true" ? "compressed" : "expanded",
 	sourceMap: env.SOURCE_MAPS === "true",
+	// functions:
+	// logger: { debug: sassLogger.debug, warn: sassLogger.warn },
 };
 
 
@@ -163,4 +166,10 @@ function randomSparkle (i) {
 	if (Math.random() < 0.25) sparkle = chalk.dim(sparkle);
 	return sparkle;
 }
-export const divider = () => Array.from({ length: 80 }, (_, i) => randomSparkle(i)).join("");
+// export const divider = () => Array.from({ length: 80 }, (_, i) => randomSparkle(i)).join("");
+
+const width = process.stdout.columns ?? 80;
+export const divider = (alt = false) => {
+	if (alt) return chalk.hex("#47404e")((`▄`).repeat(width) + "\n" + (`╧`).repeat(width));
+	return chalk.hex("#47404e")((`╤`).repeat(width) + "\n" + (`▀`).repeat(width));
+};

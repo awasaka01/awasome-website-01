@@ -25,10 +25,6 @@
 	"actionButtons": {
 		"commands": [
 			{
-				"name": "devbuild",
-				"command": "pnpm run devbuild"
-			},
-			{
 				"name": "dev",
 				"command": "pnpm run dev"
 			},
@@ -37,8 +33,8 @@
 				"command": "pnpm run build"
 			},
 			{
-				"name": "buildauto",
-				"command": "pnpm run buildauto"
+				"name": "merge-to-main",
+				"command": "pnpm run merge"
 			}
 		],
 		"defaultColor": "none",
@@ -68,7 +64,7 @@
 	// "commentAnchors.workspace.lazyLoad": true,
 	// "commentAnchors.workspace.excludeFiles": "**/{__dist,node_modules,.git,.idea,target,out,build,bin,obj,dist,vendor}/**/*",
 	// "commentAnchors.workspace.pathFormat": "full",
-	"editor.wordSeparators": "`~!@#$%^&*()=+[{]}\\|;:'\",.<>/?", // remove '-' from the list to allow double clicking on words to copy them
+	"editor.wordSeparators": "`~!@#%^&*()=+[{]}\\|;:'\",.<>/?", // remove '-' from the list to allow double clicking on words to copy them
 	"editor.tokenColorCustomizations": {
 		"textMateRules": [
 			{

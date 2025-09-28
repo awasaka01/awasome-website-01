@@ -1,0 +1,20 @@
+---yaml
+title: Template Page
+description: silly little website
+# favicon: /images/raw/favicon.ico
+---
+{{ layout "main-base.vto" }} 
+{{#  ↓ Content to insert in <head> ↓  #}} {{ slot head }} 
+
+
+{{#  ↓ Content to insert in <body> ↓  #}} {{ /slot }}  
+
+
+<main>
+	<h1>website - template page</h1>
+	<a href="/">home</a>
+</main>
+
+
+{{# <script>{{ include "./critical.js" }}</script> {{# Inline important Javascript #}}
+{{ /layout }}

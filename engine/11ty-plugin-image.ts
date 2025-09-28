@@ -17,8 +17,6 @@ import glob from "fast-glob";
 // let verbose = true;
 env.MINIFY_IMAGES = "true";
 
-const arr = ["apple", "banana", "cherry"];
-console.log(util.arrayRandom(arr));
 
 
 const MAX_WIDTH_WEBP = 32; // Max width for the small min. images 
@@ -103,12 +101,12 @@ export default function (options) {
 				const metadata = await img.metadata();
 
 
-				// 1. Create a min.imagename.webp - at the lowest quality possible
+				// 1. Create a min.imagename.min.webp - at the lowest quality possible
 				await (metadata.width > MAX_WIDTH_WEBP
 					? img.clone().resize({ width: MAX_WIDTH_WEBP })
 					: img.clone()
 				).webp({ force: true, quality: 1, alphaQuality: 100, lossless: true },
-				).toFile(`${absPaths.output}/images/${filename}.webp`);
+				).toFile(`${absPaths.output}/images/${filename}.min.webp`);
 
 				// 2. Create an imagename.avif - at a balance between size and quality
 				await (metadata.width > MAX_WIDTH_AVIF
@@ -125,7 +123,7 @@ export default function (options) {
 				const [filesize, filesizeAVIF, filesizeWEBP] = (await Promise.all([
 					fs.promises.stat(`${absPaths.images}/${url}`),
 					fs.promises.stat(`${absPaths.output}/images/${filename}.avif`),
-					fs.promises.stat(`${absPaths.output}/images/${filename}.webp`),
+					fs.promises.stat(`${absPaths.output}/images/${filename}.min.webp`),
 				])).map((f) => (f.size / 1024 > 99.99 ? `${(f.size / 1024 / 1024).toFixed(2)} mB` : `${(f.size / 1024).toFixed(2)} kB`).padStart(8, " "));
 
 				log(`${colors.pink("📸 Compressed!")} original: ${colors.blue(filesize)} -> avif: ${colors.blue(filesizeAVIF)}, webp: ${colors.blue(filesizeWEBP)} - ${colors.pink(url)}`);
@@ -140,7 +138,7 @@ export default function (options) {
 				return (`
 <figure class="progressive-image ${options.classes.join(" ")}" aria-label="${options.alt}">
 	<img class="min" aria-hidden="true"
-		src="images/${filename}.webp" 
+		src="images/${filename}.min.webp" 
 		width="${width}" height="${height}" ${options.priority} alt="${options.alt}"
 	> 
 	<img class="full"
