@@ -1,0 +1,267 @@
+┏━┳━┓
+┣━╋━┫
+┃ ┃ ┃
+┗━┻━┛
+╔═╦═╗
+╠═╬═╣
+║ ║ ║
+╚═╩═╝
+┌─┬─┐
+├─┼─┤
+│ │ │
+└─┴─┘
+╭╮
+╰╯
+dont update "eleventy-plugin-vento": "4.6.0",
+
+
+// TODO - Actually TODO:
+
+# Minor:
+[x] Add 404 page 
+[ ] Make unimmportant characters on the main menu not selectable
+[ ] Copy old neocities + github link
+add cache
+
+# Framework:
+[ ] 
+
+
+# Major:
+[ ] NO MORE COMPLETE OVERHAULS OF THE WHOLE WEBSITE
+
+
+# Would be nice:
+
+sitemap.xml [https://github.com/aplauche/11ty-Rapid-Starter/blob/main/src/sitemap.njk#L10]
+own custom image optimizer plugin
+	optimize to a lower res .min.webp and a regular .webp
+	replace all html and css refrences to the original image to double-load the webps instead
+
+
+# Current Feaures:
+- Live dev server
+- Templating in .html files, use templateEngineOverride to change, https://www.11ty.dev/docs/template-overrides/#template-engine-override-examples
+- Supported, anywhere, mixing is allowed: html, js, scss, css, typescript, react, jsx
+- Build
+
+
+# undocumented 11ty features / other "useful" links:
+lots of dev server stuff: https://github.com/11ty/eleventy-dev-server/releases/tag/v2.0.7
+dev server ready: https://github.com/11ty/eleventy-dev-server/issues/17#issuecomment-2722773367
+https://github.com/11ty/eleventy-dev-server/issues/9#issuecomment-2722593070 
+https://www.11ty.dev/docs/plugins/bundle/
+github actions help: https://vite.dev/guide/static-deploy.html
+https://quartz.jzhao.xyz/advanced/creating-components
+https://deepakness.com/blog/publishing-from-obsidian-using-11ty/
+
+
+live dev server
+templating in html
+ability to use any, anywhere:
+	html, js, scss, css, 
+	typescript, react, jsx
+blog system using markdown files
+	arbitrary code inside the markdown files (that will be removed during rss feed conversion)
+	tags, dates, 
+customizable output url
+minification
+		"buildfull-b": "cross-env DEBUG=Eleventy:Benchmark* && pnpm run buildfull"
+deleteion of unused files
+
+
+
+
+Option 3: GitHub Actions
+
+Use CI to automatically push dist/ to gh-pages on every commit.
+
+Keeps local repo clean; no need for scripts.
+
+Example:
+name: Deploy dist
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+      - run: pnpm install
+      - run: pnpm build
+      - uses: peaceiris/actions-gh-pages@v3
+        with:
+          publish_dir: ./dist
+uwuwu
+
+
+
+
+
+
+name: Build Site
+on: { push: { branches: [main] }, pull_request: {} }
+jobs: { 
+  build: { 
+    runs-on: ubuntu-latest, 
+    steps: [
+      { name: "Checkout repository",       uses: "actions/checkout@v3" },
+      { name: "Setup Node.js",             uses: "actions/setup-node@v3", with: { node-version: 20 } },
+      { name: "Cache npm",                 uses: "actions/cache@v3",       with: { path: "~/.npm", key: "${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}", restore-keys: ["${{ runner.os }}-node-"] } },
+      { name: "Install dependencies",      run:  "npm ci" },
+      { name: "Build",                     run:  "node ./build.js --production" }
+    ]
+  }
+}
+▷ `build` · Full build for production, including everything
+
+▷ `autobuild` · Runs `buildfull` when changes in src folder, also hosts the site for easy preview
+
+<!-- ▷ `build-b` / `startfull-b` /... · Same as abovee but with 11ty's benchmarking enabled -->
+
+notyet▷ `BUILD-FINAL` · Same as `buildfull` but for running in places like github actions, reduced logging and other human things
+
+---
+
+The build process runs as follows:  
+`src`━ 11ty ━➤`temp`━ Vite ━➤`production/dev`
+
+---
+
+
+### folder structure
+
+☰ `/src/` · Contains all source files, including HTML, CSS, JS, and assets
+
+☰ `/____temp/` · Used as an intermediary folder, as Vite runs on 11ty's output  
+☰ `/__dev/` · Final output folder when using `build` or `start`  
+☰ `/__production/` · Final output folder when using `buildfull` or `startfull`
+
+
+☰ `/scripts/` · Scripts used during the build process, seperated from .eleventy.js for readability  
+☰ `/scripts/misc/` · Random, probably unused, stuff
+
+
+
+---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---yaml
+title: Home
+description: silly little website
+favicon: /assets/images/favicon.ico
+replace: { "𝓕/g": '<span class="spacer"></span>' }
+colorMatches: true
+---
+{{ layout "main-base.vto" }} 
+{{#  ↓ Content to insert in <head> ↓  #}} {{ slot head }} 
+<title>overwr</title>
+
+{{#  ↓ Content to insert in <body> ↓  #}} {{ /slot }}     
+
+{{ image "miku.png" }}
+{{# {{ image "S1060032.JPG", { alt: "uwu" } }}
+{{ image "oh-no-riv-dont-look-d-v0-trs5vm61jhqd1.webp", { priority: "high" } }} #}}
+{{ image "raw/S1080001.JPG" }}
+<picture>
+
+</picture>
+𝓒1:┃◺
+𝓕𝓕𝓕
+	<div>
+		<h1>⚠️wiork in progress! !</h1>
+	</div>
+
+
+<script>{{ include "./critical.js" }}</script> {{# Inline important Javascript #}} 
+{{ /layout }}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---yaml
+title: Home
+description: silly little website
+favicon: /assets/images/favicon.ico
+replace: { "𝓕/g": '<span class="spacer"></span>' }
+colorMatches: true
+---
+{{ layout "main-base.vto" }} 
+{{#  ↓ Content to insert in <head> ↓  #}} {{ slot head }} 
+<title>overwr</title>
+<script type="importmap">{ "imports": { 
+	"chroma": "https://unpkg.com/chroma-js@3.1.2/index.js",
+	"react": "https://unpkg.com/react@18.2.0/umd/react.production.min.js",
+	"react-dom/client": "https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js",
+	"bezier-easing": "https://unpkg.com/bezier-easing@2.1.0/dist/bezier-easing.min.js",
+	"pathfinding": "https://cdn.jsdelivr.net/npm/pathfinding@0.0.1/pathfinding.min.js",
+	"use-sound": "https://unpkg.com/use-sound@5.0.0/dist/use-sound.cjs.production.min.js"
+} }</script>
+
+{{#  ↓ Content to insert in <body> ↓  #}} {{ /slot }}  
+   
+<div id="boop-root"></div>
+<script type="module" src="./react.js"></script>
+
+{{# {{ image "Pink_Slime_SP.webp", { classes: ["slime"]} }}
+{{ image "Puddle_Slime_SP.webp", { classes: ["slime"]} }}
+{{ image "Saber_Slime_SP.webp", { classes: ["slime"]} }}
+ {{ image "Tabby_Slime_SP.webp", { classes: ["slime"]} }}
+{{ image "Phosphor_Slime_SP.webp", { classes: ["slime"]} }}
+{{ image "Honey_Slime_SP.webp", { classes: ["slime"]} }}
+{{ image "S1060032.JPG", { alt: "uwu" } }}
+{{ image "miku.png" }}
+{{ image "oh-no-riv-dont-look-d-v0-trs5vm61jhqd1.webp" }}
+{{ image "raw/S1080001.JPG" }} #}}
+
+
+{{# <img src="" alt=""> #}}
+
+{{# <img src="images/raw/S1080001.JPG" alt="" fetchpriority="low"> #}}
+
+
+
+
+
+	<div>
+		<h1>⚠️wiork in progress! !</h1>
+	</div>
+
+
+<script>{{ include "./critical.js" }}</script> {{# Inline important Javascript #}} 
+{{ /layout }}

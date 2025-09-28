@@ -1,0 +1,49 @@
+// @use "sass:color";
+// @use "sass:math";
+// @use "sass:string";
+// @use "sass:meta";
+@use "sass:list";
+@use "sass:map";
+@use "sass:math";
+
+@use "bundled.scss" as *;
+
+
+
+$colors: [fg, bg, hi];
+
+@each $c in $colors {
+	
+
+	$gradient1: [];
+	@for $i from 0 through 9 {
+		$gradient1: list.append($gradient1, cl($c, math.round(($i * 100) + 50)));
+	}
+	$gradient2: [];
+	@for $i from 0 through 19 {
+		$gradient2: list.append($gradient2, cl($c, math.round(($i * 50) + 25)));
+	}
+	$gradient3: [];
+	@for $i from 0 through 39 {
+		$gradient3: list.append($gradient3, cl($c, math.round(($i * 25) + 12.5)));
+	}
+	$gradient4: [];
+	@for $i from 0 through 79 {
+		$gradient4: list.append($gradient4, cl($c, math.round(($i * 12.5) + 6.25)));
+	}
+	.var-section:nth-child(#{list.index($colors, $c)}) {
+		.bars > div {
+			height: 4cap;
+			&:nth-child(1) { background-color: cl($c); }	
+			&:nth-child(2) { background: f_steppedGradient($gradient1); }
+			&:nth-child(3) { background: f_steppedGradient($gradient2); }
+			&:nth-child(4) { background: f_steppedGradient($gradient3); }
+			&:nth-child(5) { background: f_steppedGradient($gradient4); }
+		}
+	}
+}
+
+
+
+	
+@include compile-colors;

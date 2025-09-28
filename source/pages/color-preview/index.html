@@ -1,0 +1,25 @@
+---yaml
+title: Color Preview
+description: silly little website
+# favicon: /images/raw/favicon.ico
+---
+{{ layout "main-base.vto" }} 
+{{#  ↓ Content to insert in <head> ↓  #}} {{ slot head }} 
+<link rel="stylesheet" href="colors.css">
+
+{{#  ↓ Content to insert in <body> ↓  #}} {{ /slot }}  
+
+<a href="/">../homepage/</a>
+<label for="theme-select">Select Theme: </label>{{ include "theme-select.vto" }}
+
+<main>
+	<div id="color-variables">
+		<section class="var-section"><p class="title">fg</p><div class="bars"><div>500</div><div></div><div></div><div></div><div></div></div></section>
+		<section class="var-section"><p class="title">bg</p><div class="bars"><div>500</div><div></div><div></div><div></div><div></div></div></section>
+		<section class="var-section"><p class="title">hi</p><div class="bars"><div>500</div><div></div><div></div><div></div><div></div></div></section>
+	</div>
+</main>
+
+
+{{# <script>{{ include "./critical.js" }}</script> {{# Inline important Javascript #}}
+{{ /layout }}

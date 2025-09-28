@@ -1,5 +1,6 @@
 // engine/build.ts
-
+chalk.level = 3;
+process.env.FORCE_COLOR = "1";
 
 // - node modules
 import { rm, readFile, writeFile, mkdir } from "node:fs/promises";
@@ -16,6 +17,7 @@ import startEsbuild from "./build-esbuild.js";
 import customLogger from "./build-logger.js";
 
 // - my config
+import * as util from "__util__";
 import * as config from "./config.js";
 import { paths, absPaths, log, err, colors, env_type } from "./config.js";
 const { blue: b, pink: p, white: w } = colors;
@@ -30,7 +32,7 @@ const env = process.env as env_type & NodeJS.ProcessEnv;
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
-const eleventy_cli_args = [`--config=${paths.compiled}/${paths.engine}/eleventy.js`];
+const eleventy_cli_args = [`--config=./${paths.compiled}/${paths.engine}/eleventy.js`];
 if (env.DISABLE_INCREMENTAL === "false") eleventy_cli_args.push("--incremental");
 if (env.SERVE === "true") eleventy_cli_args.push("--serve");
 
@@ -50,10 +52,7 @@ console.log("");
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
-// - esbuild
-const esbuild_context = await startEsbuild(glob.sync(`${absPaths.source}/**/!(_)*.{js,jsx,ts,tsx}`), paths.output);
 
-console.log(env, process.env);
 
 // - eleventy
 const command = env.USE_NPX === "true" ? "npx eleventy" : "eleventy";
@@ -61,17 +60,20 @@ const eleventy_process = spawn(`${command} ${eleventy_cli_args.join(" ")}`, {
 	stdio: ["inherit", "pipe", "pipe"],
 	env: { ...env, ...process.env, FORCE_COLOR: "1" },
 	shell: true,
-
 });
 process.send({ type: "child_process", pid: eleventy_process.pid });
+
 // - Capture and modify eleventy's output to look better
 customLogger(eleventy_process);
 
 
+// - esbuild
+const esbuild_context = await startEsbuild(glob.sync(`${absPaths.source}/**/!(_)*.{js,jsx,ts,tsx}`), paths.output);
 
 
 // - After build: Log folder size (in kB and mB)
 eleventy_process.on("exit", async (code = 0) => {
+
 	if (esbuild_context) esbuild_context.dispose();
 	if (env.SERVE === "true") return;
 
@@ -100,6 +102,6 @@ async function sizeOfFolder (path) {
 /** Recursively delete all files and folders inside a directory */
 async function clearDirectory (path : string) {
 	return Promise.all((await glob(`**/*`,
-		{ cwd: path, absolute: true, onlyFiles: false, markDirectories: true })
+		{ cwd: path, absolute: true, onlyFiles: false, markDirectories: true, ignore: ["images/**"] })
 	).map((f) => rm(f, { recursive: true })));
 }

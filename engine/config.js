@@ -1,4 +1,6 @@
 // engine/config.js
+chalk.level = 3;
+process.env.FORCE_COLOR = "1";
 
 // ✧ process.env is modified by the build script, so correct the types:
 const env = /** @type {NodeJS.ProcessEnv & import('./config.js').env_type} */ (process.env);
@@ -40,20 +42,37 @@ export const env_key = {
 	DISABLE_INCREMENTAL: { flags: ["no-inc", "no-incremental"] },
 	USE_NPX: { flags: ["npx"] },
 	MAX_QUALITY: { flags: ["quality"] },
+	SOURCE_MAPS: { flags: ["source-maps", "sourcemaps", "map", "maps", "sourcemap", "source-map"] },
 
-	SERVE: { flags: ["s", "serve", "dev"], enable: ["SOURCE_MAPS", "WATCH"] },
-		SOURCE_MAPS: { },
+	SERVE: { flags: ["s", "serve", "dev"], enable: ["WATCH"] },
 		WATCH: { flags: ["w", "watch"] }, // < different to serve! enables auto reloading of config instead of only running once
 
 	PRODUCTION: { flags: ["p", "prod", "production", "full"], enable: ["MINIFY_FILES", "MINIFY_IMAGES"] },
-		MINIFY_FILES: { },
+		MINIFY_FILES: { flags: ["minify", "min"] },
 		MINIFY_IMAGES: { },
 
 	CLEAN: { flags: ["c", "clean"], enable: ["CLEAR_CACHE", "CLEAR_DIST"] },
 		CLEAR_CACHE: { },
 		CLEAR_DIST: { flags: ["clear-dist", "cleardist"] },
+	// CLEAR_IMAGES: { },
 };
 /** @typedef {Record<keyof typeof env_key, 'true' | 'false' | undefined>} env_type */
+
+
+/* ~~~~~ External Dependencies ~~~~~ */
+/** Import map to be included in each page's \<script type="importmap"> */
+const importmap = { "imports": {
+	"chroma-js": "https://unpkg.com/chroma-js@3.1.2/index.js",
+	"react": "https://esm.sh/react@18",
+	"react-dom/client": "https://esm.sh/react-dom@18/client",
+	"react/jsx-runtime": "https://esm.sh/react@18/jsx-runtime",
+	"bezier-easing": "https://unpkg.com/bezier-easing@2.1.0/dist/bezier-easing.min.js",
+	"pathfinding": "https://cdn.jsdelivr.net/npm/pathfinding@0.0.1/pathfinding.min.js",
+	"@speed-highlight/core": "https://unpkg.com/@speed-highlight/core/dist/index.js",
+	// "use-sound": "https://unpkg.com/use-sound@5.0.0/dist/use-sound.cjs.production.min.js",
+} };
+/** Imports to ignore whilst bundling source .ts files */
+export const external_dependencies = [...Object.keys(importmap.imports)];
 
 
 
@@ -105,6 +124,8 @@ export const scss = {
 	loadPaths: [absPaths.scss],
 	style: env.MINIFY_FILES === "true" ? "compressed" : "expanded",
 	sourceMap: env.SOURCE_MAPS === "true",
+	// functions:
+	// logger: { debug: sassLogger.debug, warn: sassLogger.warn },
 };
 
 
@@ -113,6 +134,7 @@ export const scss = {
 export const vento = { dataVarname: "global", includes: paths.includes };
 export const vento_data = { // data to pass to Vento templates, then can be accessd with {{ key }}:
 	"env": { ...env },
+	"importmap": JSON.stringify(importmap),
 };
 
 
@@ -144,4 +166,10 @@ function randomSparkle (i) {
 	if (Math.random() < 0.25) sparkle = chalk.dim(sparkle);
 	return sparkle;
 }
-export const divider = () => Array.from({ length: 80 }, (_, i) => randomSparkle(i)).join("");
+// export const divider = () => Array.from({ length: 80 }, (_, i) => randomSparkle(i)).join("");
+
+const width = process.stdout.columns ?? 80;
+export const divider = (alt = false) => {
+	if (alt) return chalk.hex("#47404e")((`▄`).repeat(width) + "\n" + (`╧`).repeat(width));
+	return chalk.hex("#47404e")((`╤`).repeat(width) + "\n" + (`▀`).repeat(width));
+};

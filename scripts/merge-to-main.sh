@@ -1,6 +1,5 @@
 #!/bin/bash
 # scripts/merge-to-main.sh
-# Automated Rawr merge script
 set -e
 
 
@@ -9,10 +8,10 @@ set -e
 # ————————————————————————————————————————————————————————————
 RAW_NAME="[rawrbot]"
 RAW_EMAIL="rawrbot@example.com"
-export GIT_AUTHOR_NAME="$RAW_NAME"
-export GIT_AUTHOR_EMAIL="$RAW_EMAIL"
-export GIT_COMMITTER_NAME="$RAW_NAME"
-export GIT_COMMITTER_EMAIL="$RAW_EMAIL"
+# export GIT_AUTHOR_NAME="$RAW_NAME"
+# export GIT_AUTHOR_EMAIL="$RAW_EMAIL"
+# export GIT_COMMITTER_NAME="$RAW_NAME"
+# export GIT_COMMITTER_EMAIL="$RAW_EMAIL"
 
 
 # ————————————————————————————————————————————————————————————
@@ -77,7 +76,7 @@ fi
 # ————————————————————————————————————————————————————————————
 if [[ -n $(git status --porcelain) ]]; then
     gradient_echo_rgb "$FANCY_LINE ⋆.˚ ⋆.˚ ⋆.˚" 255 105 180 0 0 0
-    echo -e "${YELLOW}${tab}⚠️ You have uncommitted changes!${RESET}"
+    echo -e "${YELLOW}${tab}⚠️  You have uncommitted changes!${RESET}"
     echo -e "${MAGENTA}${tab}❔ Press ENTER to commit them manually, or type anything else to cancel:${RESET}"
     gradient_echo_rgb "$FANCY_LINE ⋆.˚ ⋆.˚ ⋆.˚" 255 105 180 0 0 0
     read -r CONFIRM_CHANGES
@@ -104,7 +103,7 @@ git pull origin main
 #  Force merge, priority to current branch:
 # ————————————————————————————————————————————————————————————
 echo -e "${BLUE}${tab}🔀 Merging '$CURRENT_BRANCH' into main (force conflicts to branch)...${RESET}"
-git merge --no-ff "$CURRENT_BRANCH" -m "merged '$CURRENT_BRANCH'" -X theirs || {
+git -c user.name="rawrbot" -c user.email="rawrbot@example.com" merge --no-ff "$CURRENT_BRANCH" -m "merged from '$CURRENT_BRANCH'" -X theirs || {
     echo -e "${RED}${tab}❌ Merge failed. Resolve conflicts manually.${RESET}"
     git checkout "$ORIGINAL_BRANCH"
     exit 1

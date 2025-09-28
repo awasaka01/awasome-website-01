@@ -1,15 +1,18 @@
 // - node modules
+import {} from "node:path";
 import fs from "node:fs";
 import esbuild from "esbuild";
+import externalizeAllPackagesExcept from "esbuild-plugin-noexternal";
+import { replace as esbuildPluginReplace } from "esbuild-plugin-replace";
 import browserslist_esbuild from "browserslist-to-esbuild";
 const supported_browsers_esbuild = browserslist_esbuild(config.supported_browsers); // < convert browserslist to an esbuild compatible format
 
 // - my config
+import * as util from "__util__";
 import * as config from "./config.js";
-import { nodeVersions } from "browserslist";
 const { log, err, colors, paths, absPaths } = config;
 const { blue: b, pink: p, white: w } = colors;
-const env = process.env as import("./config.js").env_type & NodeJS.ProcessEnv;
+const env = process.env as config.env_type & NodeJS.ProcessEnv;
 
 
 
@@ -24,16 +27,31 @@ export default async function startEsbuildClient (entryPoints : string[], outdir
 	if (bad_entryPoints.length > 0) err(`🥣 esbuild: unsupported entry files: [ ${bad_entryPoints.join(", ")} ]`);
 
 
+	// - Reformat entryPoints to an object of pairs
+	const entryPointsIO : { in : string, out : string }[] = entryPoints.map((entry) => {
+		const out = entry
+			.replace(absPaths.source, absPaths.output)
+			.replace(".ts", "") // .js is added automatically by esbuild
+			.replace(".js", "")
+			.replace("pages/", "");
+		return { in: entry, out: out };
+	});
+
+
 	const options : esbuild.BuildOptions = {
 		loader: { ".png": "file", ".jpg": "file", ".svg": "file", ".mp3": "file" },
-		external: ["react", "react-dom", "react-dom/client"],
+		external: config.external_dependencies,
 		logLevel: "error",
 
 		format: "esm", platform: "browser",
 		target: supported_browsers_esbuild,
-		entryPoints: entryPoints, outdir: outdir,
+		entryPoints: entryPointsIO, outdir: outdir,
 		bundle: true, minify: env.MINIFY_FILES === "true",
 		sourcemap: env.SOURCE_MAPS === "true" ? "inline" : undefined,
+		plugins: [
+			// externalizeAllPackagesExcept(config.bundled_packages),
+			esbuildPluginReplace({ "__util__": "/awa-util/core.js" }),
+		],
 	};
 
 	if (env.SERVE === "false") {

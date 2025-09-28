@@ -3,16 +3,20 @@
 //  Modify Eleventy's log output
 //
 // ──────────────────────────────────────────────────────────────────────────────────────────────────
+chalk.level = 3;
+process.env.FORCE_COLOR = "1";
 
 // - node modules
 import chroma from "chroma-js";
 import chalk from "chalk";
 
 // - my config
+import * as util from "__util__";
 import * as config from "./config.js";
 const { log, err, colors, paths, absPaths } = config;
 const { blue: b, pink: p, white: w } = colors;
 const env = process.env as import("./config.js").env_type & NodeJS.ProcessEnv;
+
 
 
 /* ~~~~~ Define custom colors ~~~~~ */
@@ -26,7 +30,7 @@ const fileType_colors = {
 	ts: chalk.hex("#519aba"),
 	tsx: chalk.hex("#58dcc4"),
 	html: chalk.hex("#cea385"),
-	scss: chalk.hex("#e85079"),
+	scss: chalk.hex("#cf649a"),
 };
 const prettyTag_11ty = chalk.hex("#8f7da3")(" 11ty ");
 
@@ -61,6 +65,9 @@ function pretty_eleventy_log (m) {
 		console.log("");
 		m = colors.pink(`Server started at ${colors.blue(`http://localhost:${config.port}`)}`) + `\n`;
 	}
+	if (m.includes("Watching…")) {
+		return;
+	}
 
 	// - remove leading spaces, even if they're infront of ansi codes
 	m = m.replace(/(?<=^(\x1b\[[0-9;]*m)*)( +)/gm, "");
@@ -69,6 +76,7 @@ function pretty_eleventy_log (m) {
 	m = `${chalk.hex("#8f7da3")(" 11ty ")}${config.timestamp()} ${channel} ${m}`;
 	console.log(m);
 }
+
 
 
 /* ~~~~~~ Helper Functions ~~~~~~ */
@@ -84,3 +92,19 @@ function handleChunkStreams (chunk, logger = console.log) {
 	buffer = lines.pop();
 	for (let line of lines) { logger(line);	}
 }
+
+
+
+
+export const sassDebug = (str : string) => {
+	console.log(`${chalk.hex("#cf649a")(" Sass ")}${config.timestamp()} ${str.replace("——", chalk.dim("——"))}`);
+};
+export const sassWarn = (str : string) => {
+	const terminalWidth = process.stdout.columns ?? 80;
+	console.log(chalk.hex("#d4b942")("◢◤".repeat(terminalWidth / 2)));
+	console.log("");
+	console.log(`${chalk.hex("#cf649a")(" Sass ")}${config.timestamp()} ${str.replace("——", chalk.dim("——"))}`);
+	console.log("");
+	console.log(chalk.hex("#d4b942")("◢◤".repeat(terminalWidth / 2)));
+	// console.log(chalk.hex("#191717").bgHex("#d4b54e")("◿◸".repeat(terminalWidth / 2)));
+};

@@ -3,6 +3,9 @@ import fs from "node:fs";
 import esbuild from "esbuild";
 import browserslist_esbuild from "browserslist-to-esbuild";
 const supported_browsers_esbuild = browserslist_esbuild(config.supported_browsers); // < convert browserslist to an esbuild compatible format
+import { transform as lightningcss, browserslistToTargets } from "lightningcss";
+const supported_browsers_lightningcss = browserslistToTargets(config.supported_browsers); // < convert browserslist to a lightningcss compatible format
+
 
 // - 11ty plugins
 import ImagePlugin_11ty from "./11ty-plugin-image.js";
@@ -11,13 +14,15 @@ import preprocessors_11ty from "./11ty-preprocessors.js";
 import postprocessors_11ty from "./11ty-postprocessors.js";
 import { VentoPlugin } from "eleventy-plugin-vento";
 
+import { sassDebug, sassWarn } from "./build-logger.js";
+
 // - my config
 import * as config from "./config.js";
 const { log, err, colors, paths, absPaths } = config;
 const { blue: b, pink: p, white: w } = colors;
-const env = process.env as import("./config.js").env_type & NodeJS.ProcessEnv;
+const env = process.env as config.env_type & NodeJS.ProcessEnv;
 
-log("—— Eleventy Config started...");
+// log("—— Eleventy Config started...");
 
 
 
@@ -31,7 +36,7 @@ const eleventy_config = {
 
 
 // 2. Eleventy Config function, defined using 11ty.ts for type support:
-import { defineConfig } from "11ty.ts";
+import Eleventy, { defineConfig } from "11ty.ts";
 export default defineConfig((eleventyConfig) => {
 
 	// - Ignore files
@@ -47,24 +52,32 @@ export default defineConfig((eleventyConfig) => {
 	eleventyConfig.setUseGitIgnore(false);
 	eleventyConfig.addPassthroughCopy("./source/**/*.{mp3,css}");
 	eleventyConfig.addPassthroughCopy("./source/fonts/**/*");
+	eleventyConfig.setDataFileBaseName("override");
+
+
 	// ~~~~~ Plugins ~~~~~
 	// | images: Compress images
 	// | preprocessors: Transform content before templates are compiled
 	// | postprocessors: Transform content after templates are compiled (data does not contain frontmater!)
 	// | Vento.vto template support [https://github.com/noelforte/eleventy-plugin-vento]
-	// | Sass.scss support using sass-embedded (+ my plugin), and minify it using esbuild
+	// | Sass.scss support using sass-embedded (+ my plugin), and minify it using lightningcss
 	eleventyConfig.addPlugin(ImagePlugin_11ty({}));
 	eleventyConfig.addPlugin(preprocessors_11ty);
 	eleventyConfig.addPlugin(postprocessors_11ty);
 	eleventyConfig.addPlugin(VentoPlugin, { ventoOptions: { ...config.vento } });
 	eleventyConfig.addPlugin(SassPlugin_11ty({
-		postprocess: env.MINIFY_FILES === "true" ? undefined : (content, data) => {
-			return esbuild.transformSync(content, {
-				loader: "css", minify: true,
-				target: supported_browsers_esbuild,
-			}).code;
+		sassOptions: { ...config.scss, logger: { debug: sassDebug, warn: sassWarn } },
+		postprocess: env.MINIFY_FILES === "true" ? undefined : (content, data, map) => {
+			const result = lightningcss({
+				filename: data.page.fileSlug + ".css",
+				code: Buffer.from(content, "utf8"),
+				targets: supported_browsers_lightningcss,
+				minify: true,
+				sourceMap: env.SOURCE_MAPS === "true",
+				inputSourceMap: env.SOURCE_MAPS === "true" ? JSON.stringify(map) : undefined,
+			});
+			return result.code + (result.map ? `\n/*# sourceMappingURL=data:application/json;base64,${Buffer.from(JSON.stringify(result.map)).toString("base64")}*/` : "");
 		},
-		sassOptions: config.scss,
 	}));
 
 	eleventyConfig.setServerOptions({
@@ -75,6 +88,6 @@ export default defineConfig((eleventyConfig) => {
 		watch: ["**/*.{js,ts,tsx,jsx}", "images/**/*"],
 	});
 
-	log("—— Eleventy Config done!");
+	log("   Eleventy Config loaded!");
 	return undefined;
 });

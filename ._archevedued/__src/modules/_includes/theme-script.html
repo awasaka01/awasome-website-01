@@ -1,0 +1,21 @@
+<script>
+	const dropdown = document.querySelector("#theme-select");
+	const dropdownValueDisplay = dropdown.querySelector("output");
+	const values = [...dropdown.querySelector("ul").children];
+	if (theme) {
+		const result = values.find((li) => li.dataset.id === theme)?.textContent
+		if (!result) { localStorage.removeItem("theme"); document.documentElement.setAttribute("data-theme", "default"); }
+		dropdownValueDisplay.value = result ?? "Default"; 
+	}
+
+	values.forEach((li) => {
+		li.addEventListener("mousedown", (e) => {
+			localStorage.setItem("theme", li.dataset.id);
+			document.documentElement.setAttribute("data-theme", li.dataset.id);
+			dropdownValueDisplay.value = li.textContent;
+		});
+	});
+</script>
+<style>
+	
+</style>
