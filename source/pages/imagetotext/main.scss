@@ -15,9 +15,20 @@
 /* ✿ ╟━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╢ ✿ */
 
 
+
 // - Root Properties
 $base-font-size: 18px;
 $base-line-height: 1.2;
+
+/* - Font based ratios, derived from the Pixel2 font */
+$ch-ratio: 0.53759765625;  // = 1101 / 2048 (0S/2 xAvgCharWidth)
+$lh-ratio: 1.18408203125;  // = 2425 / 2048 (sTypoAscender - sTypoDescender + sTypoLineGap)
+$cap-ratio: 0.63818359375; // = 1307 / 2048 (OS/2 sCapHeight)
+
+@function ch($font-size: $base-font-size) { @return $font-size * $ch-ratio; }
+@function lh($font-size: $base-font-size) { @return $font-size * $lh-ratio; }
+@function cap($font-size: $base-font-size) { @return $font-size * $cap-ratio; }
+
 
 // - Character-based units, tied to the root element to be consistent
 :root {

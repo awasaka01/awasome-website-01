@@ -1,0 +1,269 @@
+// @use "sass:color";
+// @use "sass:list";
+// @use "sass:map";
+// @use "sass:math";
+// @use "sass:meta";
+// @use "sass:selector";
+// @use "sass:string";
+
+@use "bundled.scss" as *;
+@include reset;
+@include base-styles;
+@include target-reset(html input button, true);
+
+/* ✿ ╟━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╢ ✿ */
+
+// - Root Properties
+$base-font-size: 18px;
+$base-line-height: 1.2;
+
+/* ❀ ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴ ❀ */
+// 	- Custom units in pixels based on the actual font metrics, and the base font size
+// For use in places where you want to use character-based units for a different font size than the one the element has
+// Otherwise, when the font size passed is the same, values will (hopefully) be identical to 1ch, 1ex, 1lh, and 1cap
+
+// - The exact ratios for 'gohu11'
+$ch-ratio: 0.53759765625;  // = 1101 (xAvgCharWidth)                                 / 2048 (unitsPerEm) = width of x
+$ex-ratio: 0.45654296875;  // =  935 (sxHeight)                                      / 2048 (unitsPerEm) = height of x
+$lh-ratio: 1.18408203125;  // = 2425 (sTypoAscender - sTypoDescender + sTypoLineGap) / 2048 (unitsPerEm) = line height
+$cap-ratio: 0.63818359375; // = 1307 (sCapHeight)                                    / 2048 (unitsPerEm) = height of caps
+// [precision calculator: https://www.mathsisfun.com/calculator-precision.html]
+// [getting the font metrics: https://opentype.js.org/font-inspector.html]
+
+// - Functions to calculate the character-based units from a font size, output is in pixels/px
+@function ch($i: 1, $font-size: $base-font-size) { @return ($font-size * $ch-ratio) * $i; }   // width of x
+@function ex($i: 1, $font-size: $base-font-size) { @return ($font-size * $ex-ratio) * $i; }   // height of x
+@function lh($i: 1, $font-size: $base-font-size) { @return ($font-size * $lh-ratio) * $i; }   // line height
+@function cap($i: 1, $font-size: $base-font-size) { @return ($font-size * $cap-ratio) * $i; } // height of X
+
+/* ❀ ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴ ❀ */
+// - Helpful variables and root properties
+
+:root {
+	font-size: $base-font-size;
+	line-height: $base-line-height;
+}
+
+
+$gap: ch(2) lh(1); // shorthand list for margins and paddings that are 2 characters wide and 1 line tall
+
+/* ✿ ╟━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╢ ✿ */
+
+
+
+body {
+	padding: 40px;
+	// overflow: hidden;
+}
+
+
+
+// Removes weird space below images
+img { vertical-align: middle; }
+
+
+
+// .marquee-items {
+// 	min-width: 100%;
+// 	width: fit-content;
+// 	display: flex;
+// 	justify-content: space-around;
+// 	animation: scroll calc(var(--speed) * 2) linear infinite;
+// 	animation-fill-mode: both;
+// 	animation-play-state: running;
+// 	transform: translateX(100%);
+// }
+// .marquee-track.duplicate .marquee-items {
+// 	animation-delay: calc(var(--speed) * -1);
+// }
+// .marquee:not(.nopause):hover .marquee-items {
+// 	animation-play-state: paused;
+// }
+
+// .marquee.slower { --speed: 120s; }
+// .marquee {
+// 	--speed: 30s; /* Amount of time it takes for one element to be in the exact same location again */
+// 	--gradient-size: 9%;
+// 	--scrollbar-height: 12px;
+
+// 	background-color: rgb(0 0 0 / 30%);
+
+// 	overflow: hidden;
+// 	position: relative;
+
+
+// 	/* [OPTIONAL] Gradient on the left and right */
+// 	// &::before {
+// 	// 	color: rgb(0 0 0 / 33.3%);
+// 	// 	background: linear-gradient(to right, currentcolor 0%, transparent var(--gradient-size), transparent calc(100% - var(--gradient-size)), currentcolor 100%);	
+// 	// 	content: ""; position: absolute; z-index: 5; inset: 0; pointer-events: none;
+// 	// 	height: auto;
+// 	// }
+// 	/* [OPTIONAL] Highlight when focuced/tabbed */
+// 	a:focus {
+// 		outline-offset: -3px;
+// 		outline: 3px rgb(255 255 255 / 90%) dashed;
+// 	}
+// }
+// .marquee-track {
+// 	overflow: hidden;
+// 	// max-width: 100%;
+// 	pointer-events: none;
+// }
+// .marquee-items > * {
+// 	pointer-events: all;
+// }
+
+// .marquee a {
+// 	cursor: pointer;
+// }
+// .marquee-track.duplicate { position: absolute; top: 0; left: 0; right: 0; }
+
+
+
+// .marquee.scroll-under::-webkit-scrollbar {
+// 	height: var(--scrollbar-height);
+// }
+// .marquee.scroll-under::-webkit-scrollbar-track {
+// 	background: rgb(77 75 75);
+// }
+// .marquee.scroll-under::-webkit-scrollbar-thumb {
+// 	background: rgb(156 156 156);
+// }
+
+// .marquee.scroll-under {
+// 	padding-bottom: var(--scrollbar-height);
+// 	margin-bottom: -20px;
+// }
+// .marquee.scroll-under:hover {
+// 	padding-bottom: 0;
+// 	overflow: scroll hidden;
+// }
+
+
+// .marquee-items p {
+// 	cursor: default;
+// 	margin-right: 1em;
+// 	user-select: none;
+// }
+// .marquee-items img {
+// 	width: 80px;
+// 	height: 31px;
+// }
+
+
+/* ✿ ╟━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╢ ✿ */
+
+
+.marquee {
+	--speed: 1s;
+	--gradient-size: 9%;
+	--scrollbar-height: 12px;
+	--children: 19;
+	overflow: visible;
+	.marquee-viewport {
+		height: 31px;
+		width: 100%;
+		display: grid;
+		overflow: hidden;
+		.marquee-track {
+			display: flex;
+			justify-content: space-around;
+			min-width: 100%;
+			width: max-content;
+			> * {
+				--i: calc(var(--nth-child) - 1);
+				order: var(--i);
+				display: block;
+			}
+		}
+	}
+}
+
+/* ❀ ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴ ❀ */
+
+/* use 'contain: paint' for clipping instead of 'overflow: hidden' if it's supported - prevents image unloading issues on firefox */
+@supports (contain: paint) { .marquee-viewport { contain: paint; overflow: visible !important; } }
+/* miscellaneous things that may or may not fix issues with image unloading */
+.marquee-track img { backface-visibility: hidden; }
+.marquee-track { transform-style: preserve-3d; }
+.marquee-track > * { will-change: transform; }
+
+/* ❀ ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴ ❀ */
+
+/* ~~~~~ right to left animation ~~~~~ */
+.marquee.rtl .marquee-track > * {
+	animation: RTLscroll var(--speed) linear infinite;
+	animation-delay: calc(var(--speed) / var(--children) * var(--i) * -1);
+}
+@keyframes RTLscroll { /* from right edge of item touching left edge of viewport to far right end of track */
+	from { transform: translateX(calc(100% * (var(--children) - var(--i) - 1))); }
+	to { transform: translateX(calc(-100% * (var(--i) + 1))); }
+}
+
+/* ~~~~~ left to right animation ~~~~~ */
+.marquee.ltr .marquee-track > * {
+	animation: LTRscroll var(--speed) linear infinite;
+	animation-delay: calc(var(--speed) / var(--children) * var(--i) * -1);
+}
+.marquee.ltr .marquee-viewport { justify-content: end; }
+@keyframes LTRscroll { /* from far left end of track to left edge of item touching right edge of viewport */
+	from { transform: translateX(calc(-100% * (var(--i)))); }
+	to { transform: translateX(calc(100% * (var(--children) - var(--i)))); }
+}
+
+
+/* ✿ ╟━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╢ ✿ */
+@include compile-colors;
+
+
+
+// /*.marquee {
+// 	--speed: 0.1s;
+// 	--gradient-size: 9%;
+// 	--scrollbar-height: 12px;
+// 	--children: 19;
+// 	overflow: visible;
+
+
+// 	.marquee-viewport {
+// 		height: 31px;
+// 		border: 2px solid rgb(255 255 255);
+// 		overflow: hidden;
+// 		width: 100%;
+
+// 		.marquee-track {
+// 			display: flex;
+// 			justify-content: space-around;
+// 			min-width: 100%;
+// 			width: max-content;
+// 			> * {
+// 				/* Define the per-element index */
+// 				--i: calc(var(--nth-child) - 1);
+
+// 				order: var(--i); /* optional if you want reordering */
+// 				display: block;
+
+// 				/* Define animatable property for transform offset */
+				
+
+// 				animation: scroll var(--speed) linear infinite reverse;
+// 				animation-delay: calc(var(--speed) / var(--children) * var(--i) * -1);
+// 			}
+// 		}
+// 	}
+// }
+
+// .marquee-track * {
+// 	will-change: transform;
+// 	transform: translateZ(0);
+// 	image-rendering: auto;
+// 	content-visibility: visible; /* stops skipping rendering */
+// }
+
+
+// @keyframes scroll {
+// 	0% { transform: translateX(calc(-100% * (var(--i) + 1))); }
+// 	100% { transform: translateX(calc(100% * (var(--children) - var(--i) - 1))); }
+// }
+//  */

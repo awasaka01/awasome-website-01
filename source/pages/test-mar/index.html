@@ -1,0 +1,204 @@
+---yaml
+title: Template Page
+description: silly little website
+# favicon: /images/raw/favicon.ico
+---
+{{ layout "main-base.vto" }} 
+{{#  ↓ Content to insert in <head> ↓  #}} {{ slot head }} 
+<link rel="stylesheet" href="./nth.css">
+
+{{#  ↓ Content to insert in <body> ↓  #}} {{ /slot }}  
+
+
+<main>
+	<a href="/" class="text">../homepage/</a>
+	<p><br></p>
+{{# 
+	<h4>marquee with link images</h4>
+	<p>- no additional classes</p>
+	<p>there's not enough content to fully fill the marquee, so it's spaced out</p>
+
+	<div class="marquee" aria-role="marquee" aria-label="Scrolling Buttons">
+		<div class="marquee-track"><div class="marquee-items">
+			<a tabindex="0" href="https://cataas.com/cat"><img width="88" height="31" src="/images/raw/buttons/template-button-1.png"></a>
+			<a tabindex="0" href="https://cataas.com/cat"><img width="88" height="31" src="/images/raw/buttons/template-button-3.png"></a>
+			<a tabindex="0" href="https://cataas.com/cat"><img width="88" height="31" src="/images/raw/buttons/template-button-5.png"></a>
+			<a tabindex="0" href="https://cataas.com/cat"><img width="88" height="31" src="/images/raw/buttons/template-button-7.png"></a>
+			<a tabindex="0" href="https://cataas.com/cat"><img width="88" height="31" src="/images/raw/buttons/template-button-9.png"></a>
+		</div></div>
+		<div class="marquee-track duplicate" aria-hidden="true"><div class="marquee-items">
+			<a tabindex="-1" href="https://cataas.com/cat"><img width="88" height="31" src="/images/raw/buttons/template-button-1.png"></a>
+			<a tabindex="-1" href="https://cataas.com/cat"><img width="88" height="31" src="/images/raw/buttons/template-button-3.png"></a>
+			<a tabindex="-1" href="https://cataas.com/cat"><img width="88" height="31" src="/images/raw/buttons/template-button-5.png"></a>
+			<a tabindex="-1" href="https://cataas.com/cat"><img width="88" height="31" src="/images/raw/buttons/template-button-7.png"></a>
+			<a tabindex="-1" href="https://cataas.com/cat"><img width="88" height="31" src="/images/raw/buttons/template-button-9.png"></a>
+		</div></div>
+	</div>
+
+
+	<p><br><br></p>
+
+
+	<h4>marquee with text</h4>
+	<p>+ slower</p>
+	<p>+ nopause</p>
+
+	<div class="marquee slower nopause" aria-role="marquee" aria-label="Scrolling Buttons">
+		<div class="marquee-track"><div class="marquee-items">
+			<p>cat</p><p>dog</p><p>elephant</p><p>lion</p><p>tiger</p><p>leopard</p><p>jaguar</p>
+			<p>cheetah</p><p>hyena</p><p>wolf</p><p>bear</p><p>monkey</p><p>gorilla</p><p>kangaroo</p>
+			<p>koala</p><p>panda</p><p>raccoon</p><p>squirrel</p><p>chipmunk</p><p>hedgehog</p><p>gerbil</p>
+		</div></div>
+		<div class="marquee-track duplicate" aria-hidden="true"><div class="marquee-items">
+			<p>cat</p><p>dog</p><p>elephant</p><p>lion</p><p>tiger</p><p>leopard</p><p>jaguar</p>
+			<p>cheetah</p><p>hyena</p><p>wolf</p><p>bear</p><p>monkey</p><p>gorilla</p><p>kangaroo</p>
+			<p>koala</p><p>panda</p><p>raccoon</p><p>squirrel</p><p>chipmunk</p><p>hedgehog</p><p>gerbil</p>
+		</div></div>
+	</div>
+
+
+	<p><br><br></p>
+
+
+	<h4>marquee filled up with images</h4>
+
+	<div class="marquee" aria-role="marquee" aria-label="Scrolling Buttons">
+		<div class="marquee-track"><div class="marquee-items">
+			<img src="/images/raw/buttons/template-button-1.png">
+			<img src="/images/raw/buttons/template-button-2.png">
+			<img src="/images/raw/buttons/template-button-3.png">
+			<img src="/images/raw/buttons/template-button-4.png">
+			<img src="/images/raw/buttons/template-button-5.png">
+			<img src="/images/raw/buttons/template-button-6.png">
+			<img src="/images/raw/buttons/template-button-7.png">
+			<img src="/images/raw/buttons/template-button-8.png">
+			<img src="/images/raw/buttons/template-button-9.png">
+			<img src="/images/raw/buttons/template-button-10.png">
+			<img src="/images/raw/buttons/template-button-11.png">
+			<img src="/images/raw/buttons/template-button-12.png">
+			<img src="/images/raw/buttons/template-button-13.png">
+			<img src="/images/raw/buttons/template-button-14.png">
+			<img src="/images/raw/buttons/template-button-15.png">
+			<img src="/images/raw/buttons/template-button-16.png">
+			<img src="/images/raw/buttons/template-button-17.png">
+			<img src="/images/raw/buttons/template-button-18.png">
+			<img src="/images/raw/buttons/template-button-19.png">
+		</div></div>
+		<div class="marquee-track duplicate" aria-hidden="true"><div class="marquee-items">
+			<img src="/images/raw/buttons/template-button-1.png">
+			<img src="/images/raw/buttons/template-button-2.png">
+			<img src="/images/raw/buttons/template-button-3.png">
+			<img src="/images/raw/buttons/template-button-4.png">
+			<img src="/images/raw/buttons/template-button-5.png">
+			<img src="/images/raw/buttons/template-button-6.png">
+			<img src="/images/raw/buttons/template-button-7.png">
+			<img src="/images/raw/buttons/template-button-8.png">
+			<img src="/images/raw/buttons/template-button-9.png">
+			<img src="/images/raw/buttons/template-button-10.png">
+			<img src="/images/raw/buttons/template-button-11.png">
+			<img src="/images/raw/buttons/template-button-12.png">
+			<img src="/images/raw/buttons/template-button-13.png">
+			<img src="/images/raw/buttons/template-button-14.png">
+			<img src="/images/raw/buttons/template-button-15.png">
+			<img src="/images/raw/buttons/template-button-16.png">
+			<img src="/images/raw/buttons/template-button-17.png">
+			<img src="/images/raw/buttons/template-button-18.png">
+			<img src="/images/raw/buttons/template-button-19.png">
+		</div></div>
+	</div>
+
+
+	<p><br><br></p>
+
+
+	<h4>marquee filled up with images</h4>
+	<p>+ scroll-under</p>
+
+	<div class="marquee scroll-under" aria-role="marquee" aria-label="Scrolling Buttons">
+		<div class="marquee-track"><div class="marquee-items">
+			<img src="/images/raw/buttons/template-button-1.png">
+			<img src="/images/raw/buttons/template-button-2.png">
+			<img src="/images/raw/buttons/template-button-3.png">
+			<img src="/images/raw/buttons/template-button-4.png">
+			<img src="/images/raw/buttons/template-button-5.png">
+			<img src="/images/raw/buttons/template-button-6.png">
+			<img src="/images/raw/buttons/template-button-7.png">
+			<img src="/images/raw/buttons/template-button-8.png">
+			<img src="/images/raw/buttons/template-button-9.png">
+			<img src="/images/raw/buttons/template-button-10.png">
+			<img src="/images/raw/buttons/template-button-11.png">
+			<img src="/images/raw/buttons/template-button-12.png">
+			<img src="/images/raw/buttons/template-button-13.png">
+			<img src="/images/raw/buttons/template-button-14.png">
+			<img src="/images/raw/buttons/template-button-15.png">
+			<img src="/images/raw/buttons/template-button-16.png">
+			<img src="/images/raw/buttons/template-button-17.png">
+			<img src="/images/raw/buttons/template-button-18.png">
+			<img src="/images/raw/buttons/template-button-19.png">
+		</div></div>
+		<div class="marquee-track duplicate" aria-hidden="true"><div class="marquee-items">
+			<img src="/images/raw/buttons/template-button-1.png">
+			<img src="/images/raw/buttons/template-button-2.png">
+			<img src="/images/raw/buttons/template-button-3.png">
+			<img src="/images/raw/buttons/template-button-4.png">
+			<img src="/images/raw/buttons/template-button-5.png">
+			<img src="/images/raw/buttons/template-button-6.png">
+			<img src="/images/raw/buttons/template-button-7.png">
+			<img src="/images/raw/buttons/template-button-8.png">
+			<img src="/images/raw/buttons/template-button-9.png">
+			<img src="/images/raw/buttons/template-button-10.png">
+			<img src="/images/raw/buttons/template-button-11.png">
+			<img src="/images/raw/buttons/template-button-12.png">
+			<img src="/images/raw/buttons/template-button-13.png">
+			<img src="/images/raw/buttons/template-button-14.png">
+			<img src="/images/raw/buttons/template-button-15.png">
+			<img src="/images/raw/buttons/template-button-16.png">
+			<img src="/images/raw/buttons/template-button-17.png">
+			<img src="/images/raw/buttons/template-button-18.png">
+			<img src="/images/raw/buttons/template-button-19.png">
+		</div></div>
+	</div>
+
+
+	<p><br><br></p> #}}
+
+
+	<h4>marquee2</h4>
+	<p></p>
+
+	<div class="marquee ltr" aria-role="marquee" aria-label="Scrolling Buttons">
+		<div class="marquee-viewport"><div class="marquee-track">
+			<img src="/images/raw/buttons/template-button-1.png">
+			<img src="/images/raw/buttons/template-button-2.png">
+			<img src="/images/raw/buttons/template-button-3.png">
+			<img src="/images/raw/buttons/template-button-4.png">
+			<img src="/images/raw/buttons/template-button-5.png">
+			<img src="/images/raw/buttons/template-button-6.png">
+			<img src="/images/raw/buttons/template-button-7.png">
+			<img src="/images/raw/buttons/template-button-8.png">
+			<img src="/images/raw/buttons/template-button-9.png">
+			<img src="/images/raw/buttons/template-button-10.png">
+			<img src="/images/raw/buttons/template-button-11.png">
+			<img src="/images/raw/buttons/template-button-12.png">
+			<img src="/images/raw/buttons/template-button-13.png">
+			<img src="/images/raw/buttons/template-button-14.png">
+			<img src="/images/raw/buttons/template-button-15.png">
+			<img src="/images/raw/buttons/template-button-16.png">
+			<img src="/images/raw/buttons/template-button-17.png">
+			<img src="/images/raw/buttons/template-button-18.png">
+			<img src="/images/raw/buttons/template-button-19.png">
+		</div></div>
+	</div>
+
+
+
+
+
+
+
+
+	<p><br></p><p><br></p><p><br></p>
+</main>
+
+{{# <script>{{ include "./critical.js" }}</script> {{# Inline important Javascript #}}
+{{ /layout }}

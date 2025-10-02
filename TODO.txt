@@ -22,6 +22,7 @@
 - code block copy paste button
 - learn and mabye implement css modules, for the class and id scoping
 - dont show build fialed on restart
+- replace sass error 11ty erroring with handle self
 
 
 ..................................................................
