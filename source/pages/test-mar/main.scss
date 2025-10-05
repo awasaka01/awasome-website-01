@@ -52,165 +52,161 @@ $gap: ch(2) lh(1); // shorthand list for margins and paddings that are 2 charact
 
 
 body {
-	padding: 40px;
+	padding: 30px;
+	// padding: 50vw;
+	// width: 200vw;
+	box-sizing: border-box;
 	// overflow: hidden;
 }
 
 
+.t { max-width: 100%; overflow: visible; display: flex; opacity: 0.6; }
 
 // Removes weird space below images
-img { vertical-align: middle; }
-
-
-
-// .marquee-items {
-// 	min-width: 100%;
-// 	width: fit-content;
-// 	display: flex;
-// 	justify-content: space-around;
-// 	animation: scroll calc(var(--speed) * 2) linear infinite;
-// 	animation-fill-mode: both;
-// 	animation-play-state: running;
-// 	transform: translateX(100%);
-// }
-// .marquee-track.duplicate .marquee-items {
-// 	animation-delay: calc(var(--speed) * -1);
-// }
-// .marquee:not(.nopause):hover .marquee-items {
-// 	animation-play-state: paused;
-// }
-
-// .marquee.slower { --speed: 120s; }
-// .marquee {
-// 	--speed: 30s; /* Amount of time it takes for one element to be in the exact same location again */
-// 	--gradient-size: 9%;
-// 	--scrollbar-height: 12px;
-
-// 	background-color: rgb(0 0 0 / 30%);
-
-// 	overflow: hidden;
-// 	position: relative;
-
-
-// 	/* [OPTIONAL] Gradient on the left and right */
-// 	// &::before {
-// 	// 	color: rgb(0 0 0 / 33.3%);
-// 	// 	background: linear-gradient(to right, currentcolor 0%, transparent var(--gradient-size), transparent calc(100% - var(--gradient-size)), currentcolor 100%);	
-// 	// 	content: ""; position: absolute; z-index: 5; inset: 0; pointer-events: none;
-// 	// 	height: auto;
-// 	// }
-// 	/* [OPTIONAL] Highlight when focuced/tabbed */
-// 	a:focus {
-// 		outline-offset: -3px;
-// 		outline: 3px rgb(255 255 255 / 90%) dashed;
-// 	}
-// }
-// .marquee-track {
-// 	overflow: hidden;
-// 	// max-width: 100%;
-// 	pointer-events: none;
-// }
-// .marquee-items > * {
-// 	pointer-events: all;
-// }
-
-// .marquee a {
-// 	cursor: pointer;
-// }
-// .marquee-track.duplicate { position: absolute; top: 0; left: 0; right: 0; }
-
-
-
-// .marquee.scroll-under::-webkit-scrollbar {
-// 	height: var(--scrollbar-height);
-// }
-// .marquee.scroll-under::-webkit-scrollbar-track {
-// 	background: rgb(77 75 75);
-// }
-// .marquee.scroll-under::-webkit-scrollbar-thumb {
-// 	background: rgb(156 156 156);
-// }
-
-// .marquee.scroll-under {
-// 	padding-bottom: var(--scrollbar-height);
-// 	margin-bottom: -20px;
-// }
-// .marquee.scroll-under:hover {
-// 	padding-bottom: 0;
-// 	overflow: scroll hidden;
-// }
-
-
-// .marquee-items p {
-// 	cursor: default;
-// 	margin-right: 1em;
-// 	user-select: none;
-// }
-// .marquee-items img {
-// 	width: 80px;
-// 	height: 31px;
-// }
 
 
 /* ✿ ╟━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╢ ✿ */
 
+/* awasome marquee - see info at https://github.com/awasaka01/awasome-website-01/blob/main/README.md */
 
+/* overall container for the marquee, sets default values and stuff */
 .marquee {
-	--speed: 1s;
-	--gradient-size: 9%;
+	--speed: 80;
+	--fadeout-size: 5px;
+	--gradient-size: 30px;
 	--scrollbar-height: 12px;
 	--children: 19;
-	overflow: visible;
-	.marquee-viewport {
-		height: 31px;
-		width: 100%;
-		display: grid;
-		overflow: hidden;
-		.marquee-track {
-			display: flex;
-			justify-content: space-around;
-			min-width: 100%;
-			width: max-content;
-			> * {
-				--i: calc(var(--nth-child) - 1);
-				order: var(--i);
-				display: block;
-			}
-		}
-	}
+	--gradient-color: rgb(0 0 0 / 60%);
+	--background: rgb(0 0 0 / 20%);
+	--width-per-child: 200;
+	// Calculated values, not to be set by user
+	--animation-distance: calc(var(--width-per-child) * var(--children));
+	--duration: calc(1s * (var(--animation-distance) / var(--speed)));
 }
+/* viewport, area that is visible, like a window into the track */
+.marquee .marquee-viewport {
+	width: 100%;
+	display: flex;
+	overflow: hidden;
+	mask-image: linear-gradient(to right, #0000 0%, #fff var(--fadeout-size) calc(100% - var(--fadeout-size)), #0000 100%);
+	mask-position: left;
+	mask-size: 100% 100%;
+	position: relative;
+	justify-content: flex-start;
+}
+/* track, contains all items - if not enough content to fill the viewport, it's spaced out */
+.marquee .marquee-viewport .marquee-track {
+	display: grid;
+	grid-auto-flow: column;
+	flex-shrink: 0;
+	justify-content: start;
+	justify-items: center;
+	grid-template-columns: repeat(var(--children), 1fr);
+	min-width: calc(100% * var(--children) / (var(--children) - 1)); // this if breaks: calc(100% * (var(--children) + 1) / var(--children));
+	width: max-content;
+	background-color: var(--background);
+}
+/* each item in the track */
+.marquee .marquee-viewport .marquee-track > * {
+	--i: calc(var(--nth-child) - 1);
+	width: 100%;
+	display: flex;
+	place-content: center center;
+	place-items: center center;
+	position: relative;
+	// box-shadow: inset 0 0 0 2px teal;
+	// animation-play-state: paused;
+}
+/* ❀ ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴ ❀ */
+
+.marquee-viewport::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to right, var(--gradient-color) 0%, transparent var(--gradient-size) calc(100% - var(--gradient-size)), var(--gradient-color) 100%); }
 
 /* ❀ ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴ ❀ */
 
+
+
+/* ~~~~~ west / right-to-left scrolling animation ~~~~~ */
+.marquee.direction-west .marquee-track > *,
+.marquee.rtl .marquee-track > *,
+.marquee.W .marquee-track > *, {
+	animation: LTRscroll var(--duration) linear infinite reverse;
+	animation-delay: calc((var(--duration) / var(--children) * (var(--children) - var(--i) - 1)) * -1);
+}
+
+
+/* ~~~~~ (default) left to right scrolling animation ~~~~~ */
+.marquee.ltr .marquee-track > *, .marquee:not(.rtl) .marquee-track > * {
+	animation: LTRscroll var(--duration) linear infinite;
+	animation-delay: calc((var(--duration) / var(--children) * (var(--i) + 1)) * -1);
+}
+@keyframes LTRscroll { /* from right edge of item touching left edge of viewport to far right end of track */
+	from { transform: translateX(calc(-100% * (var(--i) + 1))); }
+	to { transform: translateX(calc(100% * (var(--children) - var(--i) - 1))); }
+}
+
+
+
+
+
+.marquee.hover-pause:hover .marquee-track > * { animation-play-state: paused !important; }
+
+/* ~~~~~ (default) left to right scrolling animation ~~~~~ */
+// .marquee.ltr .marquee-track > *, .marquee:not(.rtl) .marquee-track > * { animation-direction: reverse; }
+
+// .marquee.rtl .marquee-track > * {
+// 	animation: LTRscroll var(--duration) linear infinite;
+// 	animation-delay: calc(var(--duration) / var(--children) * var(--i) * -1);
+// }
+// @keyframes LTRscroll { /* from right edge of item touching left edge of viewport to far right end of track */
+// 	from { transform: translateX(calc(100% * (var(--children) - var(--i) - 1))); }
+// 	to { transform: translateX(calc(-100% * (var(--i) + 1))); }
+// }
+/* ❀ ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴ ❀ */
+
+/* ~~~~~ hover highlights ~~~~~ */
+
+// 3 spaced pixels corner border
+.marquee.hover-highlight-1 .marquee-track > *:hover::before {
+	content: "";
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	pointer-events: none;
+	inset: 0;
+	color: rgb(255 255 255);
+
+	--square-size: 2px;
+	--square-size-2: calc(var(--square-size) * 2);
+	--square-size-4: calc(var(--square-size) * 4);
+	background:
+		/* top-left corner */
+		repeating-linear-gradient(90deg, currentcolor 0 var(--square-size), transparent var(--square-size) var(--square-size-2)) top left,
+		repeating-linear-gradient(180deg, currentcolor 0 var(--square-size), transparent var(--square-size) var(--square-size-2)) top left,
+		/* top-right corner */
+		repeating-linear-gradient(270deg, currentcolor 0 var(--square-size), transparent var(--square-size) var(--square-size-2)) top right,
+		repeating-linear-gradient(180deg, currentcolor 0 var(--square-size), transparent var(--square-size) var(--square-size-2)) top right,
+		/* bottom-left corner */
+		repeating-linear-gradient(90deg, currentcolor 0 var(--square-size), transparent var(--square-size) var(--square-size-2)) bottom left,
+		repeating-linear-gradient(0deg, currentcolor 0 var(--square-size), transparent var(--square-size) var(--square-size-2)) bottom left,
+		/* bottom-right corner */
+		repeating-linear-gradient(270deg, currentcolor 0 var(--square-size), transparent var(--square-size) var(--square-size-2)) bottom right,
+		repeating-linear-gradient(0deg, currentcolor 0 var(--square-size), transparent var(--square-size) var(--square-size-2)) bottom right;
+	background-size: var(--square-size-4) var(--square-size), var(--square-size) var(--square-size-4);
+	background-repeat: no-repeat;
+}
+
+
+/* ❀ ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴ ❀ */
+
+
 /* use 'contain: paint' for clipping instead of 'overflow: hidden' if it's supported - prevents image unloading issues on firefox */
-@supports (contain: paint) { .marquee-viewport { contain: paint; overflow: visible !important; } }
+@supports (contain: paint) { .marquee-viewport { contain: paint; overflow: unset !important; } }
 /* miscellaneous things that may or may not fix issues with image unloading */
 .marquee-track img { backface-visibility: hidden; }
 .marquee-track { transform-style: preserve-3d; }
 .marquee-track > * { will-change: transform; }
-
-/* ❀ ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴ ❀ */
-
-/* ~~~~~ right to left animation ~~~~~ */
-.marquee.rtl .marquee-track > * {
-	animation: RTLscroll var(--speed) linear infinite;
-	animation-delay: calc(var(--speed) / var(--children) * var(--i) * -1);
-}
-@keyframes RTLscroll { /* from right edge of item touching left edge of viewport to far right end of track */
-	from { transform: translateX(calc(100% * (var(--children) - var(--i) - 1))); }
-	to { transform: translateX(calc(-100% * (var(--i) + 1))); }
-}
-
-/* ~~~~~ left to right animation ~~~~~ */
-.marquee.ltr .marquee-track > * {
-	animation: LTRscroll var(--speed) linear infinite;
-	animation-delay: calc(var(--speed) / var(--children) * var(--i) * -1);
-}
-.marquee.ltr .marquee-viewport { justify-content: end; }
-@keyframes LTRscroll { /* from far left end of track to left edge of item touching right edge of viewport */
-	from { transform: translateX(calc(-100% * (var(--i)))); }
-	to { transform: translateX(calc(100% * (var(--children) - var(--i)))); }
-}
+/* removes whitespace around images */
+img { vertical-align: middle; }
 
 
 /* ✿ ╟━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╢ ✿ */
@@ -254,6 +250,12 @@ img { vertical-align: middle; }
 // 	}
 // }
 
+// .marquee.ltr .marquee-track, .marquee:not(.rtl) .marquee-track { justify-content: end; }
+// .marquee.ltr .marquee-track, .marquee:not(.rtl) .marquee-viewport { justify-content: flex-end; }
+// @keyframes LTRscroll { /* from far left end of track to left edge of item touching right edge of viewport */
+// 	from { transform: translateX(calc(-100% * (var(--i)))); }
+// 	to { transform: translateX(calc(100% * (var(--children) - var(--i)))); }
+// }
 // .marquee-track * {
 // 	will-change: transform;
 // 	transform: translateZ(0);

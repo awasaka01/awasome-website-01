@@ -5,195 +5,90 @@ description: silly little website
 ---
 {{ layout "main-base.vto" }} 
 {{#  ↓ Content to insert in <head> ↓  #}} {{ slot head }} 
-<link rel="stylesheet" href="./nth.css">
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/awasaka01/css-nth-child-variables@master/css/100-vars.css">
 {{#  ↓ Content to insert in <body> ↓  #}} {{ /slot }}  
 
 
 <main>
 	<a href="/" class="text">../homepage/</a>
 	<p><br></p>
-{{# 
-	<h4>marquee with link images</h4>
-	<p>- no additional classes</p>
-	<p>there's not enough content to fully fill the marquee, so it's spaced out</p>
-
-	<div class="marquee" aria-role="marquee" aria-label="Scrolling Buttons">
-		<div class="marquee-track"><div class="marquee-items">
-			<a tabindex="0" href="https://cataas.com/cat"><img width="88" height="31" src="/images/raw/buttons/template-button-1.png"></a>
-			<a tabindex="0" href="https://cataas.com/cat"><img width="88" height="31" src="/images/raw/buttons/template-button-3.png"></a>
-			<a tabindex="0" href="https://cataas.com/cat"><img width="88" height="31" src="/images/raw/buttons/template-button-5.png"></a>
-			<a tabindex="0" href="https://cataas.com/cat"><img width="88" height="31" src="/images/raw/buttons/template-button-7.png"></a>
-			<a tabindex="0" href="https://cataas.com/cat"><img width="88" height="31" src="/images/raw/buttons/template-button-9.png"></a>
-		</div></div>
-		<div class="marquee-track duplicate" aria-hidden="true"><div class="marquee-items">
-			<a tabindex="-1" href="https://cataas.com/cat"><img width="88" height="31" src="/images/raw/buttons/template-button-1.png"></a>
-			<a tabindex="-1" href="https://cataas.com/cat"><img width="88" height="31" src="/images/raw/buttons/template-button-3.png"></a>
-			<a tabindex="-1" href="https://cataas.com/cat"><img width="88" height="31" src="/images/raw/buttons/template-button-5.png"></a>
-			<a tabindex="-1" href="https://cataas.com/cat"><img width="88" height="31" src="/images/raw/buttons/template-button-7.png"></a>
-			<a tabindex="-1" href="https://cataas.com/cat"><img width="88" height="31" src="/images/raw/buttons/template-button-9.png"></a>
-		</div></div>
-	</div>
-
-
-	<p><br><br></p>
-
-
-	<h4>marquee with text</h4>
-	<p>+ slower</p>
-	<p>+ nopause</p>
-
-	<div class="marquee slower nopause" aria-role="marquee" aria-label="Scrolling Buttons">
-		<div class="marquee-track"><div class="marquee-items">
-			<p>cat</p><p>dog</p><p>elephant</p><p>lion</p><p>tiger</p><p>leopard</p><p>jaguar</p>
-			<p>cheetah</p><p>hyena</p><p>wolf</p><p>bear</p><p>monkey</p><p>gorilla</p><p>kangaroo</p>
-			<p>koala</p><p>panda</p><p>raccoon</p><p>squirrel</p><p>chipmunk</p><p>hedgehog</p><p>gerbil</p>
-		</div></div>
-		<div class="marquee-track duplicate" aria-hidden="true"><div class="marquee-items">
-			<p>cat</p><p>dog</p><p>elephant</p><p>lion</p><p>tiger</p><p>leopard</p><p>jaguar</p>
-			<p>cheetah</p><p>hyena</p><p>wolf</p><p>bear</p><p>monkey</p><p>gorilla</p><p>kangaroo</p>
-			<p>koala</p><p>panda</p><p>raccoon</p><p>squirrel</p><p>chipmunk</p><p>hedgehog</p><p>gerbil</p>
-		</div></div>
-	</div>
-
-
-	<p><br><br></p>
-
-
-	<h4>marquee filled up with images</h4>
-
-	<div class="marquee" aria-role="marquee" aria-label="Scrolling Buttons">
-		<div class="marquee-track"><div class="marquee-items">
-			<img src="/images/raw/buttons/template-button-1.png">
-			<img src="/images/raw/buttons/template-button-2.png">
-			<img src="/images/raw/buttons/template-button-3.png">
-			<img src="/images/raw/buttons/template-button-4.png">
-			<img src="/images/raw/buttons/template-button-5.png">
-			<img src="/images/raw/buttons/template-button-6.png">
-			<img src="/images/raw/buttons/template-button-7.png">
-			<img src="/images/raw/buttons/template-button-8.png">
-			<img src="/images/raw/buttons/template-button-9.png">
-			<img src="/images/raw/buttons/template-button-10.png">
-			<img src="/images/raw/buttons/template-button-11.png">
-			<img src="/images/raw/buttons/template-button-12.png">
-			<img src="/images/raw/buttons/template-button-13.png">
-			<img src="/images/raw/buttons/template-button-14.png">
-			<img src="/images/raw/buttons/template-button-15.png">
-			<img src="/images/raw/buttons/template-button-16.png">
-			<img src="/images/raw/buttons/template-button-17.png">
-			<img src="/images/raw/buttons/template-button-18.png">
-			<img src="/images/raw/buttons/template-button-19.png">
-		</div></div>
-		<div class="marquee-track duplicate" aria-hidden="true"><div class="marquee-items">
-			<img src="/images/raw/buttons/template-button-1.png">
-			<img src="/images/raw/buttons/template-button-2.png">
-			<img src="/images/raw/buttons/template-button-3.png">
-			<img src="/images/raw/buttons/template-button-4.png">
-			<img src="/images/raw/buttons/template-button-5.png">
-			<img src="/images/raw/buttons/template-button-6.png">
-			<img src="/images/raw/buttons/template-button-7.png">
-			<img src="/images/raw/buttons/template-button-8.png">
-			<img src="/images/raw/buttons/template-button-9.png">
-			<img src="/images/raw/buttons/template-button-10.png">
-			<img src="/images/raw/buttons/template-button-11.png">
-			<img src="/images/raw/buttons/template-button-12.png">
-			<img src="/images/raw/buttons/template-button-13.png">
-			<img src="/images/raw/buttons/template-button-14.png">
-			<img src="/images/raw/buttons/template-button-15.png">
-			<img src="/images/raw/buttons/template-button-16.png">
-			<img src="/images/raw/buttons/template-button-17.png">
-			<img src="/images/raw/buttons/template-button-18.png">
-			<img src="/images/raw/buttons/template-button-19.png">
-		</div></div>
-	</div>
-
-
-	<p><br><br></p>
-
-
-	<h4>marquee filled up with images</h4>
-	<p>+ scroll-under</p>
-
-	<div class="marquee scroll-under" aria-role="marquee" aria-label="Scrolling Buttons">
-		<div class="marquee-track"><div class="marquee-items">
-			<img src="/images/raw/buttons/template-button-1.png">
-			<img src="/images/raw/buttons/template-button-2.png">
-			<img src="/images/raw/buttons/template-button-3.png">
-			<img src="/images/raw/buttons/template-button-4.png">
-			<img src="/images/raw/buttons/template-button-5.png">
-			<img src="/images/raw/buttons/template-button-6.png">
-			<img src="/images/raw/buttons/template-button-7.png">
-			<img src="/images/raw/buttons/template-button-8.png">
-			<img src="/images/raw/buttons/template-button-9.png">
-			<img src="/images/raw/buttons/template-button-10.png">
-			<img src="/images/raw/buttons/template-button-11.png">
-			<img src="/images/raw/buttons/template-button-12.png">
-			<img src="/images/raw/buttons/template-button-13.png">
-			<img src="/images/raw/buttons/template-button-14.png">
-			<img src="/images/raw/buttons/template-button-15.png">
-			<img src="/images/raw/buttons/template-button-16.png">
-			<img src="/images/raw/buttons/template-button-17.png">
-			<img src="/images/raw/buttons/template-button-18.png">
-			<img src="/images/raw/buttons/template-button-19.png">
-		</div></div>
-		<div class="marquee-track duplicate" aria-hidden="true"><div class="marquee-items">
-			<img src="/images/raw/buttons/template-button-1.png">
-			<img src="/images/raw/buttons/template-button-2.png">
-			<img src="/images/raw/buttons/template-button-3.png">
-			<img src="/images/raw/buttons/template-button-4.png">
-			<img src="/images/raw/buttons/template-button-5.png">
-			<img src="/images/raw/buttons/template-button-6.png">
-			<img src="/images/raw/buttons/template-button-7.png">
-			<img src="/images/raw/buttons/template-button-8.png">
-			<img src="/images/raw/buttons/template-button-9.png">
-			<img src="/images/raw/buttons/template-button-10.png">
-			<img src="/images/raw/buttons/template-button-11.png">
-			<img src="/images/raw/buttons/template-button-12.png">
-			<img src="/images/raw/buttons/template-button-13.png">
-			<img src="/images/raw/buttons/template-button-14.png">
-			<img src="/images/raw/buttons/template-button-15.png">
-			<img src="/images/raw/buttons/template-button-16.png">
-			<img src="/images/raw/buttons/template-button-17.png">
-			<img src="/images/raw/buttons/template-button-18.png">
-			<img src="/images/raw/buttons/template-button-19.png">
-		</div></div>
-	</div>
-
-
-	<p><br><br></p> #}}
-
 
 	<h4>marquee2</h4>
 	<p></p>
+tdodo: make  css  nth  js script,. user can specifcy element or,,. just nth vars class and have it atuo
 
-	<div class="marquee ltr" aria-role="marquee" aria-label="Scrolling Buttons">
+
+	<p><br><br></p>
+
+	{{# <div style="--children: 4;" class="marquee ltr" aria-role="marquee" aria-label="Scrolling Buttons">
+		<div class="marquee-viewport"><div class="marquee-track"><div><img src="/images/raw/buttons/template-button-1.png"></div><div><img src="/images/raw/buttons/template-button-2.png"></div><div><img src="/images/raw/buttons/template-button-3.png"></div><div><img src="/images/raw/buttons/template-button-4.png"></div>
+		</div></div>
+	</div> #}}
+
+	<p><br><br></p>
+
+	<div style="--children: 20;" class="marquee rtl" aria-role="marquee" aria-label="Scrolling Buttons">
 		<div class="marquee-viewport"><div class="marquee-track">
-			<img src="/images/raw/buttons/template-button-1.png">
-			<img src="/images/raw/buttons/template-button-2.png">
-			<img src="/images/raw/buttons/template-button-3.png">
-			<img src="/images/raw/buttons/template-button-4.png">
-			<img src="/images/raw/buttons/template-button-5.png">
-			<img src="/images/raw/buttons/template-button-6.png">
-			<img src="/images/raw/buttons/template-button-7.png">
-			<img src="/images/raw/buttons/template-button-8.png">
-			<img src="/images/raw/buttons/template-button-9.png">
-			<img src="/images/raw/buttons/template-button-10.png">
-			<img src="/images/raw/buttons/template-button-11.png">
-			<img src="/images/raw/buttons/template-button-12.png">
-			<img src="/images/raw/buttons/template-button-13.png">
-			<img src="/images/raw/buttons/template-button-14.png">
-			<img src="/images/raw/buttons/template-button-15.png">
-			<img src="/images/raw/buttons/template-button-16.png">
-			<img src="/images/raw/buttons/template-button-17.png">
-			<img src="/images/raw/buttons/template-button-18.png">
-			<img src="/images/raw/buttons/template-button-19.png">
+			<span><p><--</p></span>
+			<div><img src="/images/raw/buttons/template-button-1.png"></div><div><img src="/images/raw/buttons/template-button-2.png"></div>
+			<div><img src="/images/raw/buttons/template-button-3.png"></div><div><img src="/images/raw/buttons/template-button-4.png"></div>
+			<div><img src="/images/raw/buttons/template-button-5.png"></div><div><img src="/images/raw/buttons/template-button-6.png"></div>
+			<div><img src="/images/raw/buttons/template-button-7.png"></div><div><img src="/images/raw/buttons/template-button-8.png"></div>
+			<div><img src="/images/raw/buttons/template-button-9.png"></div><div><img src="/images/raw/buttons/template-button-10.png"></div>
+			<div><img src="/images/raw/buttons/template-button-11.png"></div><div><img src="/images/raw/buttons/template-button-12.png"></div>
+			<div><img src="/images/raw/buttons/template-button-13.png"></div><div><img src="/images/raw/buttons/template-button-14.png"></div>
+			<div><img src="/images/raw/buttons/template-button-15.png"></div><div><img src="/images/raw/buttons/template-button-16.png"></div>
+			<div><img src="/images/raw/buttons/template-button-17.png"></div><div><img src="/images/raw/buttons/template-button-18.png"></div>
+			<div><img src="/images/raw/buttons/template-button-19.png"></div>
+		</div></div>
+	</div>
+
+	<div style="--children: 20;" class="marquee ltr" aria-role="marquee" aria-label="Scrolling Buttons">
+		<div class="marquee-viewport"><div class="marquee-track">
+			<span><p>--></p></span>
+			<span><img src="/images/raw/buttons/template-button-1.png"></span><span><img src="/images/raw/buttons/template-button-2.png"></span><span><img src="/images/raw/buttons/template-button-3.png"></span><span><img src="/images/raw/buttons/template-button-4.png"></span><span><img src="/images/raw/buttons/template-button-5.png"></span><span><img src="/images/raw/buttons/template-button-6.png"></span><span><img src="/images/raw/buttons/template-button-7.png"></span><span><img src="/images/raw/buttons/template-button-8.png"></span><span><img src="/images/raw/buttons/template-button-9.png"></span><span><img src="/images/raw/buttons/template-button-10.png"></span><span><img src="/images/raw/buttons/template-button-11.png"></span><span><img src="/images/raw/buttons/template-button-12.png"></span><span><img src="/images/raw/buttons/template-button-13.png"></span><span><img src="/images/raw/buttons/template-button-14.png"></span><span><img src="/images/raw/buttons/template-button-15.png"></span><span><img src="/images/raw/buttons/template-button-16.png"></span><span><img src="/images/raw/buttons/template-button-17.png"></span><span><img src="/images/raw/buttons/template-button-18.png"></span><span><img src="/images/raw/buttons/template-button-19.png"></span>
 		</div></div>
 	</div>
 
 
+	<div style="--children: 26; --speed: 40;" class="marquee ltr hover-pause hover-highlight-1" aria-role="marquee" aria-label="Scrolling Buttons">
+		<div class="marquee-viewport"><div class="marquee-track">
+			<span><p>a</p></span> <span><p>b</p></span> <span><p>c</p></span> <span><p>d</p></span> <span><p>e</p></span> <span><p>f</p></span> <span><p>g</p></span> <span><p>h</p></span> <span><p>i</p></span> <span><p>j</p></span> <span><p>k</p></span> <span><p>l</p></span> <span><p>m</p></span> <span><p>n</p></span> <span><p>o</p></span> <span><p>p</p></span> <span><p>q</p></span> <span><p>r</p></span> <span><p>s</p></span> <span><p>t</p></span> <span><p>u</p></span> <span><p>v</p></span> <span><p>w</p></span> <span><p>x</p></span> <span><p>y</p></span> <span><p>z</p></span>
+		</div></div>
+	</div>
 
 
+	{{# <p><br><br></p>
 
+	<div style="--children: 13;" class="marquee rtl nopause" aria-role="marquee" aria-label="Scrolling Buttons">
+		<div class="marquee-viewport"><div class="marquee-track">
+			<span><img src="/images/raw/buttons/template-button-1.png"></span><span><img src="/images/raw/buttons/template-button-2.png"></span><span><img src="/images/raw/buttons/template-button-3.png"></span><span><img src="/images/raw/buttons/template-button-4.png"></span><span><img src="/images/raw/buttons/template-button-5.png"></span><span><img src="/images/raw/buttons/template-button-6.png"></span><span><img src="/images/raw/buttons/template-button-7.png"></span><span><img src="/images/raw/buttons/template-button-8.png"></span><span><img src="/images/raw/buttons/template-button-9.png"></span><span><img src="/images/raw/buttons/template-button-10.png"></span><span><img src="/images/raw/buttons/template-button-11.png"></span><span><img src="/images/raw/buttons/template-button-12.png"></span><span><img src="/images/raw/buttons/template-button-13.png"></span>
+		</div></div>
+	</div>
+
+	<div class="t"><span><img src="/images/raw/buttons/template-button-1.png"></span><span><img src="/images/raw/buttons/template-button-2.png"></span><span><img src="/images/raw/buttons/template-button-3.png"></span><span><img src="/images/raw/buttons/template-button-4.png"></span><span><img src="/images/raw/buttons/template-button-5.png"></span><span><img src="/images/raw/buttons/template-button-6.png"></span><span><img src="/images/raw/buttons/template-button-7.png"></span><span><img src="/images/raw/buttons/template-button-8.png"></span><span><img src="/images/raw/buttons/template-button-9.png"></span><span><img src="/images/raw/buttons/template-button-10.png"></span><span><img src="/images/raw/buttons/template-button-11.png"></span><span><img src="/images/raw/buttons/template-button-12.png"></span><span><img src="/images/raw/buttons/template-button-13.png"></span></div>
+
+	<div style="--children: 6;" class="marquee rtl nopause" aria-role="marquee" aria-label="Scrolling Buttons">
+		<div class="marquee-viewport"><div class="marquee-track">
+			<div>this</div><div>only</div><div>has</div><div>5</div><div>elements</div><div>lying >:3 its six!!</div>
+		</div></div>
+	</div>
+
+	<p><br><br></p>
+
+	<div style="--children: 4;" class="marquee rtl" aria-role="marquee" aria-label="Scrolling Buttons">
+		<div class="marquee-viewport"><div class="marquee-track">
+			<div><img src="/images/raw/buttons/template-button-1.png"></div><div>yay</div><div><img src="/images/raw/buttons/template-button-3.png"></div><div><img src="/images/raw/buttons/template-button-4.png"></div>
+		</div></div>
+	</div>
+
+	<p><br><br></p>
+
+	<div style="--children: 6;" class="marquee rtl" aria-role="marquee" aria-label="Scrolling Buttons">
+		<div class="marquee-viewport"><div class="marquee-track">
+			<div><p>1</p></div> <div><p>2</p></div> <div><p>3</p></div> <div><p>4</p></div> <div><p>5</p></div> <div><p>6</p></div>
+		</div></div>
+	</div> #}}
 
 
 
