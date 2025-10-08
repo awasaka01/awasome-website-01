@@ -54,6 +54,7 @@ export default defineConfig((eleventyConfig) => {
 	eleventyConfig.addPassthroughCopy("./source/fonts/**/*");
 	eleventyConfig.setDataFileBaseName("override");
 
+	eleventyConfig.addShortcode("importmap", () => JSON.stringify(config.importmap));
 
 	// ~~~~~ Plugins ~~~~~
 	// | images: Compress images

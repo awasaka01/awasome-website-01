@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 	good();
 
+
 });
 
 
@@ -18,10 +19,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 function good () {
 	const good = document.querySelectorAll(".good") as NodeListOf<HTMLLinkElement>;
 	const transforms = () => [
-		`rotate(${util.ri(0, 360)}deg)`,
-		`scale(${util.ri(-1, 1, false)})`,
-		`translate(${util.ri(-5, 5, false)}px, ${util.ri(-5, 5, false)}px)`,
-		`skew(${util.ri(-10, 10, false)}deg, ${util.ri(-10, 10, false)}deg)`,
+		`rotate(${util.rr(0, 360)}deg)`,
+		`scale(${util.rr(-1, 1, false)})`,
+		`translate(${util.rr(-5, 5, false)}px, ${util.rr(-5, 5, false)}px)`,
+		`skew(${util.rr(-10, 10, false)}deg, ${util.rr(-10, 10, false)}deg)`,
 	].join(" ");
 
 	good.forEach((el) => {
@@ -36,7 +37,7 @@ function good () {
 // ---------------------------------------------------------------- 
 function shimmerLogo () {
 	const logo = document.getElementById("logo-text");
-	const cooldown = () => util.ri(1000, 5000);
+	const cooldown = () => util.rr(1000, 5000);
 }
 
 
@@ -52,14 +53,14 @@ async function slimey () {
 	(el) => {
 		// if (Math.random() > 0.5) return null;
 		return {
-		transforms : [`translateY(-${util.ri(10, 80)}px)`],
-		timing : "ease-out", duration : `${util.ri(250, 400)}ms`,
+		transforms : [`translateY(-${util.rr(10, 80)}px)`],
+		timing : "ease-out", duration : `${util.rr(250, 400)}ms`,
 	}; },
 	(el) => {
-		const angle = util.ri(1, 20) * (Math.random() > 0.5 ? 1 : -1);
+		const angle = util.rr(1, 20) * (Math.random() > 0.5 ? 1 : -1);
 		return {
 		transforms : [`rotate(${0 - angle}deg)`, `rotate(${angle * 2}deg)`],
-		timing : "ease-in-out", duration : `${util.ri(100, 400)}ms`,
+		timing : "ease-in-out", duration : `${util.rr(100, 400)}ms`,
 	}; },
 	// (el) => { return {
 	// 	transforms : [`rotate(${util.rr(-2, 2) * 360}deg)`],
@@ -147,7 +148,7 @@ async function animate (el : HTMLElement) {
 		});
 	}
 	child.style.transform = "";
-	setTimeout(() => slime.animating = false, util.ri(400, 700));
+	setTimeout(() => slime.animating = false, util.rr(400, 700));
 }
 
 

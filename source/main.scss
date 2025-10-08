@@ -13,9 +13,6 @@
 
 
 body {
-	font-family: "gohu11", monospace;
-	color: c(fg, 500);
-	background-color: c(bg, 500);
 	box-sizing: border-box;
 	padding: 2rem;
 }
@@ -68,6 +65,13 @@ main {
 	.c { color: c(hi, 400); }
 	.d { color: c(hi, 222); }
 	.e { color: c(hi, 222); }
+	.color-000 { color: c(fg, 550, 0); } 
+	.color-001 { color: c(fg, 100, 0, 0.1); }
+	text-shadow:
+		currentcolor 0 0 1em,
+		rgb(255 0 255 / 20%) 1ch 0 0.15em,
+		rgb(0 255 255 / 20%) -1ch 0 0.15em;
+	opacity: 0.9;
 }
 
 

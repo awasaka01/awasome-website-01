@@ -61,7 +61,7 @@ export const env_key = {
 
 /* ~~~~~ External Dependencies ~~~~~ */
 /** Import map to be included in each page's \<script type="importmap"> */
-const importmap = { "imports": {
+export const importmap = { "imports": {
 	"chroma-js": "https://unpkg.com/chroma-js@3.1.2/index.js",
 	"react": "https://esm.sh/react@18",
 	"react-dom/client": "https://esm.sh/react-dom@18/client",
@@ -69,6 +69,7 @@ const importmap = { "imports": {
 	"bezier-easing": "https://unpkg.com/bezier-easing@2.1.0/dist/bezier-easing.min.js",
 	"pathfinding": "https://cdn.jsdelivr.net/npm/pathfinding@0.0.1/pathfinding.min.js",
 	"@speed-highlight/core": "https://unpkg.com/@speed-highlight/core/dist/index.js",
+	"simplex-noise": "https://unpkg.com/simplex-noise@4.0.3/dist/esm/simplex-noise.js",
 	// "use-sound": "https://unpkg.com/use-sound@5.0.0/dist/use-sound.cjs.production.min.js",
 } };
 /** Imports to ignore whilst bundling source .ts files */
@@ -132,10 +133,10 @@ export const scss = {
 
 /* ~~~~~ Vento Config ~~~~~ */
 export const vento = { dataVarname: "global", includes: paths.includes };
-export const vento_data = { // data to pass to Vento templates, then can be accessd with {{ key }}:
-	"env": { ...env },
-	"importmap": JSON.stringify(importmap),
-};
+// export const vento_data = { // data to pass to Vento templates, then can be accessd with {{ key }}:
+// 	"env": { ...env },
+// 	"importmap": JSON.stringify(importmap),
+// };
 
 
 

@@ -95,20 +95,18 @@ p { cursor: default; }
 }
 
 main {
-	opacity: 0;
 	margin: auto;
 	// zoom: calc(1 / var(--device-pixel-ratio));
 	// transform: scale(var(--device-pixel-ratio));
 	transform-origin: 0 0;
   
 
-
 	position: relative;
 	display: inline-flex;
 	flex-direction: column;
 	width: min-content;
 	max-width: 100%;
-	background-color: c(bg, 400);
+	background-color: c(bg, 400, 0, 0.8);
 
 	gap: rlh(1);
 	padding: $padding;
