@@ -20,20 +20,18 @@ $themes: (
 		hi: (color: #53e4db), 
 	),
 	default: (
-		fg: (color: #fddbff, cmin: 0.02, cmax: 0.13, l: 0.1), 
-		bg: (color: oklch(30.208% 0.037 331.063), l: 0.035),
-		hi: (color: #d7617f, cmin: 0.1, cmax: 0.13), 
-	)
+		fg: (color: #eedaef, cmin: 0.02, cmax: 0.13), 
+		bg: (color: #2b2437, l-left: 0.03, c: 0.00003),
+		hi: (color: #d07aa6, cmin: 0.1, cmax: 0.17, l-left: 0.1), 
+	),
 );
-
-
 
 // ? Default options applied to every role in all themes
 $DEFAULT-color-options: (
 	// Adjustment factor means (n-500 * factor)
-	/* Lightness adjustment factor: */ l: 0.07,
-	/*    Chroma adjustment factor: */ c: -0.00002,
-	/*       Hue adjustment factor: */ h: 0.05,
+	/* Lightness adjustment factor: */ l: 0.06,
+	/*    Chroma adjustment factor: */ c: -0.000012,
+	/*       Hue adjustment factor: */ h: 0.02,
 	/*           Minimum lightness: */ lmin: 0,
 	/*           Maximum lightness: */ lmax: 100,
 	/*              Minimum chroma: */ cmin: 0,

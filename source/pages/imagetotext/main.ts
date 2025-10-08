@@ -181,7 +181,7 @@ document.addEventListener("DOMContentLoaded", () => {
 					/* ~~~~~ Handle character selection ~~~~~ */
 					if ((a !== 0 && options.characterSelection === "skip-space") || options.characterSelection === "cycle") {
 						characterIndex = (characterIndex + 1) % options.characters.length;
-					} else if (options.characterSelection === "random") { characterIndex = util.rr(0, options.characters.length - 1); }
+					} else if (options.characterSelection === "random") { characterIndex = util.ri(0, options.characters.length - 1); }
 					const character = a === 0 ? " " : options.characters[characterIndex];
 
 					/* ~~~~~ ansi ~~~~~ */

@@ -5,6 +5,11 @@
 	body {
 		font-family: "gohu11", monospace;
 		color: c(fg, 500);
+		background-color: c(bg, 250);
+		position: relative;
+	}
+	
+	main {
 		background-color: c(bg, 500);
 	}
 	a.text {

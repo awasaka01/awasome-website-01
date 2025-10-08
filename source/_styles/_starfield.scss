@@ -1,0 +1,45 @@
+#starfield {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 0;
+	overflow: hidden;
+	pointer-events: none;
+}
+
+ 
+    
+.star {
+	position: absolute;
+	pointer-events: none;
+	opacity: 0;
+	animation-fill-mode: both;
+}
+    
+@keyframes twinkle-1 {
+	0% { opacity: 0; }
+	40% { opacity: 1; }
+	60% { opacity: 1; }
+	100% { opacity: 0; }
+}
+	
+@keyframes twinkle-2 {
+	0% { opacity: 0; }
+	50% { opacity: 1; }
+	100% { opacity: 0; }
+}
+	
+@keyframes twinkle-3 {
+	0% { opacity: 0; }
+	25% { opacity: 1; }
+	50% { opacity: 0.9; }
+	75% { opacity: 1; }
+	100% { opacity: 0; }
+}
+    
+@keyframes rotate {
+	from { transform: rotate(0deg); }
+	to { transform: rotate(360deg); }
+}

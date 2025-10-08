@@ -8,12 +8,12 @@ description: silly little website
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/awasaka01/css-nth-child-variables@master/css/100-vars.css">
 {{#  ↓ Content to insert in <body> ↓  #}} {{ /slot }}  
 
-
-<main>
-	<a href="/" class="text">../homepage/</a>
+	<a href="/" class="text">../homepage.html</a>
 	<p><br></p>
+<main>
+	<div class="diagonal-stripes"></div>
 
-	<h4>marquee2</h4>
+	<h2>marquee2</h2>
 	<p></p>
 tdodo: make  css  nth  js script,. user can specifcy element or,,. just nth vars class and have it atuo
 
@@ -27,7 +27,7 @@ tdodo: make  css  nth  js script,. user can specifcy element or,,. just nth vars
 
 	<p><br><br></p>
 
-	<div style="--children: 20;" class="marquee rtl" aria-role="marquee" aria-label="Scrolling Buttons">
+	{{# <div style="--children: 20;" class="marquee rtl" aria-role="marquee" aria-label="Scrolling Buttons">
 		<div class="marquee-viewport"><div class="marquee-track">
 			<span><p><--</p></span>
 			<div><img src="/images/raw/buttons/template-button-1.png"></div><div><img src="/images/raw/buttons/template-button-2.png"></div>
@@ -48,7 +48,7 @@ tdodo: make  css  nth  js script,. user can specifcy element or,,. just nth vars
 			<span><p>--></p></span>
 			<span><img src="/images/raw/buttons/template-button-1.png"></span><span><img src="/images/raw/buttons/template-button-2.png"></span><span><img src="/images/raw/buttons/template-button-3.png"></span><span><img src="/images/raw/buttons/template-button-4.png"></span><span><img src="/images/raw/buttons/template-button-5.png"></span><span><img src="/images/raw/buttons/template-button-6.png"></span><span><img src="/images/raw/buttons/template-button-7.png"></span><span><img src="/images/raw/buttons/template-button-8.png"></span><span><img src="/images/raw/buttons/template-button-9.png"></span><span><img src="/images/raw/buttons/template-button-10.png"></span><span><img src="/images/raw/buttons/template-button-11.png"></span><span><img src="/images/raw/buttons/template-button-12.png"></span><span><img src="/images/raw/buttons/template-button-13.png"></span><span><img src="/images/raw/buttons/template-button-14.png"></span><span><img src="/images/raw/buttons/template-button-15.png"></span><span><img src="/images/raw/buttons/template-button-16.png"></span><span><img src="/images/raw/buttons/template-button-17.png"></span><span><img src="/images/raw/buttons/template-button-18.png"></span><span><img src="/images/raw/buttons/template-button-19.png"></span>
 		</div></div>
-	</div>
+	</div> #}}
 
 
 	<div style="--children: 26; --speed: 40;" class="marquee ltr hover-pause hover-highlight-1" aria-role="marquee" aria-label="Scrolling Buttons">
@@ -56,6 +56,27 @@ tdodo: make  css  nth  js script,. user can specifcy element or,,. just nth vars
 			<span><p>a</p></span> <span><p>b</p></span> <span><p>c</p></span> <span><p>d</p></span> <span><p>e</p></span> <span><p>f</p></span> <span><p>g</p></span> <span><p>h</p></span> <span><p>i</p></span> <span><p>j</p></span> <span><p>k</p></span> <span><p>l</p></span> <span><p>m</p></span> <span><p>n</p></span> <span><p>o</p></span> <span><p>p</p></span> <span><p>q</p></span> <span><p>r</p></span> <span><p>s</p></span> <span><p>t</p></span> <span><p>u</p></span> <span><p>v</p></span> <span><p>w</p></span> <span><p>x</p></span> <span><p>y</p></span> <span><p>z</p></span>
 		</div></div>
 	</div>
+
+
+	<div style="--children: 26; --speed: 40;" class="marquee rtl" aria-role="marquee" aria-label="Scrolling Buttons">
+		<div class="marquee-viewport"><div class="marquee-track">
+			<span><p>a</p></span> <span><p>b</p></span> <span><p>c</p></span> <span><p>d</p></span> <span><p>e</p></span> <span><p>f</p></span> <span><p>g</p></span> <span><p>h</p></span> <span><p>i</p></span> <span><p>j</p></span> <span><p>k</p></span> <span><p>l</p></span> <span><p>m</p></span> <span><p>n</p></span> <span><p>o</p></span> <span><p>p</p></span> <span><p>q</p></span> <span><p>r</p></span> <span><p>s</p></span> <span><p>t</p></span> <span><p>u</p></span> <span><p>v</p></span> <span><p>w</p></span> <span><p>x</p></span> <span><p>y</p></span> <span><p>z</p></span>
+		</div></div>
+	</div>
+
+
+	<section id="vertical-marquees">
+		<div style="--children: 26; --speed: 40;" class="marquee N" aria-role="marquee" aria-label="Scrolling Buttons">
+			<div class="marquee-viewport"><div class="marquee-track">
+				<span><p>a</p></span> <span><p>b</p></span> <span><p>c</p></span> <span><p>d</p></span> <span><p>e</p></span> <span><p>f</p></span> <span><p>g</p></span> <span><p>h</p></span> <span><p>i</p></span> <span><p>j</p></span> <span><p>k</p></span> <span><p>l</p></span> <span><p>m</p></span> <span><p>n</p></span> <span><p>o</p></span> <span><p>p</p></span> <span><p>q</p></span> <span><p>r</p></span> <span><p>s</p></span> <span><p>t</p></span> <span><p>u</p></span> <span><p>v</p></span> <span><p>w</p></span> <span><p>x</p></span> <span><p>y</p></span> <span><p>z</p></span>
+			</div></div>
+		</div>
+		<div style="--children: 26; --speed: 40;" class="marquee S" aria-role="marquee" aria-label="Scrolling Buttons">
+			<div class="marquee-viewport"><div class="marquee-track">
+				<span><p>a</p></span> <span><p>b</p></span> <span><p>c</p></span> <span><p>d</p></span> <span><p>e</p></span> <span><p>f</p></span> <span><p>g</p></span> <span><p>h</p></span> <span><p>i</p></span> <span><p>j</p></span> <span><p>k</p></span> <span><p>l</p></span> <span><p>m</p></span> <span><p>n</p></span> <span><p>o</p></span> <span><p>p</p></span> <span><p>q</p></span> <span><p>r</p></span> <span><p>s</p></span> <span><p>t</p></span> <span><p>u</p></span> <span><p>v</p></span> <span><p>w</p></span> <span><p>x</p></span> <span><p>y</p></span> <span><p>z</p></span>
+			</div></div>
+		</div>
+	</section>
 
 
 	{{# <p><br><br></p>

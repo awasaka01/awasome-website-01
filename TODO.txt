@@ -2,11 +2,11 @@
 
 ..................................................................
 ==== do toings:
-- image to text convertor
 
 
 ..................................................................
 ==== do to:
+- make steve ai
 - pixel to svg converter
 - add 404 page
 - blog system using html files in blog
@@ -23,6 +23,7 @@
 - learn and mabye implement css modules, for the class and id scoping
 - dont show build fialed on restart
 - replace sass error 11ty erroring with handle self
+- remove "skipped build" message and replace it with esbuild
 
 
 ..................................................................
@@ -36,6 +37,7 @@
 ..................................................................
 ==== do ne:
 
+- image to text convertor
 - lightningcss instead of esbuild css for autoprefix and its cool and fast and small and fast and small and cool
 
 

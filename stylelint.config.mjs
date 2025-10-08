@@ -76,8 +76,9 @@ export default defineConfig({
 		"shorthand-property-no-redundant-values": null, // (top: 0; left: 0; bottom: 0;	right: 0;) is not redundant
 		"font-family-no-missing-generic-family-keyword": null, // [possibly untrue:] the fontface has the defaults anyway???
 
+		"length-zero-no-unit": null,
 		"property-no-unknown": null,
-
+		"custom-property-empty-line-before": null,
 		"selector-no-qualifying-type": null, // < I THINK STYLELINT DEVS AREW INSANE WHY IS input[type='button'] BANNED BY DEFAULT
 	},	
 });

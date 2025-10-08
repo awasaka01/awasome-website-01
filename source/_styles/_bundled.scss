@@ -2,6 +2,9 @@
 // ~           in _bundled.scss ~ \\
 // -------------------------------\\
 
+// starfield
+@forward "./_starfield.scss";
+
 // base styles
 @forward "./_theme.scss";
 
