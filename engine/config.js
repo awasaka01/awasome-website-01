@@ -62,13 +62,12 @@ export const env_key = {
 /* ~~~~~ External Dependencies ~~~~~ */
 /** Import map to be included in each page's \<script type="importmap"> */
 export const importmap = { "imports": {
-	"chroma-js": "https://unpkg.com/chroma-js@3.1.2/index.js",
-	"react": "https://esm.sh/react@18",
-	"react-dom/client": "https://esm.sh/react-dom@18/client",
-	"react/jsx-runtime": "https://esm.sh/react@18/jsx-runtime",
-	"bezier-easing": "https://unpkg.com/bezier-easing@2.1.0/dist/bezier-easing.min.js",
-	"pathfinding": "https://cdn.jsdelivr.net/npm/pathfinding@0.0.1/pathfinding.min.js",
-	"@speed-highlight/core": "https://unpkg.com/@speed-highlight/core/dist/index.js",
+	"chroma-js": "https://esm.sh/chroma-js@3.1.2",
+	"react": "https://esm.sh/react@19",
+	"react-dom/": "https://esm.sh/react-dom@19/",
+	// "bezier-easing": "https://unpkg.com/bezier-easing@2.1.0/dist/bezier-easing.min.js",
+	// "pathfinding": "https://cdn.jsdelivr.net/npm/pathfinding@0.0.1/pathfinding.min.js",
+	// "@speed-highlight/core": "https://unpkg.com/@speed-highlight/core/dist/index.js",
 	"simplex-noise": "https://unpkg.com/simplex-noise@4.0.3/dist/esm/simplex-noise.js",
 	// "use-sound": "https://unpkg.com/use-sound@5.0.0/dist/use-sound.cjs.production.min.js",
 } };

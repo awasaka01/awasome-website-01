@@ -24,6 +24,7 @@
 - dont show build fialed on restart
 - replace sass error 11ty erroring with handle self
 - remove "skipped build" message and replace it with esbuild
+- add disable background button to homepage and cache it
 
 
 ..................................................................

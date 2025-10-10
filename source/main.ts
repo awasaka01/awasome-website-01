@@ -1,11 +1,11 @@
 import * as util from "./awa-util/core.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
-	slimey();
-	shimmerLogo();
+	// slimey();
+	// shimmerLogo();
 
 
-	good();
+	// good();
 
 
 });

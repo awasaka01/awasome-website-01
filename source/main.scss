@@ -6,15 +6,17 @@
 // @use "sass:selector";
 // @use "sass:string";
 
+@use "auto-resize-text.scss";
 @use "bundled.scss" as *;
 @include base-styles;
 @include reset;
+
 ///////////////////////////////////////////////////////////////////////////////////
 
 
 body {
 	box-sizing: border-box;
-	padding: 2rem;
+	// padding: 2rem;
 }
 body, html {
 	display: flex;
@@ -43,7 +45,7 @@ br {
 // - Main
 
 main {
-	background-color: c(bg, 500);
+	background-color: transparent;
 	max-width: 80ch;
 	margin: 0 auto;
 }
@@ -59,19 +61,15 @@ main {
 	white-space: pre;
 	margin: auto;
 	* { display: inline; }
-	.left { margin-right: auto; }
-	.a { color: c(hi, 600); }
-	.b { color: c(hi, 500); }
-	.c { color: c(hi, 400); }
-	.d { color: c(hi, 222); }
-	.e { color: c(hi, 222); }
 	.color-000 { color: c(fg, 550, 0); } 
-	.color-001 { color: c(fg, 100, 0, 0.1); }
+	.color-001 { color: c(fg, 550); opacity: 0.1; }
+	cursor: default;
+	opacity: 0.9;
+	padding: 1ch;
 	text-shadow:
 		currentcolor 0 0 1em,
 		rgb(255 0 255 / 20%) 1ch 0 0.15em,
 		rgb(0 255 255 / 20%) -1ch 0 0.15em;
-	opacity: 0.9;
 }
 
 
