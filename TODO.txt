@@ -2,11 +2,11 @@
 
 ..................................................................
 ==== do toings:
-- image to text convertor
 
 
 ..................................................................
 ==== do to:
+- make steve ai
 - pixel to svg converter
 - add 404 page
 - blog system using html files in blog
@@ -14,14 +14,15 @@
 - add github link | made with 👾 by aliens
 - last updated at, site and individual pages
 - make critical js reload the html possibley sommehow
-- uese particle / animation sysemte like particles.js or gsap
-- stars bg
 - theme preview and psospobsbisbly edit live (unlikely)
 - cat follow mouse (fake)
 - code snippets for use, sorted by tags
 - code block copy paste button
 - learn and mabye implement css modules, for the class and id scoping
 - dont show build fialed on restart
+- replace sass error 11ty erroring with handle self
+- remove "skipped build" message and replace it with esbuild
+- add disable background button to homepage and cache it
 
 
 ..................................................................
@@ -35,8 +36,9 @@
 ..................................................................
 ==== do ne:
 
+- image to text convertor
 - lightningcss instead of esbuild css for autoprefix and its cool and fast and small and fast and small and cool
-
+- stars bg
 
 
 ..................................................................
@@ -47,3 +49,9 @@
 - site history view, with snapshots in past, 
   + would NEED image versioning, and page versioning, maybe a snapshots/pages and a snashots/assets folder?, maybe a hash for each image so dont have to somehow manually version them? same for external files like js and css?
 - terminal animation library, see test.js, see https://github.com/chjj/blessed
+
+
+.................................................................
+==== aybe: 
+
+- uese particle / animation sysemte like particles.js or gsap

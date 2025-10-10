@@ -7,9 +7,14 @@ export * from "./_matrix.js";
 export * from "./_inputtracking.js";
 export * from "./_updateloop.js";
 
+/** DEPRECATED, use specific random int or float functions */
+export const rr = (min : number, max : number, floor = true) => floor ? Math.floor(Math.random() * (max - min + 1)) + min : Math.random() * (max - min + 1) + min;
 
 /** Generate a random whole number between min and max */
-export const rr = (min : number, max : number, floor = true) => floor ? Math.floor(Math.random() * (max - min + 1)) + min : Math.random() * (max - min + 1) + min;
+export const ri = (min : number, max : number) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+/** Generate a random float between min and max */
+export const rf = (min : number, max : number) => Math.random() * (max - min) + min;
 
 /** A promise that resolves after t milliseconds */
 export const delay = async (t = 1000) : Promise<void> => new Promise((resolve) => setTimeout(resolve, t));
@@ -32,9 +37,22 @@ export const showANSI = (str : string) => str.replace(/\x1b(\[[0-9;]+m)/g, "$&\\
 export const removeDuplicateRGBescapeCodes = /(?<fg>\\x1b\[38;2;(?:[0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]);(?:[0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]);(?:[0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])m){2,}|(?<bg>\\x1b\[48;2;(?:[0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]);(?:[0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]);(?:[0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])m){2,}/g;
 
 
+/* Generate a weighted array of values, based on an array of [weight, value] pairs, or an object */
+export function weightedArray<T> (pairs : [weight: number, value: T][] | { weight : number, value : T }[]) {
+
+	// Convert input to array of objects
+	if (Array.isArray(pairs[0])) pairs = pairs.map((pair) => ({ weight : pair[0], value : pair[1] }));
+	const pairObjects = pairs as { weight : number, value : T }[];
+
+	// Generate weighted array
+	const output = [] as T[];
+	for (const obj of pairObjects) { for (let i = 0; i < obj.weight; i++) { output.push(obj.value); } }
+	return output;
+}
+
 
 /** Returns a random value from an array of [weight, value] pairs */
-export function weightedRandom (pairs : [number, any][], returnArray = false) {
+export function weightedRandom<T> (pairs : [weight: number, value: T][], returnArray = false) {
 
 	// Create array with n number of each value
 	const ar = [];
@@ -43,11 +61,12 @@ export function weightedRandom (pairs : [number, any][], returnArray = false) {
 			ar.push(value);
 		}
 	}
-	if (returnArray) return ar;
+	if (returnArray) return ar as T[];
 
 	// Pick a random value from the array
-	return ar[Math.floor(Math.random() * ar.length)];
+	return ar[Math.floor(Math.random() * ar.length)] as T;
 }
+
 
 /** Returns a random value from an array */
 export function arrayRandom<T> (array : T[]) { return array[Math.floor(Math.random() * array.length)]; }

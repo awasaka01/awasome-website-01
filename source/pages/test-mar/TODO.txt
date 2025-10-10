@@ -1,0 +1,48 @@
+if cannot FULLY contain all items, aka even a single pixel over, enable the marquee.
+- though this would then cause other "issue" where elements could technically be without gaps if there was a duplicate item?
+- actually would have to be dupe all as all would need to be able to show half/half on each side
+- unfixable
+
+marquee enabled by default, spacing out elements,
+
+speed is calculated based on a set px/s speed, but this requires knowledge of the element width
+, impossible in css, so must manually set --child-width, or not care and just set speed anyway, it will be innacruate but consistent with itself
+, or override --duration manually, the amount of time for full loop
+, or use js script
+
+
+js script:
+auto pause marquees that dont need to be marquees, aka total width of all children is less than or equal to viewport width,
+automatically set --child-width
+
+
+
+classes:
+hover-pause : pause on hover
+rtl : right to left
+ltr : left to right (default)
+
+← E / direction-east / rtl ←  right to left
+→ W / direction-west / ltr →  left to right
+
+↑ N / direction-north ↑  bottom to top
+↓ S / direction-south ↓  top to bottom
+
+S  = top → bottom
+
+E  = right → left
+
+W  = left → right
+scrollbars (default none)
+- scrollbar-above
+- scrollbar-below
+
+hover-highlight-1, dotted kinda thing? 
+
+/ user option:
+nopause class for disbale hover pausing
+
+
+
+/ scrollbar typwes:
+https://foolishdeveloper.com/marquee-tag-using-html/

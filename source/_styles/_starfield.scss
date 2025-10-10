@@ -1,0 +1,94 @@
+
+body {
+}
+html, body {
+	overflow: hidden;
+	min-height: 100vh;
+}
+.bg-full {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: -1;
+	overflow: hidden;
+}
+
+// * { outline: 0.3px solid rgb(255 0 0 / 40%) !important; }
+.perspective-container {
+	perspective: 1000px;
+	perspective-origin: 50% 50%;
+	height: 100vh;
+	overflow: hidden scroll;
+}
+#wraper {
+	overflow: hidden;
+}
+.content {
+	transform-style: preserve-3d;
+	position: relative;
+	// your actual page content here creates the scroll height naturally
+}
+
+#starfield {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	transform-style: preserve-3d;
+}
+.star {
+
+	position: absolute;
+	// left: 0 !important; top: 0 !important;
+	transform-style: preserve-3d;
+}
+
+#space-background {
+	opacity: 0;
+	transition: opacity 1000ms ease-out;
+	image-rendering: pixelated;
+}
+
+#tw {
+	transform-style: preserve-3d;
+	opacity: 0;
+	transition: opacity 1000ms ease-out;
+	image-rendering: pixelated;
+	transform: translateZ(100px);
+}
+    
+// .star {
+// 	position: absolute;
+// 	pointer-events: none;
+// 	opacity: 0;
+// 	animation-fill-mode: both;
+// }
+    
+// @keyframes twinkle-1 {
+// 	0% { opacity: 0; }
+// 	40% { opacity: 1; }
+// 	60% { opacity: 1; }
+// 	100% { opacity: 0; }
+// }
+	
+// @keyframes twinkle-2 {
+// 	0% { opacity: 0; }
+// 	50% { opacity: 1; }
+// 	100% { opacity: 0; }
+// }
+	
+// @keyframes twinkle-3 {
+// 	0% { opacity: 0; }
+// 	25% { opacity: 1; }
+// 	50% { opacity: 0.9; }
+// 	75% { opacity: 1; }
+// 	100% { opacity: 0; }
+// }
+    
+// @keyframes rotate {
+// 	from { transform: rotate(0deg); }
+// 	to { transform: rotate(360deg); }
+// }

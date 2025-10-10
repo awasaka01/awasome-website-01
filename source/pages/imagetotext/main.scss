@@ -15,9 +15,20 @@
 /* ✿ ╟━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╢ ✿ */
 
 
+
 // - Root Properties
 $base-font-size: 18px;
 $base-line-height: 1.2;
+
+/* - Font based ratios, derived from the Pixel2 font */
+$ch-ratio: 0.53759765625;  // = 1101 / 2048 (0S/2 xAvgCharWidth)
+$lh-ratio: 1.18408203125;  // = 2425 / 2048 (sTypoAscender - sTypoDescender + sTypoLineGap)
+$cap-ratio: 0.63818359375; // = 1307 / 2048 (OS/2 sCapHeight)
+
+@function ch($font-size: $base-font-size) { @return $font-size * $ch-ratio; }
+@function lh($font-size: $base-font-size) { @return $font-size * $lh-ratio; }
+@function cap($font-size: $base-font-size) { @return $font-size * $cap-ratio; }
+
 
 // - Character-based units, tied to the root element to be consistent
 :root {
@@ -84,20 +95,18 @@ p { cursor: default; }
 }
 
 main {
-
 	margin: auto;
 	// zoom: calc(1 / var(--device-pixel-ratio));
 	// transform: scale(var(--device-pixel-ratio));
 	transform-origin: 0 0;
   
 
-
 	position: relative;
 	display: inline-flex;
 	flex-direction: column;
 	width: min-content;
 	max-width: 100%;
-	background-color: c(bg, 400);
+	background-color: c(bg, 400, 0, 0.8);
 
 	gap: rlh(1);
 	padding: $padding;

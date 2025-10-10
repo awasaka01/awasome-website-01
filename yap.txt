@@ -265,3 +265,31 @@ colorMatches: true
 
 <script>{{ include "./critical.js" }}</script> {{# Inline important Javascript #}} 
 {{ /layout }}
+
+
+
+
+
+
+
+
+<a class="skiplink" href="#after-marquee1">skip marquee</a>
+
+<a id="after-marquee1"></a>
+/* ~~~~~ [OPTIONAL] Stlying for the tab-only links for skipping the marquee ~~~~~ */
+.skiplink {
+	background-color: #ffffff;
+	color: #000000;
+	padding: 4px;
+	outline: 4px solid #423fff;
+
+	position: absolute;
+	z-index: 1000;
+	transform: translateY(-100%);
+	clip-path: rect(0 0 0 0);
+	pointer-events: none;
+}
+.skiplink:focus {
+	clip-path: none;
+	visibility: visible;
+}

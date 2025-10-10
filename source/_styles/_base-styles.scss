@@ -5,9 +5,14 @@
 	body {
 		font-family: "gohu11", monospace;
 		color: c(fg, 500);
+		background-color: c(bg, 250);
+		position: relative;
+	}
+	
+	main {
 		background-color: c(bg, 500);
 	}
-	a {
+	a.text {
 		color: c(hi, 500);
 		text-decoration: underline;
 		text-underline-offset: 0.15em;
@@ -52,4 +57,13 @@
 	> * {
 		grid-column: span 2;
 	}
+}
+
+
+.visually-hidden {
+	position: fixed;
+	opacity: 0;
+	visibility: hidden;
+	pointer-events: none;
+	z-index: 9999;
 }

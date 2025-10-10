@@ -1,0 +1,12 @@
+.auto-resize-text {
+	overflow: hidden visible; // x, y
+	box-sizing: border-box;
+	display: block;
+
+	width: auto;
+	max-width: 100%;
+	height: auto;
+
+	* { font-size: inherit; }
+	> * { width: max-content; margin: auto; display: block !important; }
+}
