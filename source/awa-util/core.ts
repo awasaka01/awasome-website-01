@@ -128,6 +128,16 @@ export function createElement (html : string) : HTMLElement {
 }
 
 
+/** Center text */
+export function padBoth (str : string, targetLength = process.stdout.columns ?? 80, char = " ") : string {
+	const strLength = removeANSI(str).length;
+	if (strLength >= targetLength) return str;
+
+	const left = Math.floor((targetLength - strLength) / 2);
+	const right = targetLength - strLength - left;
+	return "".padStart(left, char) + str + "".padStart(right, char);
+}
+
 
 
 interface FileUploaderOptions {

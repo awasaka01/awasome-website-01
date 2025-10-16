@@ -1,7 +1,6 @@
 
-
 ..................................................................
-==== do toings:
+==== do ing:
 
 
 ..................................................................
@@ -23,6 +22,29 @@
 - replace sass error 11ty erroring with handle self
 - remove "skipped build" message and replace it with esbuild
 - add disable background button to homepage and cache it
+- remove ovveruide.11tydata fronm dist
+- fix avif and webp not be uploaded to nekoweb and neociti,, probabley cache isue ? 
+- remove "11ty File changed: engine\sunnymiku.js (skips build)"
+- dry flag work for all files not just eleventy
+- forbid restart when not on watch mode as it breaks so much stuff i think
+
+
+.................................................................
+==== do mabye: 
+
+- log all index.html sizes after build
+- uese particle / animation sysemte like particles.js or gsap
+- custom vento template handler, steal code from https://github.com/noelforte/eleventy-plugin-vento
+
+
+..................................................................
+==== do ne:
+
+- image to text convertor
+- lightningcss instead of esbuild css for autoprefix and its cool and fast and small and fast and small and cool
+- stars bg
+- add reload on config.js change too
+- do a hard shutdown when errors occur
 
 
 ..................................................................
@@ -34,14 +56,6 @@
 
 
 ..................................................................
-==== do ne:
-
-- image to text convertor
-- lightningcss instead of esbuild css for autoprefix and its cool and fast and small and fast and small and cool
-- stars bg
-
-
-..................................................................
 ==== istanity:
 
 - download page as single file button... must replace all urls and embed images as data uris
@@ -49,9 +63,4 @@
 - site history view, with snapshots in past, 
   + would NEED image versioning, and page versioning, maybe a snapshots/pages and a snashots/assets folder?, maybe a hash for each image so dont have to somehow manually version them? same for external files like js and css?
 - terminal animation library, see test.js, see https://github.com/chjj/blessed
-
-
-.................................................................
-==== aybe: 
-
-- uese particle / animation sysemte like particles.js or gsap
+- 3D game, make movement good and then do the rest of eveything, first person because it be kindof surreal game

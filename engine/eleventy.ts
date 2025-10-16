@@ -1,26 +1,25 @@
-// - node modules
+// ✧ node modules
 import fs from "node:fs";
 import esbuild from "esbuild";
 import browserslist_esbuild from "browserslist-to-esbuild";
-const supported_browsers_esbuild = browserslist_esbuild(config.supported_browsers); // < convert browserslist to an esbuild compatible format
+const supported_browsers_esbuild = browserslist_esbuild(mono.supported_browsers); // < convert browserslist to an esbuild compatible format
 import { transform as lightningcss, browserslistToTargets } from "lightningcss";
-const supported_browsers_lightningcss = browserslistToTargets(config.supported_browsers); // < convert browserslist to a lightningcss compatible format
+const supported_browsers_lightningcss = browserslistToTargets(mono.supported_browsers); // < convert browserslist to a lightningcss compatible format
 
-
-// - 11ty plugins
+// ✧ 11ty plugins
 import ImagePlugin_11ty from "./11ty-plugin-image.js";
 import SassPlugin_11ty from "./11ty-plugin-sass.js";
 import preprocessors_11ty from "./11ty-preprocessors.js";
 import postprocessors_11ty from "./11ty-postprocessors.js";
 import { VentoPlugin } from "eleventy-plugin-vento";
 
-import { sassDebug, sassWarn } from "./build-logger.js";
-
-// - my config
-import * as config from "./config.js";
-const { log, err, colors, paths, absPaths } = config;
+// ✧ my imports:
+import * as util from "__util__";
+import * as mono from "./monolith.js";
+const { log, colors, err, paths, abs_paths } = mono;
 const { blue: b, pink: p, white: w } = colors;
-const env = process.env as config.env_type & NodeJS.ProcessEnv;
+const env = process.env as import("./config.js").env_type & NodeJS.ProcessEnv;
+
 
 // log("—— Eleventy Config started...");
 
@@ -40,7 +39,7 @@ import Eleventy, { defineConfig } from "11ty.ts";
 export default defineConfig((eleventyConfig) => {
 
 	// - Ignore files
-	eleventyConfig.ignores.add(`${config.paths.source}/_*{*/_*,*}`); // Ignore files and directories that start with an underscore  (glob to match _'s instead: !(_)*{*/!(_)*,*})
+	eleventyConfig.ignores.add(`${mono.paths.source}/_*{*/_*,*}`); // Ignore files and directories that start with an underscore  (glob to match _'s instead: !(_)*{*/!(_)*,*})
 	eleventyConfig.ignores.add("**/critical.js");
 	eleventyConfig.ignores.add(`**/*.{js,ts,tsx,jsx}`);
 
@@ -54,7 +53,7 @@ export default defineConfig((eleventyConfig) => {
 	eleventyConfig.addPassthroughCopy("./source/fonts/**/*");
 	eleventyConfig.setDataFileBaseName("override");
 
-	eleventyConfig.addShortcode("importmap", () => JSON.stringify(config.importmap));
+	eleventyConfig.addShortcode("importmap", () => JSON.stringify(mono.importmap));
 
 	// ~~~~~ Plugins ~~~~~
 	// | images: Compress images
@@ -65,9 +64,9 @@ export default defineConfig((eleventyConfig) => {
 	eleventyConfig.addPlugin(ImagePlugin_11ty({}));
 	eleventyConfig.addPlugin(preprocessors_11ty);
 	eleventyConfig.addPlugin(postprocessors_11ty);
-	eleventyConfig.addPlugin(VentoPlugin, { ventoOptions: { ...config.vento } });
+	eleventyConfig.addPlugin(VentoPlugin, { ventoOptions: { ...mono.vento } });
 	eleventyConfig.addPlugin(SassPlugin_11ty({
-		sassOptions: { ...config.scss, logger: { debug: sassDebug, warn: sassWarn } },
+		sassOptions: { ...mono.scss, logger: { debug: (m) => log(m, "sass"), warn: (m) => process.send({ type: "warning", message: m }) } },
 		postprocess: env.MINIFY_FILES === "true" ? undefined : (content, data, map) => {
 			const result = lightningcss({
 				filename: data.page.fileSlug + ".css",
@@ -81,8 +80,11 @@ export default defineConfig((eleventyConfig) => {
 		},
 	}));
 
+
+
+
 	eleventyConfig.setServerOptions({
-		port: config.port,
+		port: mono.port,
 		domDiff: true,
 		liveReload: true,
 		useCache: true,

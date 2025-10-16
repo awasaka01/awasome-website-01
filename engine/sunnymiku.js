@@ -14,7 +14,7 @@ process.env.FORCE_COLOR = "1";
 
 
 // - node modules
-import { fork } from "node:child_process";
+import { exec, execSync, fork } from "node:child_process";
 import crypto from "node:crypto";
 import path from "node:path";
 import fs from "node:fs";
@@ -31,9 +31,9 @@ import chalk from "chalk";
 
 
 // ! only import config that doesn't depend on env variables
-import { paths, absPaths, env_key, log, err, colors, divider } from "./config.js";
-import { fail } from "node:assert";
+import { paths, absPaths, env_key, colors } from "./config.js";
 const { blue: b, pink: p, white: w, warn } = colors;
+import { log, divider, err } from "./monolith.js";
 
 
 
@@ -45,6 +45,7 @@ console.log("");
 /* - Stores the PID's of all child processes */ /** @type {Set<number>} */
 const child_processes = new Set();
 
+let build_restarting = false;
 
 /* ~~~~~ Parse CLI Flags used to set Environment Variables ~~~~~ 
 - Search for flags defined in 'env_key',
@@ -65,12 +66,12 @@ process.env = { ...process.env, ...env };
 if (env.WATCH === "true") {
 	const width = process.stdout.columns || 80;
 	console.log(chalk.bgBlack.hex("#78ff60").bold("◢◤".repeat(~~(width / 2))));
-	log(`—— Running in watch mode!`);
-	log(`—— ${p(`> Press ${b.bold("Q")} to shutdown! or ${b.bold("R")} to restart! <`)}`);
+	log(`—— Running in watch mode!`, "miku");
+	log(`—— ${p(`> Press ${b.bold("Q")} to shutdown! or ${b.bold("R")} to restart! <`)}`, "miku");
 	console.log(chalk.bgBlack.hex("#78ff60").bold("◢◤".repeat(~~(width / 2))));
 	console.log("");
 }
-log(`—— Environment Variables: [ ${Object.entries(env).filter(([, v]) => v === "true").map(([k]) => k).join(", ")} ]`);
+log(`—— Environment Variables: [ ${Object.entries(env).filter(([, v]) => v === "true").map(([k]) => k).join(", ")} ]`, "miku");
 
 
 /* ~~~~~ Main Function ~~~~~ 
@@ -79,6 +80,7 @@ log(`—— Environment Variables: [ ${Object.entries(env).filter(([, v]) => v =
 	- Automatically re-run when files in engine/ change (with --watch)
 */
 async function build () {
+	build_restarting = false;
 
 	/* ~~~~~ 1. Ensure all directories exist ~~~~~ */
 	await Promise.all([
@@ -95,8 +97,8 @@ async function build () {
 
 
 	/* ~~~~~ 3. Run build.js ~~~~~ */
-	log(`🟢 Running ${b("build.js")}...`, p);
-	console.log(divider());
+	log(`👾 Running ${b("build.js")}...`, "miku");
+	console.log(divider(0));
 	const buildProcess = fork("./__compiled/engine/build.js", [], {
 		stdio: ["inherit", "inherit", "pipe", "ipc"],
 		env: { ...process.env, ...env },
@@ -115,14 +117,20 @@ async function build () {
 
 	/* ~~~~~ 5. Handle build.js exit ~~~~~ */
 	buildProcess.on("exit", (code, signal) => {
-		console.log(divider(true));
-		if (code === 0) log(`✅ ${b("build.js")} finished with code ${b.bold(code)}`, p);
-		else log(`❌ ${b("build.js")} failed with code ${colors.red.bold(code)}`, p);
+		if (build_restarting === true) return;
+		console.log(divider(1));
+
+		if (code === 0) log(`✅ ${b("build.js")} finished with code ${b.bold(code)}`, "miku");
+		else {
+			log(`❌ ${b("build.js")} failed with code ${colors.red.bold(code)}`, "miku");
+			log(`—— KILLING ALL NODE PROCESSES...`, "miku");
+			execSync("taskkill /F /IM node.exe"); // extra cleanup on errors
+		}
 		if (env.WATCH === "false") SHUTDOWN();
 	});
 
 	buildProcess.on("error", (err) => {
-		log(`❌ build.js failed to start: ${err.message}`, colors.red);
+		log(`❌ build.js failed to start: ${err.message}`, "miku");
 	});
 	buildProcess.stderr.on("data", (data) => {
 		console.log(data.toString());
@@ -137,13 +145,13 @@ async function build () {
 let watcher;
 if (env.WATCH === "true") {
 	let restartTimeout;
-	log("—— Watching engine folder for changes...");
+	log("—— Watching engine folder for changes...", "miku");
 	watcher = chokidar.watch(paths.engine, { ignoreInitial: true });
 	watcher.on("all", (eventType, path, stats) => {
-		if (!path.endsWith(".ts")) return;
+		if (path.endsWith(".js") && !path.endsWith("config.js")) return;
 		if (restartTimeout) clearTimeout(restartTimeout);
 		restartTimeout = setTimeout(async () => {
-			log(`🔧 Restarting ${b("build.js")} due to file changes in ${b(path)}...`, p, "\n");
+			log(`🔧 Restarting ${b("build.js")} due to file changes in ${b(path)}...`, "miku");
 			RESTART();
 		}, TIMEOUT);
 	});
@@ -153,6 +161,7 @@ if (env.WATCH === "true") {
 
 /* ~~~~~ Restart build.js ~~~~~ */
 async function RESTART () {
+	build_restarting = true;
 	await KILLALLCHILDREN();
 	build();
 }
@@ -162,8 +171,8 @@ async function RESTART () {
 let dead = false;
 async function SHUTDOWN () {
 	if (dead) { return; } dead = true; // < only run once
-	log(`🛑 Shutting down all processes...`, w);
-	if (watcher?.close) { log(`—— Closing file watcher...`); watcher.close(); }
+	log(`—— Shutting down all processes...`, "miku");
+	if (watcher?.close) { log(`—— Closing file watcher...`, "miku"); watcher.close(); }
 	await KILLALLCHILDREN();
 	process.exit(0); // < bug solfed: DO NOT DO THIS WITHOUT WAIT, KILLS PROCESS BEFORE CHILDREN ARE KILLED
 
@@ -199,12 +208,13 @@ if (process.stdin.isTTY && !process.env.CI) {
 		if (key === "q" || key === "\u0003") {
 			process.stdin.setRawMode(false);
 			process.stdin.pause();
-			log(`🛑 ${b.bold(key === "q" ? "Q" : "CTRL+C")} pressed...`, p);
+			log(`🛑 ${b.bold(key === "q" ? "Q" : "CTRL+C")} pressed...`, "miku");
 			SHUTDOWN();
 		}
 		else if (key === "r") {
-			log(`🛑 ${b.bold("R")} pressed...`, p);
-			log(`🔧 Restarting ${b("build.js")}...`, p, "\n");
+			console.log(divider(1));
+			log(`🛑 ${b.bold("R")} pressed...`, "miku");
+			log(`🔧 Restarting ${b("build.js")}... \n`, "miku");
 			RESTART();
 		}
 	});
@@ -252,7 +262,7 @@ async function compileTS (inputPath, outputPath, options = {}) {
 		= env.CLEAR_CACHE === "true" ? "the cache was cleared"
 		: !oldHash ? `${b(cacheFilePath)} didn't exist`
 		: "the files have changed";
-	log(p(`${chalk.bold.hex("#2f74c0")("TS")} Recompiling ${b(inputPath + "/")}`) + ` because ${reason}...`, w);
+	log(p(`${chalk.bold.hex("#2f74c0")("TS")} Recompiling ${b(inputPath + "/")}`) + ` because ${reason}...`, "miku");
 
 	// - Write the new hash and recompile
 	await fs.promises.writeFile(cacheFilePath, hash);

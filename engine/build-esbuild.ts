@@ -10,11 +10,12 @@ const supported_browsers_esbuild = browserslist_esbuild(config.supported_browser
 // - my config
 import * as util from "__util__";
 import * as config from "./config.js";
-const { log, err, colors, paths, absPaths } = config;
+const { err, colors, paths, absPaths } = config;
 const { blue: b, pink: p, white: w } = colors;
 const env = process.env as config.env_type & NodeJS.ProcessEnv;
 
 
+import { log } from "./monolith.js";
 
 
 /** Runs esbuild */
@@ -56,12 +57,12 @@ export default async function startEsbuildClient (entryPoints : string[], outdir
 
 	if (env.SERVE === "false") {
 		await esbuild.build(options);
-		log(`🥣 esbuild: Built ${b.bold(entryPoints.length)} file${entryPoints.length === 1 ? "" : "s"} to ${b(outdir)}`);
+		log(`🥣 esbuild: Built ${b.bold(entryPoints.length)} file${entryPoints.length === 1 ? "" : "s"} to ${b(outdir)}`, "esbuild");
 	}
 	else {
 		const ctx = await esbuild.context(options);
 		await ctx.watch();
-		log(`🥣 esbuild: Started watching ${b.bold(entryPoints.length)} file${entryPoints.length === 1 ? "" : "s"}`);
+		log(`🥣 esbuild: Started watching ${b.bold(entryPoints.length)} file${entryPoints.length === 1 ? "" : "s"}`, "esbuild");
 		return ctx;
 	}
 

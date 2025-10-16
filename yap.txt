@@ -293,3 +293,10 @@ colorMatches: true
 	clip-path: none;
 	visibility: visible;
 }
+
+
+why astro bad (for me):
+- spent 10 hours trying to figure out how to import typescript file, i think i had to do strange unintuitive undocumented inling of mystery functions
+- sass was difficult also but i did it
+- then had to figure out how to disable inlining the js, very confuseing
+- "i could never figure out how to do ts and scss files properly because their whole import system is weird, and it also forced me to use 2 custom tags instead of using slots because its so bad that imports dont work if they have ANY attributes, evn astro one"

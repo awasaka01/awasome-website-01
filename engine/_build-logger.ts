@@ -13,7 +13,8 @@ import chalk from "chalk";
 // - my config
 import * as util from "__util__";
 import * as config from "./config.js";
-const { log, err, colors, paths, absPaths } = config;
+const { err, paths, absPaths } = config;
+import { log, divider, colors } from "./monolith.js";
 const { blue: b, pink: p, white: w } = colors;
 const env = process.env as import("./config.js").env_type & NodeJS.ProcessEnv;
 
@@ -32,8 +33,6 @@ const fileType_colors = {
 	html: chalk.hex("#cea385"),
 	scss: chalk.hex("#cf649a"),
 };
-const prettyTag_11ty = chalk.hex("#8f7da3")(" 11ty ");
-
 
 /** @param {import("child_process").ChildProcess} eleventy_process */
 export default function modifyEleventyLog (eleventy_process) {
@@ -57,7 +56,8 @@ function pretty_eleventy_log (m) {
 
 	// - add colored channel based on file type for all "Writing <file> from..." messages
 	const fileType = [...m.matchAll(/from\s+\.\/[^\s]+\/[^\s]+\.(\w+)/g)]?.[0]?.[1];
-	if (fileType_colors[fileType]) channel = chalk.dim((fileType_colors[fileType])("▐▌"));
+
+	if (fileType && colors["lang" + fileType.toUpperCase()]) channel = chalk.dim((fileType_colors[fileType])("▐▌"));
 
 	// - custom overrides for specific messages
 	if (m.includes("Server at")) {
@@ -73,8 +73,7 @@ function pretty_eleventy_log (m) {
 	m = m.replace(/(?<=^(\x1b\[[0-9;]*m)*)( +)/gm, "");
 
 	// - combine all together
-	m = `${chalk.hex("#8f7da3")(" 11ty ")}${config.timestamp()} ${channel} ${m}`;
-	console.log(m);
+	log(`${channel} ${m}`, "11ty");
 }
 
 
@@ -103,7 +102,7 @@ export const sassWarn = (str : string) => {
 	const terminalWidth = process.stdout.columns ?? 80;
 	console.log(chalk.hex("#d4b942")("◢◤".repeat(terminalWidth / 2)));
 	console.log("");
-	console.log(`${chalk.hex("#cf649a")(" Sass ")}${config.timestamp()} ${str.replace("——", chalk.dim("——"))}`);
+	console.log(`${chalk.hex(mono)(" Sass ")}${config.timestamp()} ${str.replace("——", chalk.dim("——"))}`);
 	console.log("");
 	console.log(chalk.hex("#d4b942")("◢◤".repeat(terminalWidth / 2)));
 	// console.log(chalk.hex("#191717").bgHex("#d4b54e")("◿◸".repeat(terminalWidth / 2)));
