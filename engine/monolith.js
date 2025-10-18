@@ -5,7 +5,7 @@ import chroma from "chroma-js";
 import browserslist from "browserslist";
 
 // ✧ when accessed from outside of sunnymiku.js, process.env has extra keys:
-const env = /** @type {NodeJS.ProcessEnv & import('./monolith.js').env_type} */ (process.env);
+const env = /** @type {NodeJS.ProcessEnv & import('./monolith.js').env_arguments_type} */ (process.env);
 
 // ✧ env flags that allow color on github:
 chalk.level = 3; process.env.FORCE_COLOR = "1";
@@ -25,34 +25,34 @@ export const columns = process.stdout.columns ?? 80;
 
 
 /*  --  Environment Variables  --  */
-/** rules for env variables - which flags enable them, and what other vars they enable */
-export const env_arguments_key = deepFreeze({
-	NEOCITIES: { flags: ["neo", "neocities"] },
-	DRY_RUN: { flags: ["d", "dry", "dryrun", "test"] },
-	DISABLE_INCREMENTAL: { flags: ["no-inc", "no-incremental"] },
-	USE_NPX: { flags: ["npx"] },
-	MAX_QUALITY: { flags: ["max-quality"] },
-	SOURCE_MAPS: { flags: ["source-maps", "sourcemaps", "map", "maps", "sourcemap", "source-map"] },
-	SERVE: { flags: ["s", "serve", "dev"], enable: ["WATCH"] },
-		WATCH: { flags: ["w", "watch"] }, // < different to serve! enables auto reloading of config instead of only running once
-	PRODUCTION: { flags: ["p", "prod", "production", "full"], enable: ["MINIFY_FILES", "MINIFY_IMAGES"] },
-		MINIFY_FILES: { flags: ["minify", "min"] },
-		MINIFY_IMAGES: { },
-	CLEAN: { flags: ["c", "clean"], enable: ["CLEAR_CACHE", "CLEAR_DIST"] },
-		CLEAR_CACHE: { },
-		CLEAR_DIST: { flags: ["clear-dist", "cleardist"] },
+var __temp = deepFreeze({
+	NEOCITIES           : { flags: ["neo", "neocities"] },
+	DRY_RUN             : { flags: ["d", "dry", "dryrun", "test"] },
+	DISABLE_INCREMENTAL : { flags: ["no-inc", "no-incremental"] },
+	USE_NPX             : { flags: ["npx"] },
+	MAX_QUALITY         : { flags: ["max-quality"] },
+	SOURCE_MAPS         : { flags: ["source-maps", "sourcemaps", "map", "maps", "sourcemap", "source-map"] },
+	SERVE               : { flags: ["s", "serve", "dev"], enable: ["WATCH"] },
+		WATCH               : { flags: ["w", "watch"] }, // < different to serve! enables auto reloading of config instead of only running once
+	PRODUCTION          : { flags: ["p", "prod", "production", "full"], enable: ["MINIFY_FILES", "MINIFY_IMAGES"] },
+		MINIFY_FILES        : { flags: ["minify", "min"] },
+		MINIFY_IMAGES       : { },
+	CLEAN               : { flags: ["c", "clean"], enable: ["CLEAR_CACHE", "CLEAR_DIST"] },
+		CLEAR_CACHE         : { },
+		CLEAR_DIST          : { flags: ["clear-dist", "cleardist"] },
 });
-/** @typedef {Record<keyof typeof env_arguments_key, 'true' | 'false'>} env_type */
+export const env_arguments_key = /** @type {Record<keyof typeof __temp, { flags: string[], enable: string[] }>} */ (__temp);
+/** @typedef {Record<keyof typeof env_arguments_key, 'true' | 'false'>} env_arguments_type */
 
 
 
 /*  --  External Dependencies  --  */
 /** Import map to be included in each page's \<script type="importmap"> */
 export const importmap = Object.freeze({ "imports": {
-	"chroma-js": "https://esm.sh/chroma-js@3.1.2", // esm.sh is the best
-	"react": "https://esm.sh/react@19",
-	"react-dom/": "https://esm.sh/react-dom@19/",
-	"simplex-noise": "https://unpkg.com/simplex-noise@4.0.3/dist/esm/simplex-noise.js",
+	"chroma-js"     : "https://esm.sh/chroma-js@3.1.2", // esm.sh is the best
+	"react"         : "https://esm.sh/react@19",
+	"react-dom/"    : "https://esm.sh/react-dom@19/",
+	"simplex-noise" : "https://unpkg.com/simplex-noise@4.0.3/dist/esm/simplex-noise.js",
 } });
 /** Names of imports to ignore whilst bundling source .ts files */
 export const external_dependencies = Object.freeze([...Object.keys(importmap.imports)]);
@@ -62,17 +62,16 @@ export const external_dependencies = Object.freeze([...Object.keys(importmap.imp
 /*  --  File Paths  --  */
 /** Paths to various directories, relative to cwd, use `abs_paths` for absolute */
 export const paths = Object.freeze({
-	"engine": "engine", // build tools and stuff
-	"cache": "__cache",
-	"compiled": "__compiled", // compiled ts build scripts etc
-
-	"source": "source", // main source files (HTML, TS, SCSS, pages)
-		"util": "source/awa-util", // utilities for any page
-		"scss": "source/_styles", // SCSS files to scan when @use-ing
-		"includes": "source/_templates", // template partials . layouts for Vento
-		"images": "source/images",
-		"fonts": "source/fonts",
-	"output": "^~^ website", // compiled site . build output
+	"engine"   : "engine", // build tools and stuff
+	"cache"    : "__cache",
+	"compiled" : "__compiled", // compiled ts build scripts etc
+	"source"   : "source", // main source files (HTML, TS, SCSS, pages)
+	"util"     : "source/awa-util", // utilities for any page
+	"scss"     : "source/_styles", // SCSS files to scan when @use-ing
+	"includes" : "source/_templates", // template partials . layouts for Vento
+	"images"   : "source/images",
+	"fonts"    : "source/fonts",
+	"output"   : "^~^ website", // compiled site . build output
 });
 /** Absolute version of `paths` */
 export const abs_paths = /** @type {Readonly<Record<keyof typeof paths, string>>} */ (Object.freeze(Object.fromEntries(Object.entries(paths).map(([x, y]) => [x, path.resolve(process.cwd(), y).replace(/\\/g, "/")]))));
@@ -82,10 +81,10 @@ export const abs_paths = /** @type {Readonly<Record<keyof typeof paths, string>>
 /*  --  SCSS config, passed to sass-embedded  --  */
 /** @type {import("sass-embedded").StringOptions} */
 export const scss = {
-	alertColor: true,
-	loadPaths: [abs_paths.scss],
-	style: env.MINIFY_FILES === "true" ? "compressed" : "expanded",
-	sourceMap: env.SOURCE_MAPS === "true",
+	alertColor : true,
+	loadPaths  : [abs_paths.scss],
+	style      : env.MINIFY_FILES === "true" ? "compressed" : "expanded",
+	sourceMap  : env.SOURCE_MAPS === "true",
 	// in eleventy.ts: ', logger: { debug: sassLogger.debug, warn: sassLogger.warn }'
 };
 
@@ -107,33 +106,33 @@ const bg = /** @param {string} c */ (c) => chalk.bgHex(c);
 export const colors = Object.freeze({
 	blue: chalk.hex("#89c2ff"), pink: chalk.hex("#ff8cc5"), white: chalk.hex("#ffffff"),
 
-	langJS: "#f7df1d", langTS: "#2f74c0",
-	langCSS: "#2da8e0", langSCSS: "#cf649a",
-	langHTML: "#f06427", langVTO: "#080884",
+	langJS   : "#f7df1d", langTS   : "#2f74c0",
+	langCSS  : "#2da8e0", langSCSS : "#cf649a",
+	langHTML : "#f06427", langVTO  : "#080884",
 
 	high1: "#8f7da3", low1: "#66606c", low2: "#545156", low3: "#272a2d",
 
 	success: "#5ae674", failure: "#f05858", warning: "#eabb6b",
 
-	timestamp: "#47404e",
-	divider01: ["#78737c", "#78737c"],
+	timestamp : "#47404e",
+	divider01 : ["#78737c", "#78737c"],
 
-	esbuild: "#ffbd60",
-	eleventy: [fg("#fff"), bg("#222")],
-	enid: [fg("#2d2a30"), bg("#aa86ce"), (s) => fg("#785a9c")(bg("#aa86ce")(s))],
-	miku: [fg("#373b3e"), bg("#86cecb"), (s) => fg("#528f99")(bg("#86cecb")(s))],
+	esbuild  : "#ffbd60",
+	eleventy : [fg("#fff"), bg("#222")],
+	enid     : [fg("#2d2a30"), bg("#aa86ce"), (s) => fg("#785a9c")(bg("#aa86ce")(s))],
+	miku     : [fg("#373b3e"), bg("#86cecb"), (s) => fg("#528f99")(bg("#86cecb")(s))],
 });
 
 /** timestamp */
 export const timestamp = () => chalk.hex(colors.timestamp)((~~performance.now() % 99999).toString().padStart(5, "0"));
 
 const tags = Object.freeze({
-	"none": "",
-	"11ty": " " + colors.eleventy[0](colors.eleventy[1]("11ty")) + "  ",
-	"sass": fg(colors.langSCSS)(" Sass  "),
-	"esbuild": fg(colors.esbuild)(" " + bg(colors.esbuild).black.bold(">>") + "  "),
-	"miku": colors.miku[0](colors.miku[1](colors.miku[2]("▌") + "miku" + colors.miku[2]("▐"))) + " ",
-	"enid": colors.enid[0](colors.enid[1](colors.enid[2]("▌") + "enid" + colors.enid[2]("▐"))) + " ",
+	"none"    : "",
+	"11ty"    : " " + colors.eleventy[0](colors.eleventy[1]("11ty")) + "  ",
+	"sass"    : fg(colors.langSCSS)(" Sass  "),
+	"esbuild" : fg(colors.esbuild)(" " + bg(colors.esbuild).black.bold(">>") + "  "),
+	"miku"    : colors.miku[0](colors.miku[1](colors.miku[2]("▌") + "miku" + colors.miku[2]("▐"))) + " ",
+	"enid"    : colors.enid[0](colors.enid[1](colors.enid[2]("▌") + "enid" + colors.enid[2]("▐"))) + " ",
 });
 
 /** @param {string} message @param {keyof typeof tags} type */
@@ -150,7 +149,7 @@ export const warnings = /** @type {{ [key: string]: [keyof typeof tags, number] 
 export function warn (message, type = "enid") {
 	if (warnings[message]) warnings[message][1] += 1;
 	else warnings[message] = [type, 1];
-console.log(warnings);
+	console.log(warnings);
 }
 export function printWarnings () {
 	if (Object.keys(warnings).length <= 0) return;
