@@ -1,22 +1,30 @@
 // @ts-check
-// docs for global config https://eslint.org/docs/latest/use/configure/configuration-files#configuration-file-resolution
-
 /*
+	wawa  ESLINT CONFIG  wawa
+
 
 	This file is (probably) hardlinked to %USERPROFILE%\eslint.config.mjs
-	This is just so I can have a global eslint config, and it's still tracked on my github repos
+	This is just so I can have a global eslint config, and it's still tracked on my github repos it's used on
 
-	To check: `(Get-Item ./eslint.config.mjs).LinkType`, if nothing, it's not linked
 	To hardlink:
-		1. Have a global eslint config, in your user profile
-		2. Run in Command Prompt, with your real path (NOT PowerShell):
- 	  	   mklink /h "C:\CURRENT_PROJECT_PATH_HERE\eslint.config.mjs" "%USERPROFILE%\eslint.config.mjs"
+		1. Have a global eslint config file in your user folder [docs for this: https://eslint.org/docs/latest/use/configure/configuration-files#configuration-file-resolution]
+		2. Run in powershell:
+ 	  	   New-Item -Path (Join-Path -Path (Get-Location) -ChildPath "eslint.config.mjs") -ItemType HardLink -Target "$env:USERPROFILE\eslint.config.mjs"
+	To check:
+		1. Run in powershell:
+		   (Get-Item ./eslint.config.mjs).LinkType
+		2. Should be 'HardLink', or nothing if not linked
 
-	Note: /h makes it a hard link, pointing to the actual data on disk, instead of a symlink which is a link to the other file pointer
+	Note: A hard link is different from a symlink, pointing to the actual data on disk, a symlink is a link to the other file pointer. This allows git to see the content
 
 
 	🔗 [https://eslint.org/docs/latest/rules]
 	🔗   [https://eslint.style/rules#rules]
+
+
+	Last Edited: 2025/10/18
+	Eslint Version: 9.38.9
+	Stylistic Version: 5.5.0
 */
 
 import tseslint from "@typescript-eslint/eslint-plugin";
@@ -26,23 +34,26 @@ import eslint from "eslint";
 
 
 // | ---------------------------------------------------------------------------
-// |  Javascript exclusive rule overrides:
+// |  JavaScript exclusive rule overrides:
 /** @type { eslint.Linter.RulesRecord } */ const JS_RULES = {
-
+	// not in ts because breaks with ?: optional property
+	"@stylistic/key-spacing" : ["error", {
+		"singleLine" : { "beforeColon": false, "afterColon": true },
+		"multiLine"  : { "beforeColon": true, "afterColon": true, "align": "colon" },
+	}], // 💼 🔧 Enforce consistent spacing between property names and type annotations in types and interfaces
 };
 
 
 // | ---------------------------------------------------------------------------
 // |  TypeScript exclusive rule overrides:
 /** @type { eslint.Linter.RulesRecord } */ const TS_RULES = {
-	"@typescript-eslint/explicit-module-boundary-types" : 0,
+	"@stylistic/key-spacing" : 0,
 };
 
 
 // | ---------------------------------------------------------------------------
 // |  Rules that apply to both JS and TS:
 /** @type { eslint.Linter.RulesRecord } */ const GLOBAL_RULES = {
-
 
 
 
@@ -261,6 +272,8 @@ import eslint from "eslint";
 
 
 
+
+
 	/* -- STYLISTIC RULES -- (96) */
 	// some categories have less rules than the number says, this is because rules overlap between categories, the most specific category is used
 
@@ -276,11 +289,13 @@ import eslint from "eslint";
 
 	"@stylistic/key-spacing" : ["error", {
 		"singleLine" : { "beforeColon": false, "afterColon": true },
-		"multiLine"  : { "beforeColon": true, "afterColon": true, "align": "colon" },
 	}], // 💼 🔧 Enforce consistent spacing between property names and type annotations in types and interfaces
-	"@stylistic/keyword-spacing"               : 0, // 💼 🔧 Enforce consistent spacing before and after keywords
-	"@stylistic/no-mixed-spaces-and-tabs"      : "error", // 💼 Disallow mixed spaces and tabs for indentation
-	"@stylistic/no-multi-spaces"               : "error", // 💼 🔧 Disallow multiple spaces
+	"@stylistic/keyword-spacing"          : 0, // 💼 🔧 Enforce consistent spacing before and after keywords
+	"@stylistic/no-mixed-spaces-and-tabs" : "error", // 💼 Disallow mixed spaces and tabs for indentation
+	"@stylistic/no-multi-spaces"          : ["error", { "ignoreEOLComments" : true, "exceptions"        : {
+		"Property"           : true,
+		"PropertyDefinition" : true,
+	} }],
 	"@stylistic/no-trailing-spaces"            : ["error", { "ignoreComments": true }], // 💼 🔧 Disallow trailing whitespace at the end of lines
 	"@stylistic/no-whitespace-before-property" : "error", // 💼 🔧 Disallow whitespace before properties
 	"@stylistic/object-curly-spacing"          : ["error", "always"], // 💼 🔧 Enforce consistent spacing inside braces
@@ -298,14 +313,13 @@ import eslint from "eslint";
 
 
 	// (23) Line breaks [https://eslint.style/rules?filter=line-breaks]
-	"@stylistic/array-bracket-newline"          : ["error", "consistent"], // 🔧 Enforce linebreaks after opening and before closing array brackets
-	"@stylistic/array-element-newline"          : 0, // 🔧 Enforce line breaks after each array element
-	"@stylistic/curly-newline"                  : 0, // 🔧 Enforce consistent line breaks after opening and before closing braces
-	"@stylistic/eol-last"                       : "error", // 💼 🔧 Require or disallow newline at the end of files
-	"@stylistic/function-call-argument-newline" : 0, // 🔧 Enforce line breaks between arguments of a function call
-	"@stylistic/function-paren-newline"         : 0, // 🔧 Enforce consistent line breaks inside function parentheses
-	"@stylistic/implicit-arrow-linebreak"       : 0, // 🔧 Enforce the location of arrow function bodies
-
+	"@stylistic/array-bracket-newline"           : ["error", "consistent"], // 🔧 Enforce linebreaks after opening and before closing array brackets
+	"@stylistic/array-element-newline"           : 0, // 🔧 Enforce line breaks after each array element
+	"@stylistic/curly-newline"                   : 0, // 🔧 Enforce consistent line breaks after opening and before closing braces
+	"@stylistic/eol-last"                        : "error", // 💼 🔧 Require or disallow newline at the end of files
+	"@stylistic/function-call-argument-newline"  : 0, // 🔧 Enforce line breaks between arguments of a function call
+	"@stylistic/function-paren-newline"          : 0, // 🔧 Enforce consistent line breaks inside function parentheses
+	"@stylistic/implicit-arrow-linebreak"        : 0, // 🔧 Enforce the location of arrow function bodies
 	"@stylistic/linebreak-style"                 : 0, // 🔧 Enforce consistent linebreak style
 	"@stylistic/lines-between-class-members"     : 0, // 💼 🔧 Require or disallow an empty line between class members
 	"@stylistic/multiline-ternary"               : 0, // 💼 🔧 Enforce newlines between operands of ternary expressions
@@ -382,10 +396,10 @@ import eslint from "eslint";
 	"@stylistic/jsx-indent-props"             : 0, // 💼 🔧 Enforce props indentation in JSX
 
 
-	// ( 3) Types [https://eslint.style/rules?filter=types]
-	"@stylistic/type-annotation-spacing"  : 0, // 💼 🔧 Require consistent spacing around type annotations
-	"@stylistic/type-generic-spacing"     : 0, // 💼 🔧 Enforces consistent spacing inside TypeScript type generics
-	"@stylistic/type-named-tuple-spacing" : 0, // 💼 🔧 Expect space before the type declaration in the named tuple
+	// ( 3) Types [https://eslint.style/rules?filter=type]
+	"@stylistic/type-annotation-spacing"  : ["error", { before: true, after: true }], // 💼 🔧 Require consistent spacing around type annotations
+	"@stylistic/type-generic-spacing"     : "error", // 💼 🔧 Enforces consistent spacing inside TypeScript type generics
+	"@stylistic/type-named-tuple-spacing" : "error", // 💼 🔧 Expect space before the type declaration in the named tuple
 
 
 	// ( 11) Disallow [https://eslint.style/rules?filter=disallow]
@@ -407,8 +421,23 @@ import eslint from "eslint";
 	"@stylistic/one-var-declaration-per-line"     : 0, // 🔧 Require or disallow newlines around variable declarations
 	"@stylistic/padded-blocks"                    : 0, // 💼 🔧 Require or disallow padding within blocks
 
-};
 
+
+
+
+
+
+
+	/* -- typescript-eslint rules -- */ // [https://typescript-eslint.io/rules/]
+
+
+	"@typescript-eslint/no-empty-object-type": "error",
+	"@typescript-eslint/no-extra-non-null-assertion": "error",
+	"@typescript-eslint/no-misused-new": "error",
+	"@typescript-eslint/no-require-imports": "error",
+	"@typescript-eslint/no-wrapper-object-types": "error"
+
+};
 
 
 

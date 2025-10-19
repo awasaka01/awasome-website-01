@@ -35,6 +35,7 @@
 - log all index.html sizes after build
 - uese particle / animation sysemte like particles.js or gsap
 - custom vento template handler, steal code from https://github.com/noelforte/eleventy-plugin-vento
+- rewrite image minifier to not use image-size
 
 
 ..................................................................

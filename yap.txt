@@ -151,7 +151,14 @@ The build process runs as follows:
 
 
 
+dependencies
 
+		"esbuild-plugin-alias": "^0.2.1",
+		"esbuild-plugin-noexternal": "^0.1.6",
+		"esbuild-plugin-replace": "^1.4.0",
+		"esbuild-register": "^3.6.0",
+		"deepmerge": "^4.3.1",
+		"esbuild-ts-paths": "^1.1.3",
 
 
 

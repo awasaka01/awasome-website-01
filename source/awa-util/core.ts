@@ -41,7 +41,7 @@ export const removeDuplicateRGBescapeCodes = /(?<fg>\\x1b\[38;2;(?:[0-9]|[1-9][0
 export function weightedArray<T> (pairs : [weight: number, value: T][] | { weight : number, value : T }[]) {
 
 	// Convert input to array of objects
-	if (Array.isArray(pairs[0])) pairs = pairs.map((pair) => ({ weight : pair[0], value : pair[1] }));
+	if (Array.isArray(pairs[0])) pairs = pairs.map((pair) => ({ weight: pair[0], value: pair[1] }));
 	const pairObjects = pairs as { weight : number, value : T }[];
 
 	// Generate weighted array
