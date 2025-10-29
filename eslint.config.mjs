@@ -48,6 +48,13 @@ import eslint from "eslint";
 // |  TypeScript exclusive rule overrides:
 /** @type { eslint.Linter.RulesRecord } */ const TS_RULES = {
 	"@stylistic/key-spacing" : 0,
+
+	/* -- typescript-eslint rules -- */ // [https://typescript-eslint.io/rules/]
+	"@typescript-eslint/no-empty-object-type"        : "error",
+	"@typescript-eslint/no-extra-non-null-assertion" : "error",
+	"@typescript-eslint/no-misused-new"              : "error",
+	"@typescript-eslint/no-require-imports"          : "error",
+	"@typescript-eslint/no-wrapper-object-types"     : "error",
 };
 
 
@@ -277,25 +284,18 @@ import eslint from "eslint";
 	/* -- STYLISTIC RULES -- (96) */
 	// some categories have less rules than the number says, this is because rules overlap between categories, the most specific category is used
 
-
 	// (35) Spacing [https://eslint.style/rules?filter=spacing]
-	"@stylistic/array-bracket-spacing"     : ["error", "never"], // 💼 🔧 Enforce consistent spacing inside array brackets
-	"@stylistic/arrow-spacing"             : "error", // 💼 🔧 Enforce consistent spacing before and after the arrow in arrow functions
-	"@stylistic/block-spacing"             : "error", // 💼 🔧 Disallow or enforce spaces inside of blocks after opening block and before closing block
-	"@stylistic/comma-spacing"             : "error", // 💼 🔧 Enforce consistent spacing before and after commas
-	"@stylistic/computed-property-spacing" : "error", // 💼 🔧 Enforce consistent spacing inside computed property brackets
-	"@stylistic/function-call-spacing"     : "error", // 🔧 Require or disallow spacing between function identifiers and their invocations
-	"@stylistic/generator-star-spacing"    : "error", // 💼 🔧 Enforce consistent spacing around `*` operators in generator functions
-
-	"@stylistic/key-spacing" : ["error", {
-		"singleLine" : { "beforeColon": false, "afterColon": true },
-	}], // 💼 🔧 Enforce consistent spacing between property names and type annotations in types and interfaces
-	"@stylistic/keyword-spacing"          : 0, // 💼 🔧 Enforce consistent spacing before and after keywords
-	"@stylistic/no-mixed-spaces-and-tabs" : "error", // 💼 Disallow mixed spaces and tabs for indentation
-	"@stylistic/no-multi-spaces"          : ["error", { "ignoreEOLComments" : true, "exceptions"        : {
-		"Property"           : true,
-		"PropertyDefinition" : true,
-	} }],
+	"@stylistic/array-bracket-spacing"         : ["error", "never"], // 💼 🔧 Enforce consistent spacing inside array brackets
+	"@stylistic/arrow-spacing"                 : "error", // 💼 🔧 Enforce consistent spacing before and after the arrow in arrow functions
+	"@stylistic/block-spacing"                 : "error", // 💼 🔧 Disallow or enforce spaces inside of blocks after opening block and before closing block
+	"@stylistic/comma-spacing"                 : "error", // 💼 🔧 Enforce consistent spacing before and after commas
+	"@stylistic/computed-property-spacing"     : "error", // 💼 🔧 Enforce consistent spacing inside computed property brackets
+	"@stylistic/function-call-spacing"         : "error", // 🔧 Require or disallow spacing between function identifiers and their invocations
+	"@stylistic/generator-star-spacing"        : "error", // 💼 🔧 Enforce consistent spacing around `*` operators in generator functions
+	"@stylistic/key-spacing"                   : ["error", { "singleLine": { "beforeColon": false, "afterColon": true }	}], // 💼 🔧 Enforce consistent spacing between property names and type annotations in types and interfaces
+	"@stylistic/keyword-spacing"               : 0, // 💼 🔧 Enforce consistent spacing before and after keywords
+	"@stylistic/no-mixed-spaces-and-tabs"      : "error", // 💼 Disallow mixed spaces and tabs for indentation
+	"@stylistic/no-multi-spaces"               : ["error", { "ignoreEOLComments": true, "exceptions": { "Property": true, "PropertyDefinition": true	} }], // 💼 🔧 Disallow multiple spaces
 	"@stylistic/no-trailing-spaces"            : ["error", { "ignoreComments": true }], // 💼 🔧 Disallow trailing whitespace at the end of lines
 	"@stylistic/no-whitespace-before-property" : "error", // 💼 🔧 Disallow whitespace before properties
 	"@stylistic/object-curly-spacing"          : ["error", "always"], // 💼 🔧 Enforce consistent spacing inside braces
@@ -310,7 +310,6 @@ import eslint from "eslint";
 	"@stylistic/template-curly-spacing"        : "error", // 💼 🔧 Require or disallow spacing around embedded expressions of template strings
 	"@stylistic/template-tag-spacing"          : 0, // 💼 🔧 Require or disallow spacing between template tags and their literals
 	"@stylistic/yield-star-spacing"            : 0, // 🔧 Require or disallow spacing around the `*` in `yield*` expressions
-
 
 	// (23) Line breaks [https://eslint.style/rules?filter=line-breaks]
 	"@stylistic/array-bracket-newline"           : ["error", "consistent"], // 🔧 Enforce linebreaks after opening and before closing array brackets
@@ -329,7 +328,6 @@ import eslint from "eslint";
 	"@stylistic/operator-linebreak"              : ["error", "before"], // 💼 🔧 Enforce consistent linebreak style for operators
 	"@stylistic/padding-line-between-statements" : 0, // 🔧 Require or disallow padding lines between statements
 
-
 	// (21) Brackets [https://eslint.style/rules?filter=brackets]
 	"@stylistic/arrow-parens"    : "error", // 💼 🔧 Require parentheses around arrow function arguments
 	"@stylistic/brace-style"     : 0, // 💼 🔧 Enforce consistent brace style for blocks
@@ -338,39 +336,32 @@ import eslint from "eslint";
 	"@stylistic/wrap-iife"       : "error", // 💼 🔧 Require parentheses around immediate `function` invocations
 	"@stylistic/wrap-regex"      : 0, // 🔧 Require parenthesis around regex literals
 
-
 	// ( 4) Indent [https://eslint.style/rules?filter=indent]
 	"@stylistic/indent"            : 0, // 💼 🔧 Enforce consistent indentation
 	"@stylistic/indent-binary-ops" : 0, // 💼 🔧 Indentation for binary operators
-
 
 	// ( 3) Quotes [https://eslint.style/rules?filter=quotes]
 	"@stylistic/quote-props" : ["error", "consistent"], // 💼 🔧 Require quotes around object literal, type literal, interfaces and enums property names
 	"@stylistic/quotes"      : ["error", "double", { "avoidEscape": true, "allowTemplateLiterals": "always" }], // 💼 🔧 Enforce the consistent use of either backticks, double, or single quotes
 
-
 	// ( 3) Commas [https://eslint.style/rules?filter=commas]
 	"@stylistic/comma-dangle" : ["error", "always-multiline"], // 💼 🔧 Require or disallow trailing commas
 	"@stylistic/comma-style"  : "error", // 💼 🔧 Enforce consistent comma style
-
 
 	// ( 4) Semis [https://eslint.style/rules?filter=semis]
 	"@stylistic/no-extra-semi" : "error", // 🔧 Disallow unnecessary semicolons
 	"@stylistic/semi"          : "error", // 💼 🔧 Require or disallow semicolons instead of ASI
 	"@stylistic/semi-style"    : "error", // 🔧 Enforce location of semicolons
 
-
 	// ( 7) Operators [https://eslint.style/rules?filter=operators]
 	"@stylistic/dot-location"       : 0, // 💼 🔧 Enforce consistent newlines before and after dots
 	"@stylistic/no-mixed-operators" : 0, // 💼 Disallow mixed binary operators
-
 
 	// ( 4) Comments [https://eslint.style/rules?filter=comments]
 	"@stylistic/line-comment-position"   : 0, // Enforce position of line comments
 	"@stylistic/multiline-comment-style" : 0, // 🔧 Enforce a particular style for multiline comments
 	"@stylistic/lines-around-comment"    : 0, // 🔧 Require empty lines around comments
 	"@stylistic/spaced-comment"          : "error", // 💼 🔧 Enforce consistent spacing after the `//` or `/*` in a comment
-
 
 	// (21) JSX [https://eslint.style/rules?filter=jsx]
 	"@stylistic/jsx-closing-tag-location"     : 0, // 💼 🔧 Enforce closing tag location for multiline JSX
@@ -395,12 +386,10 @@ import eslint from "eslint";
 	"@stylistic/jsx-indent"                   : 0, // 🔧 Enforce JSX indentation. Deprecated, use `indent` rule instead
 	"@stylistic/jsx-indent-props"             : 0, // 💼 🔧 Enforce props indentation in JSX
 
-
 	// ( 3) Types [https://eslint.style/rules?filter=type]
 	"@stylistic/type-annotation-spacing"  : ["error", { before: true, after: true }], // 💼 🔧 Require consistent spacing around type annotations
 	"@stylistic/type-generic-spacing"     : "error", // 💼 🔧 Enforces consistent spacing inside TypeScript type generics
 	"@stylistic/type-named-tuple-spacing" : "error", // 💼 🔧 Expect space before the type declaration in the named tuple
-
 
 	// ( 11) Disallow [https://eslint.style/rules?filter=disallow]
 	"@stylistic/no-confusing-arrow"      : 0, // 🔧 Disallow arrow functions where they could be confused with comparisons
@@ -408,10 +397,8 @@ import eslint from "eslint";
 	"@stylistic/no-multiple-empty-lines" : 0, // 💼 🔧 Disallow multiple empty lines
 	"@stylistic/no-tabs"                 : 0, // 💼 Disallow all tabs
 
-
 	// ( 1) Experimental [https://eslint.style/rules?filter=experimental]
 	"@stylistic/list-style" : 0, // 🔧 🧪 Enforce consistent spacing and line break styles inside brackets
-
 
 	// ( 6) Misc. [https://eslint.style/rules?filter=misc]
 	"@stylistic/max-len"                          : 0, // Enforce a maximum line length
@@ -427,15 +414,6 @@ import eslint from "eslint";
 
 
 
-
-	/* -- typescript-eslint rules -- */ // [https://typescript-eslint.io/rules/]
-
-
-	"@typescript-eslint/no-empty-object-type": "error",
-	"@typescript-eslint/no-extra-non-null-assertion": "error",
-	"@typescript-eslint/no-misused-new": "error",
-	"@typescript-eslint/no-require-imports": "error",
-	"@typescript-eslint/no-wrapper-object-types": "error"
 
 };
 

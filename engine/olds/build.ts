@@ -13,15 +13,15 @@ import chalk from "chalk";
 import treeKill from "tree-kill";
 
 // ✧ parts of the build
-import startEsbuild from "./build-esbuild.js";
-import customLogger from "./logs-handler.js";
+import startEsbuild from "../build-task-esbuild.js";
+import customLogger from "../logs-handler.js";
 
 // ✧ my imports:
 import * as util from "__util__";
 import * as mono from "./monolith.js";
 const { log, err, warn, paths, abs_paths, colors } = mono;
 const { blue: b, pink: p, white: w } = colors;
-const env = process.env as import("./config.js").env_type & NodeJS.ProcessEnv;
+const env = process.env as import("./olds/config.js").env_type & NodeJS.ProcessEnv;
 
 // ✧ random kaomoji
 import kaomoji from "./kaomoji.js";

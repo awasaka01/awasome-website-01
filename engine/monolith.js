@@ -1,7 +1,6 @@
 // @ts-check
 import chalk from "chalk";
 import path from "node:path";
-import chroma from "chroma-js";
 import browserslist from "browserslist";
 
 // ✧ when accessed from outside of sunnymiku.js, process.env has extra keys:
@@ -11,10 +10,16 @@ const env = /** @type {NodeJS.ProcessEnv & import('./monolith.js').env_arguments
 chalk.level = 3; process.env.FORCE_COLOR = "1";
 
 
+/**
+ * @typedef {null | boolean | number | string | JsonArray | JsonObject} JsonValue
+ * @typedef {JsonValue[]} JsonArray
+ * @typedef {{ [key: string]: JsonValue }} JsonObject
+ */
 
 /* |____________________________________________________________________| */
 /* | ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀ | */
 //                               > config <
+let __temp;
 
 /*  --  General  --  */
 export const version = "3.0.0";
@@ -25,30 +30,34 @@ export const columns = process.stdout.columns ?? 80;
 
 
 /*  --  Environment Variables  --  */
-var __temp = deepFreeze({
-	NEOCITIES           : { flags: ["neo", "neocities"] },
-	DRY_RUN             : { flags: ["d", "dry", "dryrun", "test"] },
-	DISABLE_INCREMENTAL : { flags: ["no-inc", "no-incremental"] },
-	USE_NPX             : { flags: ["npx"] },
-	MAX_QUALITY         : { flags: ["max-quality"] },
-	SOURCE_MAPS         : { flags: ["source-maps", "sourcemaps", "map", "maps", "sourcemap", "source-map"] },
-	SERVE               : { flags: ["s", "serve", "dev"], enable: ["WATCH"] },
-		WATCH               : { flags: ["w", "watch"] }, // < different to serve! enables auto reloading of config instead of only running once
-	PRODUCTION          : { flags: ["p", "prod", "production", "full"], enable: ["MINIFY_FILES", "MINIFY_IMAGES"] },
-		MINIFY_FILES        : { flags: ["minify", "min"] },
-		MINIFY_IMAGES       : { },
-	CLEAN               : { flags: ["c", "clean"], enable: ["CLEAR_CACHE", "CLEAR_DIST"] },
-		CLEAR_CACHE         : { },
-		CLEAR_DIST          : { flags: ["clear-dist", "cleardist"] },
+__temp = deepFreeze({
+	NEOCITIES             : { flags: ["neo", "neocities"] },
+	DRY_RUN               : { flags: ["d", "dry", "dryrun", "test"] },
+	DISABLE_INCREMENTAL   : { flags: ["no-inc", "no-incremental"] },
+	USE_NPX               : { flags: ["npx"] },
+	MAX_QUALITY           : { flags: ["max-quality"] },
+	SOURCE_MAPS           : { flags: ["source-maps", "sourcemaps", "map", "maps", "sourcemap", "source-map"] },
+	SERVE                 : { flags: ["s", "serve", "dev"], enable: ["WATCH"] },
+	WATCH                 : { flags: ["w", "watch"] }, // < different to serve! enables auto reloading of config instead of only running once
+	PRODUCTION            : { flags: ["p", "prod", "production", "full"], enable: ["MINIFY_FILES", "MINIFY_IMAGES"] },
+	MINIFY_FILES          : { flags: ["minify", "min"] },
+	MINIFY_IMAGES         : { },
+	CLEAN                 : { flags: ["c", "clean"], enable: ["CLEAR_CACHE", "CLEAR_DIST"] },
+	CLEAR_CACHE           : { },
+	CLEAR_DIST            : { flags: ["clear-dist", "cleardist"] },
+	VERBOSE               : { flags: ["v", "verbose"], enable: ["VERBOSE_"] },
+	VERBOSE_LOG_ALL_FILES : { },
+	// VERBOSE_SHOW\          _CHILDREN : { },
+	VERBOSE_MISC          : { },
 });
 export const env_arguments_key = /** @type {Record<keyof typeof __temp, { flags: string[], enable: string[] }>} */ (__temp);
-/** @typedef {Record<keyof typeof env_arguments_key, 'true' | 'false'>} env_arguments_type */
+/** @typedef {Record<keyof typeof env_arguments_key | "IS_ROOT_PROCESS", 'true' | 'false'>} env_arguments_type */
 
 
 
 /*  --  External Dependencies  --  */
 /** Import map to be included in each page's \<script type="importmap"> */
-export const importmap = Object.freeze({ "imports": {
+export const importmap = Object.freeze({ "imports" : {
 	"chroma-js"     : "https://esm.sh/chroma-js@3.1.2", // esm.sh is the best
 	"react"         : "https://esm.sh/react@19",
 	"react-dom/"    : "https://esm.sh/react-dom@19/",
@@ -98,21 +107,18 @@ export const vento = { dataVarname: "global", includes: paths.includes };
 
 /* |____________________________________________________________________| */
 /* | ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀ | */
-//                               > tools <
+//                      > logging, warnings, errors <
 
-const fg = /** @param {string} c */ (c) => chalk.hex(c);
-const bg = /** @param {string} c */ (c) => chalk.bgHex(c);
-
-export const colors = Object.freeze({
-	blue: chalk.hex("#89c2ff"), pink: chalk.hex("#ff8cc5"), white: chalk.hex("#ffffff"),
+const oldcolors = Object.freeze({
+	blue : chalk.hex("#89c2ff"), pink : chalk.hex("#ff8cc5"), white : chalk.hex("#ffffff"),
 
 	langJS   : "#f7df1d", langTS   : "#2f74c0",
 	langCSS  : "#2da8e0", langSCSS : "#cf649a",
 	langHTML : "#f06427", langVTO  : "#080884",
 
-	high1: "#8f7da3", low1: "#66606c", low2: "#545156", low3: "#272a2d",
+	high1 : "#8f7da3", low1 : "#66606c", low2 : "#545156", low3 : "#272a2d",
 
-	success: "#5ae674", failure: "#f05858", warning: "#eabb6b",
+	success : "#5ae674", failure : "#f05858", warning : "#eabb6b",
 
 	timestamp : "#47404e",
 	divider01 : ["#78737c", "#78737c"],
@@ -123,57 +129,138 @@ export const colors = Object.freeze({
 	miku     : [fg("#373b3e"), bg("#86cecb"), (s) => fg("#528f99")(bg("#86cecb")(s))],
 });
 
-/** timestamp */
+const fg = /** @param {string} c */ (c) => chalk.hex(c);
+const bg = /** @param {string} c */ (c) => chalk.bgHex(c);
+
+__temp = deepFreeze(/** @type {const} */({
+	langJS    : "#f7df1d",
+	langTS    : "#2f74c0",
+	langCSS   : "#2da8e0",
+	langSCSS  : "#cf649a",
+	langHTML  : "#f06427",
+	langVTO   : "#080884",
+	high1     : "#8f7da3",
+	low1      : "#66606c",
+	low2      : "#545156",
+	low3      : "#272a2d",
+	success   : "#5ae674",
+	failure   : "#ed4360",
+	warning   : "#eabb6b",
+	timestamp : "#47404e",
+	esbuild   : "#ffbd60",
+	eleventy  : ["#ffffff", "#222222"],
+	enid      : ["#2d2a30", "#aa86ce", "#785a9c"],
+	miku      : ["#373b3e", "#86cecb", "#528f99"],
+	blue      : "#89c2ff",
+	pink      : "#ff8cc5",
+	white     : "#ffffff",
+	divider01 : ["#78737c", "#78737c"],
+}));
+
+/** Set colors for consistency */ // TODO: make typings do the th onemes the right way corect array string
+export const colors = Object.freeze({
+	...__temp,
+	fg : /** @type {Readonly<Record<keyof typeof __temp, import("chalk").ChalkInstance | import("chalk").ChalkInstance[]>>} */
+		(Object.freeze(Object.fromEntries(Object.entries(__temp).map(([key, color_s]) => {
+		return typeof color_s === "string"
+			? [key, chalk.hex(color_s)]
+			: [key, color_s.map((c) => chalk.hex(c))];
+	})))),
+	bg : /** @type {Readonly<Record<keyof typeof __temp, import("chalk").ChalkInstance | import("chalk").ChalkInstance[]>>} */
+		(Object.freeze(Object.fromEntries(Object.entries(__temp).map(([key, color_s]) => {
+		return typeof color_s === "string"
+			? [key, chalk.bgHex(color_s)]
+			: [key, color_s.map((c) => chalk.bgHex(c))];
+	})))),
+});
+
+/** 5-digit timestamp that changes every millisecond, wraps at 10,000 */
 export const timestamp = () => chalk.hex(colors.timestamp)((~~performance.now() % 99999).toString().padStart(5, "0"));
 
+/** preset tags, inserted before timestamp, clarifying the message source */
 const tags = Object.freeze({
 	"none"    : "",
 	"11ty"    : " " + colors.eleventy[0](colors.eleventy[1]("11ty")) + "  ",
 	"sass"    : fg(colors.langSCSS)(" Sass  "),
 	"esbuild" : fg(colors.esbuild)(" " + bg(colors.esbuild).black.bold(">>") + "  "),
 	"miku"    : colors.miku[0](colors.miku[1](colors.miku[2]("▌") + "miku" + colors.miku[2]("▐"))) + " ",
-	"enid"    : colors.enid[0](colors.enid[1](colors.enid[2]("▌") + "enid" + colors.enid[2]("▐"))) + " ",
+	"enid"    : colors.enid[0](colors.enid[1](colors.enid[2]("▌") + "neko" + colors.enid[2]("▐"))) + " ",
 });
 
-/** @param {string} message @param {keyof typeof tags} type */
-export function log (message, type = "enid", enable_timestamp = true) {
+
+/* ====    print messages    ==== */
+/** log a messagee to the console in a consistent style @param {string} message @param {keyof typeof tags} type */
+export function log (message, type = "enid", enable_timestamp = true, prefix = "") {
 	const tag = tags[type];
-
-	message = message.replace("——", chalk.dim("——"));
-	enable_timestamp ? console.log(`${tag}${timestamp()} ${message}`) : console.log(`${tag}${message}`);
+	// message = message.replaceAll("—", chalk.dim("—")); // other line to emdash —
+	message = message.replaceAll("—", chalk.hex("#999999")("—"));
+	enable_timestamp ? console.log(`${prefix}${tag}${timestamp()} ${message}`) : console.log(`${tag}${message}`);
 }
+// —— —— 
 
-export const warnings = /** @type {{ [key: string]: [keyof typeof tags, number] }} */ ({});
+/* ====    warnings    ==== */
+const warnings = /** @type {{ [key: string]: [keyof typeof tags, number] }} */ ({});
 
 /** @param {string} message @param {keyof typeof tags} type */
 export function warn (message, type = "enid") {
+	if (env.IS_ROOT_PROCESS === "false") return process.send({ bubble: true, function_id: "warn", args: [message, type] });
+
 	if (warnings[message]) warnings[message][1] += 1;
 	else warnings[message] = [type, 1];
-	console.log(warnings);
 }
+
 export function printWarnings () {
 	if (Object.keys(warnings).length <= 0) return;
 
 	console.log(chalk.hex(colors.warning)("◢◤".repeat(columns / 2)));
-	console.log(padBoth(chalk.hex(colors.warning).bold.underline(`⚠️  ${Object.keys(warnings).length} Warnings:`)));
+	const warningCount = Object.values(warnings).reduce((a, b) => a + b[1], 0);
+	console.log(padBoth("⚠️  " + chalk.hex(colors.warning).bold.underline(`${warningCount} Warning${warningCount !== 1 ? "s" : ""}:`)));
 	Object.entries(warnings).forEach(([message, [type, count]]) => {
 		log(chalk.dim("· ") + message + chalk.hex(colors.low2)(` x${count}`), type, false);
 	});
 	console.log("\n" + chalk.hex(colors.warning)("◢◤".repeat(columns / 2)));
 }
 
+
+/* ====    errors    ==== */
+/** @param {string} msg @param {keyof typeof tags} tag @param {boolean} noexit */
+export const error = (msg, tag = "miku", noexit = false) => {
+	console.log(chalk.hex(colors.failure)(`${tags[tag]}${timestamp()} ${chalk.bgHex(colors.failure).black(" ERROR ")}: ${chalk.bold(msg)}`));
+	if (!noexit) process.exit(0x0);
+};
+
+
+/* ====    miscellaneous    ==== */
 /** @param {number} id */
 export function divider (id) {
 	return [
 		chalk.dim.hex(colors.divider01[0])((`╤`).repeat(columns)) + "\n" + chalk.dim.hex(colors.divider01[1])((`▀`).repeat(columns)),
 		chalk.dim.hex(colors.divider01[1])((`▄`).repeat(columns)) + "\n" + chalk.dim.hex(colors.divider01[0])((`╧`).repeat(columns)),
+		chalk.bgHex("#df8831").hex("#1e1928").bold("".padStart(columns, " ┇ ■")),
+		chalk.bgHex("#df3152").hex("#1e1928").bold("".padStart(columns, " ┇ ■")),
 	][id];
 }
 
 
-export const err = (msg) => {
-	console.log(chalk.red(`${tags.miku} ${chalk.bgRed.whiteBright("ERROR")} ${chalk.bold(msg)}`));
-};
+
+
+/* |____________________________________________________________________| */
+/* | ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀ | */
+//                               > bubble <
+
+/**
+	To be inserted in all child process's process.on("message",..) functions, brings any serialized messages up to the main process 
+	Allowing functions to store data between processes easily
+*/
+export function handleBubbleMessages (obj) {
+	const args = /** @type {any[]} */ (obj.args);
+	const function_id = /** @type {string} */ (obj.function_id);
+
+	// - Handle all types
+	if (function_id === "warn") warn(args[0], args[1]);
+	else throw new Error(`Unknown function_id: ${function_id}`);
+}
+
 
 
 /* |____________________________________________________________________| */
@@ -202,26 +289,29 @@ function deepFreeze (obj) {
 	return /** @type {ReadonlyDeep<T>} */ (obj);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
 /*  --  Functions stolen from util folder  --  */
 
-export const removeANSI = (str) => str.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/gi, "");
+export function removeANSI (str) { return str.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/gi, ""); }
 export function padBoth (str, targetLength = process.stdout.columns ?? 80, char = " ") {
-	const strLength = removeANSI(str).length;
-	if (strLength >= targetLength) return str;
-
-	const left = Math.floor((targetLength - strLength) / 2);
-	const right = targetLength - strLength - left;
-	return "".padStart(left, char) + str + "".padStart(right, char);
+	let out = [];
+	str.split("\n").forEach((line) => {
+		const strLength = removeANSI(line).length;
+		if (strLength >= targetLength) return line;
+		const left = Math.floor((targetLength - strLength) / 2);
+		const right = targetLength - strLength - left;
+		out.push("".padStart(left, char) + line + "".padStart(right, char));
+	});
+	return out.join("\n");
 }
+
+
+
+/* |____________________________________________________________________| */
+/* | ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀ | */
+//                               > banner <
+
+export const SUNNYMIKU_BANNER = padBoth(`\x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;255;209;171m▄\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;255;209;171m▀\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;255;209;171m▄\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;255;209;171m▄\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;255;209;171m▄\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;255;209;171m▄\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;207;121;87m▄\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;255;209;171m▄\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;255;209;171m▄\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;255;209;171m▄\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;255;209;171m▄\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;255;209;171m▄\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;255;209;171m▄\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;255;209;171m▄\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;255;209;171m▄\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;255;209;171m▄\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;255;209;171m▄\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;255;209;171m▄\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;255;209;171m▄\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;255;209;171m▄\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;255;209;171m▄\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;255;209;171m▄\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;255;209;171m▄\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;255;209;171m▄\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;255;209;171m▄\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;255;209;171m▄\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;255;209;171m▄\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;255;209;171m▄\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;255;209;171m▄\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;255;209;171m▄\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;255;209;171m▄\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;255;209;171m▄\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;255;209;171m▄\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;255;209;171m▄\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;255;209;171m▄\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;255;209;171m▄\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;255;209;171m▄\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;255;209;171m▄\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;255;209;171m▄\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;255;209;171m▄\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;255;209;171m▄\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;207;121;87m▄\x1b[39m
+\x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;207;121;87m▄\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;207;121;87m\x1b[48;2;207;121;87m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;207;121;87m\x1b[48;2;207;121;87m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;207;121;87m\x1b[48;2;207;121;87m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m▄\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;255;209;171m\x1b[48;2;207;121;87m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;255;209;171m\x1b[48;2;207;121;87m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;207;121;87m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;255;209;171m\x1b[48;2;255;209;171m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;207;121;87m\x1b[48;2;207;121;87m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;207;121;87m\x1b[48;2;207;121;87m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;255;209;171m\x1b[48;2;255;209;171m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;255;209;171m\x1b[48;2;207;121;87m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;207;121;87m\x1b[48;2;207;121;87m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;207;121;87m▄\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;207;121;87m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;255;209;171m\x1b[48;2;255;209;171m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;255;209;171m\x1b[48;2;207;121;87m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;207;121;87m\x1b[48;2;207;121;87m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;207;121;87m▄\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;207;121;87m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;255;209;171m\x1b[48;2;207;121;87m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;207;121;87m\x1b[48;2;207;121;87m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;207;121;87m▄\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;117;57;57m▄\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;207;121;87m\x1b[48;2;207;121;87m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;255;209;171m\x1b[48;2;255;209;171m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;255;209;171m\x1b[48;2;207;121;87m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;207;121;87m▀\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;255;209;171m\x1b[48;2;207;121;87m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;207;121;87m▀\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;207;121;87m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;255;209;171m\x1b[48;2;207;121;87m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;207;121;87m\x1b[48;2;207;121;87m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;255;209;171m\x1b[48;2;255;209;171m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;207;121;87m\x1b[48;2;207;121;87m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;207;121;87m▄\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;255;209;171m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;255;209;171m\x1b[48;2;255;209;171m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;207;121;87m\x1b[48;2;207;121;87m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;207;121;87m\x1b[48;2;207;121;87m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;255;209;171m\x1b[48;2;207;121;87m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;207;121;87m\x1b[48;2;207;121;87m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;255;209;171m\x1b[48;2;207;121;87m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;255;209;171m\x1b[48;2;207;121;87m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;207;121;87m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m 
+\x1b[0m\x1b[0m\x1b[38;2;255;209;171m▀\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;207;121;87m\x1b[48;2;207;121;87m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;207;121;87m\x1b[48;2;207;121;87m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;207;121;87m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;207;121;87m▀\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;207;121;87m▀\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m▀\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m▄\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;207;121;87m\x1b[48;2;207;121;87m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;207;121;87m\x1b[48;2;207;121;87m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;117;57;57m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;207;121;87m\x1b[48;2;207;121;87m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;207;121;87m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m▀\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;207;121;87m\x1b[48;2;207;121;87m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;207;121;87m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m▀\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;207;121;87m▀\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;207;121;87m\x1b[48;2;207;121;87m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;207;121;87m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m▀\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;207;121;87m\x1b[48;2;207;121;87m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;117;57;57m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;207;121;87m\x1b[48;2;207;121;87m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;207;121;87m\x1b[48;2;207;121;87m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;207;121;87m\x1b[48;2;207;121;87m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;207;121;87m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;207;121;87m\x1b[48;2;207;121;87m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;207;121;87m\x1b[48;2;207;121;87m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;117;57;57m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;207;121;87m\x1b[48;2;207;121;87m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;207;121;87m▀\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m▀\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m▄\x1b[39m
+\x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;255;209;171m▄\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;117;57;57m▀\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m▀\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m▀\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;207;121;87m▄\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;117;57;57m▄\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m▄\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m▄\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m▀\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;207;121;87m▀\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;207;121;87m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m▄\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m▀\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;117;57;57m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;117;57;57m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;117;57;57m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;117;57;57m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;117;57;57m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;117;57;57m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;117;57;57m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;117;57;57m▄\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m▄\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m▄\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;207;121;87m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;117;57;57m▀\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;207;121;87m▀\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;207;121;87m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m▄\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m▀\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;255;209;171m\x1b[48;2;207;121;87m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;207;121;87m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;117;57;57m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m▄\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;117;57;57m▄\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m▄\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m▄\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m\x1b[48;2;117;57;57m▀\x1b[49m\x1b[39m\x1b[0m\x1b[0m\x1b[38;2;117;57;57m▀\x1b[39m
+\x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m\x1b[38;2;207;121;87m▀\x1b[39m\x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m \x1b[0m\x1b[0m `);

@@ -8,9 +8,9 @@ import chalk from "chalk";
 // ✧ my imports:
 import * as util from "__util__";
 import * as mono from "./monolith.js";
-const { log, colors, err } = mono;
+const { log, colors, error } = mono;
 const { blue: b, pink: p, white: w } = colors;
-const env = process.env as import("./config.js").env_type & NodeJS.ProcessEnv;
+const env = process.env as import("./olds/config.js").env_type & NodeJS.ProcessEnv;
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
@@ -64,8 +64,8 @@ function eleventyLogHandler (message : string) {
 		const colorFROM = colors["lang" + from.toUpperCase()];
 		const colorTO = colors["lang" + to.toUpperCase()];
 
-		if (!colorFROM) err(`No color for file type: lang${from.toUpperCase()}`);
-		if (!colorTO) err(`No color for file type: lang${to.toUpperCase()}`);
+		if (!colorFROM) error(`No color for file type: lang${from.toUpperCase()}`);
+		if (!colorTO) error(`No color for file type: lang${to.toUpperCase()}`);
 
 		channel = chalk.dim(chalk.hex(colors["lang" + from.toUpperCase()])("█") + chalk.hex(colors["lang" + to.toUpperCase()])("█"));
 

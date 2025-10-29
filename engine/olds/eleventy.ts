@@ -7,10 +7,10 @@ import { transform as lightningcss, browserslistToTargets } from "lightningcss";
 const supported_browsers_lightningcss = browserslistToTargets(mono.supported_browsers); // < convert browserslist to a lightningcss compatible format
 
 // ✧ 11ty plugins
-import ImagePlugin_11ty from "./11ty-plugin-image.js";
-import SassPlugin_11ty from "./11ty-plugin-sass.js";
-import preprocessors_11ty from "./11ty-preprocessors.js";
-import postprocessors_11ty from "./11ty-postprocessors.js";
+import ImagePlugin_11ty from "../11ty-plugin-image.js";
+import SassPlugin_11ty from "../11ty-plugin-sass.js";
+import preprocessors_11ty from "../11ty-preprocessors.js";
+import postprocessors_11ty from "../11ty-postprocessors.js";
 import { VentoPlugin } from "eleventy-plugin-vento";
 
 // ✧ my imports:
@@ -18,7 +18,7 @@ import * as util from "__util__";
 import * as mono from "./monolith.js";
 const { log, colors, err, paths, abs_paths } = mono;
 const { blue: b, pink: p, white: w } = colors;
-const env = process.env as import("./config.js").env_type & NodeJS.ProcessEnv;
+const env = process.env as import("./olds/config.js").env_type & NodeJS.ProcessEnv;
 
 
 // log("—— Eleventy Config started...");

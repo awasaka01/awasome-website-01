@@ -14,7 +14,10 @@
 		"package.json": false,
 		"**/.env": false,
 		"**/not_found.html": false,
-		"**/stylelint.config.mjs": false
+		"**/stylelint.config.mjs": false,
+		"__cache/": false,
+		"__compiled/": false,
+		"scripts/": false
 	},
 	"terminal.integrated.minimumContrastRatio": 1,
 	// Disable default validation since stylelint is used

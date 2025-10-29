@@ -1,21 +1,40 @@
-// - node modules
-import {} from "node:path";
+
+
+
+// ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+// |▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+// |  Imports, globals, and minor setup:
+// |_____________________________________________________________________________________________________________
+
+// ✧ node modules
+import crypto from "node:crypto";
+import path from "node:path";
+import glob from "fast-glob";
+import getFolderSize from "get-folder-size";
+import chalk from "chalk";
+import treeKill from "tree-kill";
 import fs from "node:fs";
 import esbuild from "esbuild";
-import externalizeAllPackagesExcept from "esbuild-plugin-noexternal";
 import { replace as esbuildPluginReplace } from "esbuild-plugin-replace";
 import browserslist_esbuild from "browserslist-to-esbuild";
-const supported_browsers_esbuild = browserslist_esbuild(config.supported_browsers); // < convert browserslist to an esbuild compatible format
 
-// - my config
+// ✧ my imports:
 import * as util from "__util__";
-import * as config from "./config.js";
-const { err, colors, paths, absPaths } = config;
+import * as mono from "./monolith.js";
+const { log, warn, error, paths, abs_paths, colors } = mono;
 const { blue: b, pink: p, white: w } = colors;
-const env = process.env as config.env_type & NodeJS.ProcessEnv;
+const env = process.env as import("./monolith.js").env_arguments_type & NodeJS.ProcessEnv;
 
 
-import { log } from "./monolith.js";
+
+// ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+// |▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+// |  Stuff:
+// |_____________________________________________________________________________________________________________
+
+const supported_browsers_esbuild = browserslist_esbuild(config.supported_browsers); // < convert browserslist to an esbuild compatible format
 
 
 /** Runs esbuild */

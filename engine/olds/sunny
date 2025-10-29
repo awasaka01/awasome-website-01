@@ -20,7 +20,7 @@ import chalk from "chalk";
 // ! only import config that doesn't depend on env variables
 import { paths, absPaths, env_key, colors } from "./config.js";
 const { blue: b, pink: p, white: w, warn } = colors;
-import { log, divider, err, env_arguments_key } from "./monolith.js";
+import { log, divider, err, env_arguments_key } from "../monolith.js";
 
 
 
@@ -38,7 +38,7 @@ let build_restarting = false;
 	  for each valid flag, set it and any dependant flags to 'true'
 	- Default all unset flags to 'false'
 */
-const env = /** @type {import('./monolith.js').env_arguments_type} */ ({}); // < casted, aka: forced type
+const env = /** @type {import('../monolith.js').env_arguments_type} */ ({}); // < casted, aka: forced type
 process.argv.slice(2).forEach((arg) => {
 	arg = arg.replace(/^(-)+/, "").toLowerCase();
 	const [name, { enable = [] }] = Object.entries(env_key).find(([, { flags }]) => flags?.includes(arg)) ?? [,{}];
@@ -116,7 +116,7 @@ async function build () {
 	});
 
 	buildProcess.on("error", (err) => log(`❌ build.js failed to start: ${err.message}`, "miku"));
-	buildProcess.stderr.on("data", (data) =>       console.log(data.toString()));
+	buildProcess.stderr.on("data", (data) => console.log(data.toString()));
 }
 
 
