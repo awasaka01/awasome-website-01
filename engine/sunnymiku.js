@@ -10,10 +10,36 @@
    - To kill them:
    taskkill /F /IM node.exe   or   pnpm kill
 */
+/*
+	filename
+	description
+*/
+// ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+// |▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+// |  Imports, globals, and minor setup:
+// |_____________________________________________________________________________________________________________
+
+// ✧ node modules
+import childProcess from "node:child_process";
+import crypto from "node:crypto";
+import fs from "node:fs";
+import treeKill from "tree-kill";
+import chokidar from "chokidar";
+import esbuild from "esbuild";
+import { replace as esbuildPluginReplace } from "esbuild-plugin-replace";
+import glob from "fast-glob";
+import chalk from "chalk";
+
+// ✧ config file
+import * as mono from "./monolith.js";
+const { log, warn, error, env_arguments_key, colors, paths, abs_paths } = mono;
+const { blue: b, pink: p, white: w } = colors.fg;
 
 process.env.IS_ROOT_PROCESS = "true";
 process.env.FORCE_COLOR = "1";
 chalk.level = 3;
+
 
 
 
@@ -25,9 +51,6 @@ chalk.level = 3;
 // |	- ensure all flag environment variables is set to 'true' or 'false'
 // |	- modifies `process.env`
 // |_____________________________________________________________________________________________________________
-
-import { log, warn, error, env_arguments_key, colors } from "./monolith.js";
-const { blue: b, pink: p, white: w } = colors;
 
 const FLAGS = /** @type {import('./monolith.js').env_arguments_type} */ ({}); // < casted, aka: forced type
 process.argv.slice(2).forEach((arg) => {
@@ -51,21 +74,6 @@ const env = /** @type {import('./monolith.js').env_arguments_type & NodeJS.Proce
 // |▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
 // |  Modules:
 // |_____________________________________________________________________________________________________________
-
-// ✧ node modules
-import { execSync, fork } from "node:child_process";
-import crypto from "node:crypto";
-import fs from "node:fs";
-import treeKill from "tree-kill";
-import chokidar from "chokidar";
-import esbuild from "esbuild";
-import { replace as esbuildPluginReplace } from "esbuild-plugin-replace";
-import glob from "fast-glob";
-import chalk from "chalk";
-
-// ✧ access monolith.js after env flags are set
-import * as mono from "./monolith.js";
-const { paths, abs_paths } = mono;
 
 
 
@@ -140,7 +148,7 @@ async function START () {
 
 	/*  --  2. Compile the files in engine/ and util/  --  */
 	try {
-		await compileTypescript(paths.util, `${paths.util.replace(paths.source, paths.compiled)}/awa-util`);
+		await compileTypescript(paths.util, `${paths.util.replace(paths.source, paths.compiled)}`);
 		await compileTypescript(paths.engine, `${paths.compiled}/${paths.engine}`);
 	} catch {
 		if (env.WATCH === "false") process.exit(0);
@@ -154,28 +162,32 @@ async function START () {
 
 
 	/*  --  3. Run build.ts  --  */
-	buildProcess = fork(`${paths.compiled}/${paths.engine}/build.js`, [], {
+	buildProcess = childProcess.fork(`${paths.compiled}/${paths.engine}/build-orchestrator.js`, [], {
 		stdio    : ["inherit", "pipe", "pipe", "ipc"],
-		env      : { ...process.env, ...env },
+		env      : { ...process.env, ...env, "IS_ROOT_PROCESS": "false" },
 		detached : process.platform !== "win32", // detach only on Unix
 	});
 	buildProcess.on("error", (err) => error(`   Failed to fork build process: "${err.toString()}"`));
+	registerChildProcess(buildProcess.pid);
 
 	buildProcess.on("message", (/** @type {{ bubble: boolean, [key: string]: any }} */ message) => {
 		if (typeof message !== "object") throw new Error(`Unexpected message from buildProcess: ${message}`);
-		else if (message.function_id !== undefined) return mono.handleBubbleMessages(message);
 		else if (message.type === "child_pid") registerChildProcess(message.pid);
 	});
 
-	buildProcess.on("exit", (code, signal) => {
+	buildProcess.on("exit", async (code, signal) => {
 		if (buildLock === false) {
 			console.log(mono.divider(1));
 			log(p(`${code === 0 ? "✅" : "⛔"} Build process ${code === 0 ? "finished" : "failed"} with code ${code === 0 ? chalk.bold.hex(colors.success)("0") : chalk.bold.hex(colors.failure)(code)} — took ${b(Date.now() - build_start_time + "ms")} `), "miku");
-			killAllChildProcesses();
+			await killAllChildProcesses();
+			if (env.WATCH === "false") process.nextTick(() => process.exit(0x0));
 		}
 	});
 
-    buildProcess.stdout.on("data", (data) => { if (buildProcess?.stdout) process.stdout.write(data); });
+    buildProcess.stdout.on("data", (data) => { handleChunkStreams(data, (str) => {
+		if (str.startsWith(mono.IPC_IDENTIFIER)) mono.handleIPCMessage(str);
+		else if (buildProcess?.stdout) console.log(str);
+	}); });
     buildProcess.stderr.on("data", (data) => { if (buildProcess?.stderr) process.stderr.write(data); });
 }
 
@@ -248,7 +260,7 @@ if (env.WATCH === "true") {
 	log(chalk.dim.italic(`   Press ${b.bold("R")} to restart or ${b.bold("Q")} to quit`), "miku");
 	watcher = chokidar.watch(paths.engine, { ignoreInitial: true });
 	watcher.on("all", (eventType, path, stats) => {
-		if (path.endsWith("sunnymiku.js")) return;
+		if (!path.endsWith(".ts") && !path.endsWith("monolith.js")) return;
 		if (restartTimeout) clearTimeout(restartTimeout);
 		restartTimeout = setTimeout(async () => {
 			console.log(mono.divider(2));
@@ -256,7 +268,7 @@ if (env.WATCH === "true") {
 			console.log(mono.padBoth(`Restarting ${b("build.js")} due to file changes in ${b(path)}...`));
 			console.log("\n");
 			await RESTART();
-		}, 1000);
+		}, 700);
 	});
 
 	registerKey("R", async () => {
@@ -288,30 +300,29 @@ if (env.WATCH === "true") {
 /** @param {string} inputPath  @param {string} outputPath  @param {esbuild.BuildOptions} [options] @returns {Promise<esbuild.BuildResult>} */
 async function compileTypescript (inputPath, outputPath, options = {}) {
 
-
-	// - Get all the .ts and .js files in the input path
-	const files = await glob(`${inputPath}/**/*!(_).{ts,js}`);
+	// - Get all the files in the input path
+	const files = (await glob(`${inputPath}/**/*!(_).{ts,js}`));
 	if (files.length === 0) error(`No .ts files found in ${inputPath}`);
 
 	// - Path to store the hash file
 	const cacheFilePath = `${paths.cache}/hashfile.${inputPath.replaceAll("/", "_")}.bin`;
 
 	// - Create a hash of all the files joined together
-	const buffer = Buffer.concat(await Promise.all(files.map((path) => fs.promises.readFile(path))));
+	const buffer = Buffer.concat(await Promise.all(files.filter((f) => !f.endsWith("sunnymiku.js")).map((path) => fs.promises.readFile(path))));
 	const hash = crypto.createHash("sha1").update(buffer).digest();
 
 	// - Get the old hash for comparison, or null
-	const oldHash = env.CLEAR_CACHE === "true" ? null : await fs.promises.readFile(cacheFilePath).catch(() => null);
+	const oldHash = env.NO_CACHE === "true" ? null : await fs.promises.readFile(cacheFilePath).catch(() => null);
 
 	// @ Return and don't recompile if the old and new hashes are the same
 	if (oldHash !== null && hash.equals(oldHash)) return;
 
 	// - Log the start message
 	const reason
-		= env.CLEAR_CACHE === "true" ? "the cache was cleared"
+		= env.NO_CACHE === "true" ? "NO_CACHE is enabled"
 		: !oldHash ? `${b(cacheFilePath)} didn't exist`
 		: "the files have changed";
-	log((`${chalk.bold.hex(colors.langTS)("TS")} Recompiling ${b(inputPath + "/")}`) + ` because ${reason}...`, "miku");
+	log((`${mono.symbols.ts} Recompiling ${b(inputPath + "/")}`) + ` because ${reason}...`, "miku");
 
 	// - Write the new hash and recompile
 	await esbuild.build({
@@ -326,4 +337,16 @@ async function compileTypescript (inputPath, outputPath, options = {}) {
 		],
 	}).catch((err) => { log(chalk.bold.hex(colors.langTS)("TS") + " " + chalk.hex(colors.failure).bold.underline(`Failed to compile ${b(inputPath + "/")}`), "miku"); throw null; });
 	await fs.promises.writeFile(cacheFilePath, hash);
+}
+
+
+
+/*  --  Helper Functions  --  */
+let buffer = "";
+/** Convert stdout chunks into singular lines */
+function handleChunkStreams (chunk, logger) {
+	const data = typeof chunk === "string" ? chunk : chunk.toString();
+	let lines = (buffer + data).split(/\r?\n/);
+	buffer = lines.pop();
+	for (let line of lines) { logger(line);	}
 }

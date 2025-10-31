@@ -18,7 +18,7 @@ import chalk from "chalk";
 
 
 // ! only import config that doesn't depend on env variables
-import { paths, absPaths, env_key, colors } from "./config.js";
+import { paths, abs_paths, env_key, colors } from "./config.js";
 const { blue: b, pink: p, white: w, warn } = colors;
 import { log, divider, err, env_arguments_key } from "../monolith.js";
 
@@ -42,7 +42,7 @@ const env = /** @type {import('../monolith.js').env_arguments_type} */ ({}); // 
 process.argv.slice(2).forEach((arg) => {
 	arg = arg.replace(/^(-)+/, "").toLowerCase();
 	const [name, { enable = [] }] = Object.entries(env_key).find(([, { flags }]) => flags?.includes(arg)) ?? [,{}];
-	if (name === undefined) return err(`¯\\_('•_•)_/¯ Unknown CLI argument provided: '${arg}' ⁭`);
+	if (name === undefined) return error(`¯\\_('•_•)_/¯ Unknown CLI argument provided: '${arg}' ⁭`);
 	env[name] = "true";
 	enable.forEach((k) => { if (env[k] === undefined) env[k] = "true"; });
 });
@@ -70,9 +70,9 @@ async function build () {
 
 	/* ~~~~~ 1. Ensure all directories exist ~~~~~ */
 	await Promise.all([
-		fs.promises.mkdir(absPaths.compiled, { recursive: true }),
-		fs.promises.mkdir(absPaths.cache, { recursive: true }),
-		fs.promises.mkdir(absPaths.output, { recursive: true }),
+		fs.promises.mkdir(abs_paths.compiled, { recursive: true }),
+		fs.promises.mkdir(abs_paths.cache, { recursive: true }),
+		fs.promises.mkdir(abs_paths.output, { recursive: true }),
 	]);
 
 
@@ -98,7 +98,7 @@ async function build () {
 			// console.log(chalk.italic.hex("#47404e")(`⫷ registered child process '${msg.pid}' ⫸`));
 			registerChildProcess(msg.pid);
 		}
-		else { return err(`Why message me? ${msg}`); }
+		else { return error(`Why message me? ${msg}`); }
 	});
 
 	/* ~~~~~ 5. Handle build.js exit ~~~~~ */
@@ -208,7 +208,7 @@ if (process.stdin.isTTY && !process.env.CI) {
 
 /** @param {number} pid */
 function registerChildProcess (pid) {
-	if (child_processes.has(pid)) err(`Child process already registered: ${pid}`);
+	if (child_processes.has(pid)) error(`Child process already registered: ${pid}`);
 	child_processes.add(pid);
 }
 
@@ -224,7 +224,7 @@ async function compileTS (inputPath, outputPath, options = {}) {
 
 	// - Get all the .ts and .js files in the input path
 	const files = await glob(`${inputPath}/**/*!(_).{ts,js}`);
-	if (files.length === 0) err(`No .ts files found in ${inputPath}`);
+	if (files.length === 0) error(`No .ts files found in ${inputPath}`);
 
 	// - Path to store the hash file
 	const cacheFilePath = `${paths.cache}/hashfile.${inputPath.replaceAll("/", "_")}.bin`;

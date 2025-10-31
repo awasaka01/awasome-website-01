@@ -13,7 +13,7 @@ import chalk from "chalk";
 // - my config
 import * as util from "__util__";
 import * as config from "./olds/config.js";
-const { err, paths, absPaths } = config;
+const { err, paths, abs_paths } = config;
 import { log, divider, colors } from "./monolith.js";
 const { blue: b, pink: p, white: w } = colors;
 const env = process.env as import("./olds/config.js").env_type & NodeJS.ProcessEnv;

@@ -1,32 +1,54 @@
+/*
+	filename
+	description
+*/
+// ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+// |▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+// |  Imports, globals, and minor setup:
+// |_____________________________________________________________________________________________________________
+
 // ✧ node modules
 import fs from "node:fs";
+import path from "node:path";
+import crypto from "node:crypto";
 import esbuild from "esbuild";
-import browserslist_esbuild from "browserslist-to-esbuild";
-const supported_browsers_esbuild = browserslist_esbuild(mono.supported_browsers); // < convert browserslist to an esbuild compatible format
-import { transform as lightningcss, browserslistToTargets } from "lightningcss";
-const supported_browsers_lightningcss = browserslistToTargets(mono.supported_browsers); // < convert browserslist to a lightningcss compatible format
-
-// ✧ 11ty plugins
-import ImagePlugin_11ty from "./11ty-plugin-image.js";
-import SassPlugin_11ty from "./11ty-plugin-sass.js";
-import preprocessors_11ty from "./11ty-preprocessors.js";
-import postprocessors_11ty from "./11ty-postprocessors.js";
-import { VentoPlugin } from "eleventy-plugin-vento";
+import { replace as esbuildPluginReplace } from "esbuild-plugin-replace";
+import browserslistToEsbuild from "browserslist-to-esbuild";
+import * as lightningcss from "lightningcss";
+import chalk from "chalk";
+import deepmerge from "deepmerge";
+import treeKill from "tree-kill";
+import glob from "fast-glob";
+import getFolderSize from "get-folder-size";
+import sharp from "sharp";
+import { imageSizeFromFile } from "image-size/fromFile";
 
 // ✧ my imports:
 import * as util from "__util__";
 import * as mono from "./monolith.js";
-const { log, colors, err, paths, abs_paths } = mono;
-const { blue: b, pink: p, white: w } = colors;
-const env = process.env as import("./olds/config.js").env_type & NodeJS.ProcessEnv;
+const { log, warn, error, paths, abs_paths, colors } = mono;
+const { blue: b, pink: p, white: w } = colors.fg;
+const env = process.env as mono.env_arguments_type & Record<string, string>;
+
+// ✧ 11ty:
+import Eleventy, { defineConfig } from "11ty.ts";
+import { VentoPlugin } from "eleventy-plugin-vento";
+
+// ✧ my plugins:
+// import eleventyPluginImageCompressor from "./eleventy-plugin--image-compressor.js";
+import eleventyPluginSassCompiler from "./eleventy-plugin--sass-compiler.js";
+import eleventyPluginTransforms from "./eleventy-plugin--transforms.js";
 
 
-// log("—— Eleventy Config started...");
 
+// ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
+// |▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+// |  Config object:    [https://www.11ty.dev/docs/config/]
+// |	- Prefered for "order of operations"
+// |_____________________________________________________________________________________________________________
 
-/* ~~~~~ Main Config ~~~~~ */ // [https://www.11ty.dev/docs/config/]
-// 1. Eleventy Config object:
 const eleventy_config = {
 	dir: { input: paths.source, includes: paths.includes, output: paths.output },
 	htmlTemplateEngine: "vto",
@@ -34,13 +56,17 @@ const eleventy_config = {
 }; export { eleventy_config as config }; // < to avoid name conflict
 
 
-// 2. Eleventy Config function, defined using 11ty.ts for type support:
-import Eleventy, { defineConfig } from "11ty.ts";
-export default defineConfig((eleventyConfig) => {
+
+// ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+// |▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+// |  Config function:    [https://www.11ty.dev/docs/config/]
+// |_____________________________________________________________________________________________________________
+
+export default ((eleventyConfig : Eleventy.EleventyConfig) => {
 
 	// - Ignore files
 	eleventyConfig.ignores.add(`${mono.paths.source}/_*{*/_*,*}`); // Ignore files and directories that start with an underscore  (glob to match _'s instead: !(_)*{*/!(_)*,*})
-	eleventyConfig.ignores.add("**/critical.js");
 	eleventyConfig.ignores.add(`**/*.{js,ts,tsx,jsx}`);
 
 	// - Watch for changes to files that this config file depends on [https://www.11ty.dev/docs/watch-serve/#reset-configuration] 
@@ -49,7 +75,7 @@ export default defineConfig((eleventyConfig) => {
 	eleventyConfig.setTemplateFormats(["html", "vto"]);
 	eleventyConfig.setDataFileSuffixes([".11ty", ".11tydata"]);
 	eleventyConfig.setUseGitIgnore(false);
-	eleventyConfig.addPassthroughCopy("./source/**/*.{mp3,css}");
+	eleventyConfig.addPassthroughCopy("./source/**/*.{mp3}");
 	eleventyConfig.addPassthroughCopy("./source/fonts/**/*");
 	eleventyConfig.setDataFileBaseName("override");
 
@@ -61,26 +87,26 @@ export default defineConfig((eleventyConfig) => {
 	// | postprocessors: Transform content after templates are compiled (data does not contain frontmater!)
 	// | Vento.vto template support [https://github.com/noelforte/eleventy-plugin-vento]
 	// | Sass.scss support using sass-embedded (+ my plugin), and minify it using lightningcss
-	eleventyConfig.addPlugin(ImagePlugin_11ty({}));
-	eleventyConfig.addPlugin(preprocessors_11ty);
-	eleventyConfig.addPlugin(postprocessors_11ty);
-	eleventyConfig.addPlugin(VentoPlugin, { ventoOptions: { ...mono.vento } });
-	eleventyConfig.addPlugin(SassPlugin_11ty({
-		sassOptions: { ...mono.scss, logger: { debug: (m) => log(m, "sass"), warn: (m) => process.send({ type: "warning", message: m }) } },
-		postprocess: env.MINIFY_FILES === "true" ? undefined : (content, data, map) => {
-			const result = lightningcss({
-				filename: data.page.fileSlug + ".css",
-				code: Buffer.from(content, "utf8"),
-				targets: supported_browsers_lightningcss,
-				minify: true,
-				sourceMap: env.SOURCE_MAPS === "true",
-				inputSourceMap: env.SOURCE_MAPS === "true" ? JSON.stringify(map) : undefined,
-			});
-			return result.code + (result.map ? `\n/*# sourceMappingURL=data:application/json;base64,${Buffer.from(JSON.stringify(result.map)).toString("base64")}*/` : "");
-		},
+	// eleventyConfig.addPlugin(eleventyPluginImageCompressor);
+	eleventyConfig.addPlugin(eleventyPluginTransforms);
+	eleventyConfig.addPlugin(VentoPlugin, { ventoOptions: { ...mono.vento as any } });
+	eleventyConfig.addPlugin(eleventyPluginSassCompiler({
+		sassOptions: { ...mono.scss, logger: { debug: (m) => log(m, "sass"), warn: (m) => warn(m, "sass") } },
+		postprocess: env.MINIFY_FILES === "true" ? undefined : minifyCSS,
 	}));
 
+	/* ~~~~~ Minify .css ~~~~~ */
+	eleventyConfig.addTemplateFormats("css");
+	eleventyConfig.addExtension("css", { // [https://www.11ty.dev/docs/languages/custom/]
+		outputFileExtension: "css",
+		useLayouts: false,
+		compile: (inputContent : string) => (data : Eleventy.EleventyScope) => minifyCSS(inputContent, data),
+	});
 
+
+	eleventyConfig.on("eleventy.after", () => {
+		setTimeout(() => mono.sendIPC({ function_id: "print-warnings", args: [] }));
+	});
 
 
 	eleventyConfig.setServerOptions({
@@ -91,6 +117,19 @@ export default defineConfig((eleventyConfig) => {
 		watch: ["**/*.{js,ts,tsx,jsx}", "images/**/*"],
 	});
 
-	log("   Eleventy Config loaded!");
-	return undefined;
+
+	log(chalk.dim.italic("   Eleventy Config loaded!"), "11ty");
 });
+
+
+function minifyCSS (content : string, data : Eleventy.EleventyScope, sourceMap ?: import("sass-embedded").CompileResult["sourceMap"]) : string {
+	const result = lightningcss.transform({
+		filename: data.page.fileSlug + ".css",
+		code: Buffer.from(content, "utf8"),
+		targets: lightningcss.browserslistToTargets(mono.supported_browsers),
+		minify: true,
+		sourceMap: env.SOURCE_MAPS === "true",
+		inputSourceMap: env.SOURCE_MAPS === "true" && Boolean(sourceMap) ? JSON.stringify(sourceMap) : undefined,
+	});
+	return result.code + (result.map ? `\n/*# sourceMappingURL=data:application/json;base64,${Buffer.from(JSON.stringify(result.map)).toString("base64")}*/` : "");
+}

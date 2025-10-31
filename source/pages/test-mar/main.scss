@@ -66,9 +66,10 @@ $gap: lh(1) ch(2) ; // shorthand list for margins and paddings that are 2 charac
 }
 
 body {
-	padding: 30px;
+	// padding: 5vh 10vw;
 	// padding: 50vw;
-	// width: 200vw;
+	width: 100vw;
+	contain: paint;
 	box-sizing: border-box;
 	// overflow: hidden;
 }
@@ -77,9 +78,11 @@ body {
 	display: flex;
 	flex-direction: row;
 	gap: 40px;
-	justify-content: center;
+	justify-content: left;
 	> * {
-		max-height: 200px;
+		display: flex;
+		flex-direction: row;
+		height: 800px;
 	}
 	.marquee-track > * {
 		height: 100%;
@@ -88,10 +91,13 @@ body {
 }
 .t { max-width: 100%; overflow: visible; display: flex; opacity: 0.6; }
 
-.marquee-track > * {
-	background-color: c(bg, 550);
-	// outline: 4px outset rgb(0 0 0 / 20%);
-	outline-offset: -4px;
+main {
+	margin: 5vh 10vw;
+}
+
+#content {
+	padding: 10px;
+	box-sizing: border-box;
 }
 
 
@@ -173,6 +179,7 @@ body {
 // 	background-size: var(--square-size-4) var(--square-size), var(--square-size) var(--square-size-4);
 // 	background-repeat: no-repeat;
 // }
+// .marquee:not(.N, .S, .W, .rtl, .direction-north, .direction-south, .direction-west),
 
 
 // /* ❀ ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴ ❀ */
@@ -180,10 +187,13 @@ body {
 
 
 
-
-
-
-
+.marquee-track > * {
+	outline: 1px solid rgb(255 255 255 / 10.3%);
+	outline-offset: -3px;
+	border-radius: 10px;
+	box-sizing: border-box;
+	background-color: c(bg, 550);
+}
 
 
 
@@ -197,33 +207,34 @@ body {
 /*  ~~~  main marquee container  ~~~  */
 .marquee {
 	/* -- critical */
-	--children: 19;
+	/* user set */ --children: 19;
 
 	/* -- styling */
 	/* user set */ --background: rgb(0 0 0 / 20%);
-	/* user set */ --gradient-color: rgb(0 0 0 / 60%);
-	/* user set */ --gradient-length: 0px;
-	/* user set */ --fadeout-length: 40px;
+	/* user set */ --gradient-color: rgb(0 0 0 / 30%);
+	/* user set */ --gradient-length: 80px;
+	/* user set */ --fadeout-length: 10px;
 	/* user set */ --scrollbar-size: 12px;
 	
 	/* -- animation speed calculation */
-	/* user set */ --speed: 80; /* in unitless px/s */
-	/* user set */ --item-size: 200; /* in unitless px, width/height depending on orientation, is only needed for accurate speed calculations */
-	/* computed */ --animation-distance: calc(var(--width-per-child) * var(--children));
-	/* user overrides */ --duration: calc(1s * (var(--animation-distance) / var(--speed)));
+	/* user set */ --speed: 100; /* in unitless px/s */
+	/* user set or script */ --item-size: 30; /* in unitless px, width/height depending on orientation, is only needed for accurate speed calculations */
+	/* computed */ --animation-distance: calc(var(--item-size) / 10 * var(--children));
+	/* computed or user overrides */ --duration: calc(1s * (var(--animation-distance) / var(--speed)));
+
+	/* user set */ --item-buffer: 16;
+	/* computed */ --item-buffer-safe: max(var(--item-buffer), 1);
 }
 /* -- angle variables for all 4 directions, mainly for gradients */
 .marquee.N, .marquee.direction-north { --direction: 0deg; /* to top */ }
 .marquee.S, .marquee.direction-south { --direction: 180deg; /* to bottom */ }
 .marquee.W, .marquee.direction-west, .marquee.rtl { --direction: 270deg; /* to left */ }
-.marquee:not(.N, .S, .W, .rtl, .direction-north, .direction-south, .direction-west),
 .marquee.E, .marquee.direction-east, .marquee.ltr { --direction: 90deg; /* to right */ }
 
 
 /* ❀ ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴ ❀ */
 /*  ~~~  viewport, area that is visible, like a window into the track  ~~~  */
 .marquee .marquee-viewport {
-	width: 100%;
 	display: flex;
 	overflow: hidden;
 	position: relative;
@@ -255,9 +266,20 @@ body {
 	flex: none;
 	place-content: center center;
 	place-items: center center;
+	// animation-play-state: paused !important;
 }
-
-
+// .marquee:not([data-firefox-patch]) .marquee-viewport .marquee-track > *,
+// .marquee[data-firefox-patch="1"] .marquee-viewport .marquee-track > * { box-shadow: 0 0 0 100vmax var(--background); }
+// .marquee[data-firefox-patch="2"] .marquee-viewport .marquee-track > * { box-shadow: 0 0 0 100vmax transparent; }
+/* .marquee[data-firefox-patch="3"] */ .marquee-viewport .marquee-track > *::after {
+	content: ""; position: absolute; top: 50%; left: 50%;
+	transform: translate(-50%, -50%);
+	width: 1px; height: 1000vh; background-color: transparent;
+}
+.marquee.E .marquee-track > *::after, .marquee.direction-east .marquee-track > *::after, .marquee.ltr .marquee-track > *::after,
+.marquee.W .marquee-track > *::after, .marquee.direction-west .marquee-track > *::after, .marquee.rtl .marquee-track > *::after {
+	width: 1000vw; height: 1px;
+}
 
 
 /* ✿ ╟━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╢ ✿ */
@@ -265,35 +287,62 @@ body {
 
 
 /* ❀ ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴ ❀ */
+/*  ~~~  horizontal container  ~~~ */
+.marquee.n,
+.marquee.direction-north,
+.marquee.s, 
+.marquee.direction-south {
+	width: 100%;
+	height: max-content;
+}
+
+
+/* ❀ ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴ ❀ */
 /*  ~~~  horizontal viewport  ~~~ */
-.marquee:not(.N, .S, .W, .rtl, .direction-north, .direction-south, .direction-west) .marquee-viewport,
 .marquee.E .marquee-viewport, .marquee.direction-east .marquee-viewport, .marquee.ltr .marquee-viewport,
 .marquee.W .marquee-viewport, .marquee.direction-west .marquee-viewport, .marquee.rtl .marquee-viewport {
+	width: 100%;
+	justify-content: right;
+}
 
+.marquee.W .marquee-viewport, .marquee.direction-west .marquee-viewport, .marquee.rtl .marquee-viewport {
+	justify-content: left;
 }
 
 
 /* ❀ ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴ ❀ */
 /*  ~~~  horizontal track  ~~~  */
-.marquee:not(.N, .S, .W, .rtl, .direction-north, .direction-south, .direction-west) .marquee-track,
 .marquee.E .marquee-track, .marquee.direction-east .marquee-track, .marquee.ltr .marquee-track,
 .marquee.W .marquee-track, .marquee.direction-west .marquee-track, .marquee.rtl .marquee-track {
 	grid-auto-flow: column;
 	width: max-content;
-	/* always be at least 1 item wider than the viewport: */
-	min-width: calc(100% * (var(--children) / (var(--children) - 1)));
+	/* always be at least 1* item wider than the viewport: */
+	min-width: calc(100% * (var(--children) / (var(--children) - var(--item-buffer-safe))));
 }
 
 
 /* ❀ ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴ ❀ */
-/*  ~~~  horizontal items  ~~~ */
-.marquee:not(.N, .S, .W, .rtl, .direction-north, .direction-south, .direction-west) .marquee-track > *,
-.marquee.E .marquee-track > *, .marquee.direction-east .marquee-track > *, .marquee.ltr .marquee-track > *,
-.marquee.W .marquee-track > *, .marquee.direction-west .marquee-track > *, .marquee.rtl .marquee-track > * {
-
+/*  ~~~  horizontal items : left to right  ~~~ */
+.marquee.E .marquee-track > *, .marquee.direction-east .marquee-track > *, .marquee.ltr .marquee-track > * {
+	animation: LTRscroll var(--duration) linear infinite; 
+	// animation-play-state: paused;
+	animation-delay: calc((var(--duration) / var(--children) * (var(--i) + var(--item-buffer-safe) - 1)) * -1);
+}
+@keyframes LTRscroll {
+	from { transform: translateX(calc(-100% * (var(--i) - 1))); }
+	to { transform: translateX(calc(100% * (var(--children) - var(--i) + 1))); }	
 }
 
-
+/*  ~~~  horizontal items : right to left  ~~~ */
+.marquee.W .marquee-track > *, .marquee.direction-west .marquee-track > *, .marquee.rtl .marquee-track > * {
+	animation: RTLscroll var(--duration) linear infinite;
+	// animation-play-state: paused;
+	animation-delay: calc((var(--duration) / var(--children) * (var(--children) - var(--i))) * -1);
+}
+@keyframes RTLscroll {
+	from { transform: translateX(calc(100% * (var(--children) - var(--i)))); }
+	to { transform: translateX(calc(-100% * (var(--i)))); }
+}
 
 
 /* ✿ ╟━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╢ ✿ */
@@ -301,38 +350,66 @@ body {
 
 
 /* ❀ ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴ ❀ */
+/*  ~~~  vertical container  ~~~ */
+.marquee.N, .marquee.direction-north,
+.marquee.S, .marquee.direction-south {
+	height: 100%;
+	width: max-content;
+}
+
+
+/* ❀ ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴ ❀ */
 /*  ~~~  vertical viewport  ~~~ */
 .marquee.N .marquee-viewport, .marquee.direction-north .marquee-viewport,
 .marquee.S .marquee-viewport, .marquee.direction-south .marquee-viewport {
-
+	width: 100%;
+	height: 100%;
+	align-items: start;
 }
 
+.marquee.S .marquee-viewport, .marquee.direction-south .marquee-viewport {
+	align-items: end;
+}
 
 /* ❀ ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴ ❀ */
 /*  ~~~  vertical track  ~~~  */
 .marquee.N .marquee-track, .marquee.direction-north .marquee-track,
 .marquee.S .marquee-track, .marquee.direction-south .marquee-track {
-
 	grid-auto-flow: row;
 	height: max-content;
-	/* always be at least 1 item wider than the viewport: */
-	min-height: calc(100% * (var(--children) / (var(--children) - 1)));
+	/* always be at least 1* item taller than the viewport: */
+	min-height: calc(100% * (var(--children) / (var(--children) - var(--item-buffer-safe))));
 }
 
 
 /* ❀ ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴ ❀ */
 /*  ~~~  vertical items  ~~~ */
-.marquee.N .marquee-track > *, .marquee.direction-north .marquee-track > *,
 .marquee.S .marquee-track > *, .marquee.direction-south .marquee-track > * {
-
+	animation: SOUTHscroll var(--duration) linear infinite;
+	// animation-play-state: paused;
+	animation-delay: calc((var(--duration) / var(--children) * (var(--i) + var(--item-buffer-safe) - 1)) * -1);
 }
 
+.marquee.N .marquee-track > *, .marquee.direction-north .marquee-track > * {
+	animation: NORTHscroll var(--duration) linear infinite;
+	// animation-play-state: paused;
+	animation-delay: calc((var(--duration) / var(--children) * (var(--children) - var(--i))) * -1);
+}
 
+@keyframes SOUTHscroll {
+	from { transform: translateY(calc(-100% * (var(--i) - 1))); /* at top */ }
+	to { transform: translateY(calc(100% * (var(--children) - var(--i) + 1))); /* below bottom */ }
+}
+@keyframes NORTHscroll {
+	from { transform: translateY(calc(100% * (var(--children) - var(--i)))); /* at bottom */ }
+	to { transform: translateY(calc(-100% * (var(--i)))); /* above top */ }
+}
 
 
 /* ✿ ╟━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╢ ✿ */
 /*    ~~~~~   MISCELLANEOUS RULES   ~~~~~   */
 
+// .marquee-viewport { overflow: visible !important; mask: none !important; }
 
 /* use 'contain: paint' for clipping instead of 'overflow: hidden' if it's supported - prevents image unloading issues on firefox */
 @supports (contain: paint) { .marquee-viewport { contain: paint; overflow: unset !important; } }
@@ -340,7 +417,7 @@ body {
 /* miscellaneous things that may or may not fix issues with image unloading */
 .marquee-track img { backface-visibility: hidden; }
 .marquee-track { transform-style: preserve-3d; }
-.marquee-track > * { will-change: transform; }
+.marquee-track > * { will-change: transform; transform: translateZ(0); }
 
 /* removes some whitespace around images */
 .marquee { vertical-align: middle; }

@@ -1,10 +1,11 @@
-// @ts-check
 import chalk from "chalk";
 import path from "node:path";
 import browserslist from "browserslist";
+import browserslistToEsbuild from "browserslist-to-esbuild";
+import * as lightningcss from "lightningcss";
 
 // ✧ when accessed from outside of sunnymiku.js, process.env has extra keys:
-const env = /** @type {NodeJS.ProcessEnv & import('./monolith.js').env_arguments_type} */ (process.env);
+const env = /** @type {NodeJS.ProcessEnv & env_arguments_type} */ (process.env);
 
 // ✧ env flags that allow color on github:
 chalk.level = 3; process.env.FORCE_COLOR = "1";
@@ -24,9 +25,11 @@ let __temp;
 /*  --  General  --  */
 export const version = "3.0.0";
 export const port = 8080;
-export const supported_browsers = browserslist(">=0.1%, not dead, not IE 11, not ios <= 14"); // console.log(browserslist);
 export const columns = process.stdout.columns ?? 80;
 
+export const supported_browsers = browserslist(">=0.1%, not dead, not IE 11, not ios <= 14"); // console.log(browserslist);
+export const supported_browsers_esbuild = browserslistToEsbuild(supported_browsers);
+export const supported_browsers_lightningcss = lightningcss.browserslistToTargets(supported_browsers);
 
 
 /*  --  Environment Variables  --  */
@@ -38,17 +41,18 @@ __temp = deepFreeze({
 	MAX_QUALITY           : { flags: ["max-quality"] },
 	SOURCE_MAPS           : { flags: ["source-maps", "sourcemaps", "map", "maps", "sourcemap", "source-map"] },
 	SERVE                 : { flags: ["s", "serve", "dev"], enable: ["WATCH"] },
-	WATCH                 : { flags: ["w", "watch"] }, // < different to serve! enables auto reloading of config instead of only running once
+		WATCH                 : { flags: ["w", "watch"] }, // < different to serve! enables auto reloading of config instead of only running once
 	PRODUCTION            : { flags: ["p", "prod", "production", "full"], enable: ["MINIFY_FILES", "MINIFY_IMAGES"] },
-	MINIFY_FILES          : { flags: ["minify", "min"] },
-	MINIFY_IMAGES         : { },
-	CLEAN                 : { flags: ["c", "clean"], enable: ["CLEAR_CACHE", "CLEAR_DIST"] },
-	CLEAR_CACHE           : { },
-	CLEAR_DIST            : { flags: ["clear-dist", "cleardist"] },
+		MINIFY_FILES          : { flags: ["minify", "min"] },
+		MINIFY_IMAGES         : { flags: ["minify-images"] },
+	CLEAN                 : { flags: ["clean"], enable: ["NO_CACHE", "CLEAR_DIST", "CLEAR_IMAGES"] },
+		NO_CACHE              : { flags: ["nc", "no-cache", "nocache"] },
+		CLEAR_DIST            : { flags: ["c", "clear-dist", "cleardist"] },
+		CLEAR_IMAGES          : { flags: ["clear-images"] },
 	VERBOSE               : { flags: ["v", "verbose"], enable: ["VERBOSE_"] },
-	VERBOSE_LOG_ALL_FILES : { },
-	// VERBOSE_SHOW\          _CHILDREN : { },
-	VERBOSE_MISC          : { },
+		VERBOSE_LOG_ALL_FILES : { flags: ["verbose-log-all-files"] },
+		VERBOSE_MISC          : { flags: ["verbose-misc"] },
+		// VERBOSE_SHOW_CHILDREN : { },
 });
 export const env_arguments_key = /** @type {Record<keyof typeof __temp, { flags: string[], enable: string[] }>} */ (__temp);
 /** @typedef {Record<keyof typeof env_arguments_key | "IS_ROOT_PROCESS", 'true' | 'false'>} env_arguments_type */
@@ -64,7 +68,7 @@ export const importmap = Object.freeze({ "imports" : {
 	"simplex-noise" : "https://unpkg.com/simplex-noise@4.0.3/dist/esm/simplex-noise.js",
 } });
 /** Names of imports to ignore whilst bundling source .ts files */
-export const external_dependencies = Object.freeze([...Object.keys(importmap.imports)]);
+export const external_dependencies = ([...Object.keys(importmap.imports)]);
 
 
 
@@ -109,29 +113,6 @@ export const vento = { dataVarname: "global", includes: paths.includes };
 /* | ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀ | */
 //                      > logging, warnings, errors <
 
-const oldcolors = Object.freeze({
-	blue : chalk.hex("#89c2ff"), pink : chalk.hex("#ff8cc5"), white : chalk.hex("#ffffff"),
-
-	langJS   : "#f7df1d", langTS   : "#2f74c0",
-	langCSS  : "#2da8e0", langSCSS : "#cf649a",
-	langHTML : "#f06427", langVTO  : "#080884",
-
-	high1 : "#8f7da3", low1 : "#66606c", low2 : "#545156", low3 : "#272a2d",
-
-	success : "#5ae674", failure : "#f05858", warning : "#eabb6b",
-
-	timestamp : "#47404e",
-	divider01 : ["#78737c", "#78737c"],
-
-	esbuild  : "#ffbd60",
-	eleventy : [fg("#fff"), bg("#222")],
-	enid     : [fg("#2d2a30"), bg("#aa86ce"), (s) => fg("#785a9c")(bg("#aa86ce")(s))],
-	miku     : [fg("#373b3e"), bg("#86cecb"), (s) => fg("#528f99")(bg("#86cecb")(s))],
-});
-
-const fg = /** @param {string} c */ (c) => chalk.hex(c);
-const bg = /** @param {string} c */ (c) => chalk.bgHex(c);
-
 __temp = deepFreeze(/** @type {const} */({
 	langJS    : "#f7df1d",
 	langTS    : "#2f74c0",
@@ -141,37 +122,35 @@ __temp = deepFreeze(/** @type {const} */({
 	langVTO   : "#080884",
 	high1     : "#8f7da3",
 	low1      : "#66606c",
-	low2      : "#545156",
+	low2      : "#423f44",
 	low3      : "#272a2d",
 	success   : "#5ae674",
 	failure   : "#ed4360",
-	warning   : "#eabb6b",
+	warning   : "#d3f072",
 	timestamp : "#47404e",
 	esbuild   : "#ffbd60",
 	eleventy  : ["#ffffff", "#222222"],
-	enid      : ["#2d2a30", "#aa86ce", "#785a9c"],
-	miku      : ["#373b3e", "#86cecb", "#528f99"],
+	enid      : ["#000000", "#af7cd3", "#8352a9"],
+	miku      : ["#2d2a30", "#4bdfdf", "#249a9a"],
 	blue      : "#89c2ff",
 	pink      : "#ff8cc5",
 	white     : "#ffffff",
 	divider01 : ["#78737c", "#78737c"],
 }));
 
-/** Set colors for consistency */ // TODO: make typings do the th onemes the right way corect array string
+/** Color palette for consistency */
 export const colors = Object.freeze({
-	...__temp,
-	fg : /** @type {Readonly<Record<keyof typeof __temp, import("chalk").ChalkInstance | import("chalk").ChalkInstance[]>>} */
-		(Object.freeze(Object.fromEntries(Object.entries(__temp).map(([key, color_s]) => {
-		return typeof color_s === "string"
-			? [key, chalk.hex(color_s)]
-			: [key, color_s.map((c) => chalk.hex(c))];
-	})))),
-	bg : /** @type {Readonly<Record<keyof typeof __temp, import("chalk").ChalkInstance | import("chalk").ChalkInstance[]>>} */
-		(Object.freeze(Object.fromEntries(Object.entries(__temp).map(([key, color_s]) => {
-		return typeof color_s === "string"
-			? [key, chalk.bgHex(color_s)]
-			: [key, color_s.map((c) => chalk.bgHex(c))];
-	})))),
+    ...__temp,
+    fg : /** @type {{ [K in keyof typeof __temp]: typeof __temp[K] extends string ? import("chalk").ChalkInstance : import("chalk").ChalkInstance[] }} */
+	(Object.freeze(Object.fromEntries(Object.entries(__temp).map(([key, value]) => {
+        if (typeof value === "string") return [key, chalk.hex(value)];
+        return [key, value.map((c) => chalk.hex(c))];
+    })))),
+    bg : /** @type {{ [K in keyof typeof __temp]: typeof __temp[K] extends string ? import("chalk").ChalkInstance : import("chalk").ChalkInstance[] }} */
+	(Object.freeze(Object.fromEntries(Object.entries(__temp).map(([key, value]) => {
+        if (typeof value === "string") return [key, chalk.bgHex(value)];
+        return [key, value.map((c) => chalk.bgHex(c))];
+    })))),
 });
 
 /** 5-digit timestamp that changes every millisecond, wraps at 10,000 */
@@ -180,11 +159,11 @@ export const timestamp = () => chalk.hex(colors.timestamp)((~~performance.now() 
 /** preset tags, inserted before timestamp, clarifying the message source */
 const tags = Object.freeze({
 	"none"    : "",
-	"11ty"    : " " + colors.eleventy[0](colors.eleventy[1]("11ty")) + "  ",
-	"sass"    : fg(colors.langSCSS)(" Sass  "),
-	"esbuild" : fg(colors.esbuild)(" " + bg(colors.esbuild).black.bold(">>") + "  "),
-	"miku"    : colors.miku[0](colors.miku[1](colors.miku[2]("▌") + "miku" + colors.miku[2]("▐"))) + " ",
-	"enid"    : colors.enid[0](colors.enid[1](colors.enid[2]("▌") + "neko" + colors.enid[2]("▐"))) + " ",
+	"11ty"    : colors.fg.eleventy[0](colors.bg.eleventy[1](" 11ty ")) + " ",
+	"sass"    : colors.fg.langSCSS("") + colors.bg.langSCSS("𝓢𝒶𝓈𝓈") + colors.fg.langSCSS(" "),
+	"esbuild" : colors.fg.esbuild(" " + colors.bg.esbuild.black.bold(">>") + "  "),
+	"miku"    : colors.fg.miku[0](colors.bg.miku[1](colors.fg.miku[2](colors.bg.miku[1]("▌")) + "miku" + colors.fg.miku[2](colors.bg.miku[1]("▐")))) + " ",
+	"enid"    : colors.fg.enid[0](colors.bg.enid[1](colors.fg.enid[2](colors.bg.enid[1]("▌")) + "evil" + colors.fg.enid[2](colors.bg.enid[1]("▐")))) + " ",
 });
 
 
@@ -203,18 +182,17 @@ const warnings = /** @type {{ [key: string]: [keyof typeof tags, number] }} */ (
 
 /** @param {string} message @param {keyof typeof tags} type */
 export function warn (message, type = "enid") {
-	if (env.IS_ROOT_PROCESS === "false") return process.send({ bubble: true, function_id: "warn", args: [message, type] });
-
+	if (env.IS_ROOT_PROCESS === "false") return sendIPC({ function_id: "warn", args: [message, type] });
 	if (warnings[message]) warnings[message][1] += 1;
 	else warnings[message] = [type, 1];
 }
 
 export function printWarnings () {
+	if (env.IS_ROOT_PROCESS === "false") return sendIPC({ function_id: "print-warnings", args: [] });
 	if (Object.keys(warnings).length <= 0) return;
-
 	console.log(chalk.hex(colors.warning)("◢◤".repeat(columns / 2)));
 	const warningCount = Object.values(warnings).reduce((a, b) => a + b[1], 0);
-	console.log(padBoth("⚠️  " + chalk.hex(colors.warning).bold.underline(`${warningCount} Warning${warningCount !== 1 ? "s" : ""}:`)));
+	console.log(padBoth(colors.fg.warning("!!        " + chalk.bold.underline(`${warningCount} Warning${warningCount !== 1 ? "s" : ""}:`) + "        !!")));
 	Object.entries(warnings).forEach(([message, [type, count]]) => {
 		log(chalk.dim("· ") + message + chalk.hex(colors.low2)(` x${count}`), type, false);
 	});
@@ -243,24 +221,29 @@ export function divider (id) {
 
 
 
+/* |____________________________________________________________________| */
+/* | ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀ | */
+//                               > symbol <
+export const symbols = {
+	ts : colors.fg.langTS.bold("TS"),
+};
+
+
 
 /* |____________________________________________________________________| */
 /* | ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀ | */
-//                               > bubble <
+//                              > fake ipc <
 
-/**
-	To be inserted in all child process's process.on("message",..) functions, brings any serialized messages up to the main process 
-	Allowing functions to store data between processes easily
-*/
-export function handleBubbleMessages (obj) {
-	const args = /** @type {any[]} */ (obj.args);
-	const function_id = /** @type {string} */ (obj.function_id);
 
-	// - Handle all types
-	if (function_id === "warn") warn(args[0], args[1]);
-	else throw new Error(`Unknown function_id: ${function_id}`);
-}
-
+export const IPC_IDENTIFIER = "[IPC]";
+export const handleIPCMessage = (string) => {
+	const json = JSON.parse(string.slice(IPC_IDENTIFIER.length));
+	({
+		"warn"           : warn,
+		"print-warnings" : printWarnings,
+	})[json.function_id](...json.args);
+};
+export const sendIPC = (object) => console.log(IPC_IDENTIFIER + JSON.stringify(object));
 
 
 /* |____________________________________________________________________| */

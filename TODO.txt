@@ -1,9 +1,9 @@
-
-..................................................................
+................................................................................................................................
 ==== do ing:
+- html tutprial with checklist and cachijg
 
 
-..................................................................
+................................................................................................................................
 ==== do to:
 - make steve ai
 - pixel to svg converter
@@ -25,30 +25,30 @@
 - remove ovveruide.11tydata fronm dist
 - fix avif and webp not be uploaded to nekoweb and neociti,, probabley cache isue ? 
 - remove "11ty File changed: engine\sunnymiku.js (skips build)"
-- dry flag work for all files not just eleventy
-- forbid restart when not on watch mode as it breaks so much stuff i think
 
 
-.................................................................
+................................................................................................................................
 ==== do mabye: 
 
 - log all index.html sizes after build
 - uese particle / animation sysemte like particles.js or gsap
 - custom vento template handler, steal code from https://github.com/noelforte/eleventy-plugin-vento
-- rewrite image minifier to not use image-size
+- rewrite image minifier to not need image-size module
 
 
-..................................................................
+................................................................................................................................
 ==== do ne:
 
+- custom 
 - image to text convertor
 - lightningcss instead of esbuild css for autoprefix and its cool and fast and small and fast and small and cool
 - stars bg
 - add reload on config.js change too
-- do a hard shutdown when errors occur
+- X bad idea X dry flag work for all files not just eleventy
+- forbid restart when not on watch mode as it breaks so much stuff i think
 
 
-..................................................................
+................................................................................................................................
 ==== do NOT to:
 
 - overcomplicate
@@ -56,7 +56,7 @@
 - forget to add ideas to todo and forget about them
 
 
-..................................................................
+................................................................................................................................
 ==== istanity:
 
 - download page as single file button... must replace all urls and embed images as data uris
@@ -65,3 +65,10 @@
   + would NEED image versioning, and page versioning, maybe a snapshots/pages and a snashots/assets folder?, maybe a hash for each image so dont have to somehow manually version them? same for external files like js and css?
 - terminal animation library, see test.js, see https://github.com/chjj/blessed
 - 3D game, make movement good and then do the rest of eveything, first person because it be kindof surreal game
+
+
+
+................................................................................................................................
+==== what:
+
+- do a hard shutdown when errors occur

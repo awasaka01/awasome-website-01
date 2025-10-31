@@ -1,18 +1,46 @@
-// ✧ env flags that allow color on github:
-chalk.level = 3; process.env.FORCE_COLOR = "1";
+/*
+	filename
+	description
+*/
+// ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
-// ✧ node modules:
-import chroma from "chroma-js";
+// |▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+// |  Imports, globals, and minor setup:
+// |_____________________________________________________________________________________________________________
+
+// ✧ node modules
+import fs from "node:fs";
+import path, { parse } from "node:path";
+import crypto from "node:crypto";
+import esbuild from "esbuild";
+import { replace as esbuildPluginReplace } from "esbuild-plugin-replace";
+import browserslistToEsbuild from "browserslist-to-esbuild";
+import * as lightningcss from "lightningcss";
 import chalk from "chalk";
+import deepmerge from "deepmerge";
+import treeKill from "tree-kill";
+import glob from "fast-glob";
+import getFolderSize from "get-folder-size";
+import sharp from "sharp";
+import type { EleventyBrowserSync, EleventyConfig, EleventyScope, EleventyServer, EleventySuppliedData, OnRequestCallbackParams, defineConfig } from "11ty.ts";
+import { imageSizeFromFile } from "image-size/fromFile";
 
 // ✧ my imports:
 import * as util from "__util__";
 import * as mono from "./monolith.js";
-const { log, colors, error } = mono;
-const { blue: b, pink: p, white: w } = colors;
-const env = process.env as import("./olds/config.js").env_type & NodeJS.ProcessEnv;
+const { log, warn, error, paths, abs_paths, colors } = mono;
+const { blue: b, pink: p, white: w } = colors.fg;
+const env = process.env as mono.env_arguments_type & Record<string, string>;
 
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+
+// ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+// |▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+// |  Unnamed:
+// |	- Detailed steps or extra info
+// |_____________________________________________________________________________________________________________
+
 
 
 
@@ -52,6 +80,8 @@ function eleventyLogHandler (message : string) {
 
 	//  . Writing (x) from (y)
 	if (message.includes("Writing") && message.includes("from")) {
+		if (env.VERBOSE_LOG_ALL_FILES === "false") return;
+
 		// - colored channels indicating file type from -> to
 		const result = [...message.matchAll(/\.(?<to>css|scss|html).+\.(?<from>.+)/g)]?.[0];
 		if (!result || !result.groups) return;
@@ -80,6 +110,14 @@ function eleventyLogHandler (message : string) {
 		channel = "🚀";
 		console.log("");
 		message = p(`Server started at ${b(`http://localhost:${mono.port}`)}\n`);
+	}
+	else if (message.includes("Copied") && message.includes("Wrote")) {
+		const result = [...message.matchAll(/Copied \x1b\[1m(?<copied>\d+)\x1b\[22m.*Wrote \x1b\[1m(?<wrote>\d+)\x1b\[22m.*\x1b\[1m(?<seconds>(?:\d|\.)+)\x1b\[22m second/gmi)]?.[0];
+		const copyCount = parseInt(result.groups.copied);
+		const writeCount = parseInt(result.groups.wrote);
+		const ms = parseFloat(result.groups.seconds) * 1000;
+		log(`   Copied ${b(copyCount)}, Wrote ${b(writeCount)} files from ${b(paths.source + "/")} to ${b(paths.output + "/")} — in ${b(ms + "ms")}`, "11ty");
+		return;
 	}
 
 	// - remove leading spaces, even if they're infront of ansi codes

@@ -1,11 +1,81 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Document</title>
-</head>
-<body>
-	<p>wow!</p>
-</body>
-</html>
+---yaml
+title: Home
+description: silly little website
+favicon: /assets/images/favicon.ico
+replace: { "𝓕/g": '<span class="spacer"></span>' }
+colorMatches: true
+---
+{{ layout "main-base.vto" }} 
+{{#  ↓ Content to insert in <head> ↓  #}} {{ slot head }} 
+
+{{#  ↓ Content to insert in <body> ↓  #}} {{ /slot }}
+<div class="perspective-container">
+		<div class="content">
+		
+		<br><br><br>
+		
+		add flower here 🌸
+		<main>
+		<div class="auto-resize-text" id="logo-text"><div>{{ include "logo-text.vto" }}</div></div>
+		<script src="/modules/auto-resize-text/core.js"></script>
+		ad dd sdiagonel stripes
+				<h1>⚠️wiork in progress! !</h1>
+		<h1>website</h1>
+		<a href="./test-mar/" class="text"><p>testing marquees</p></a>
+		<a href="./color-preview/" class="text"><p>color preview theme colors</p></a>
+		<a href="./imagetotext/" class="text"><p>conbvert image picxel to  text 1:1 pixdel, it actually works</p></a>
+		<p><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br></p>
+		<h1>parralax</h1>
+		<p><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br></p>
+		<h1>parralax</h1>
+		<p><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br></p>
+		<h1>parralax</h1>
+		<p><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br></p>
+		<h1>parralax</h1>
+		<p><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br></p>
+		<h1>parralax</h1>
+		<p><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br></p>
+		<h1>parralax</h1>
+		<p><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br></p>
+		<h1>parralax</h1>
+		<p><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br></p>
+		<p>bottom</p>
+		{{#
+		<label for="theme-select">Select Theme: </label>{{ include "theme-select.vto" }}
+		<a href="./color-preview/">color-preview</a>
+		<a href="./imagetotext/">imagetotext</a>
+		
+		<!-- Slime Rancher Scrolling Track -->
+		<div id="slimes-track"><div class="hover-detect"></div><div id="slimes">
+			{{> const slimes = ["Boom_Slime_SP", "Chickadoo", "Crystal_Slime_SP", "Dervish_Slime_SP", "Fire_Slime_SP", "Glitch_Slime_SP", "Gold_Slime_SP", "Hen_hen", "Honey_Slime_SP", "Hunter_Slime_SP", "Lucky_Slime_SP", "Mosaic_Slime_SP", "Phosphor_Slime_SP", "Pink_Slime_SP", "Pink&GordoSP", "Puddle_Slime_SP", "Quantum_Slime_SP", "Rad_Slime_SP", "Rock_Slime_SP", "Roostro", "Saber_Slime_SP", "Tabby_Slime_SP", "Tangle_Slime_SP", "The_Tarr_SP"]; }}
+			{{ for slime of slimes }}
+				{{> const name = slime.replace(/_?SP/g, "").replace(/_|&/g, " ") }}
+				<div class="image-wrapper" title="{{ name }}">
+					{{ image `slimes/${slime.replace("&", "")}.webp`, { maxwidth: 128, classes: [], alt: name, att: { title: name, loading: "eager" } } }}
+				</div>
+			{{ /for }}
+		</div></div>
+		{{# {{ image "Pink_Slime_SP.webp", { classes: ["slime"]} }}
+		{{ image "Puddle_Slime_SP.webp", { classes: ["slime"]} }}
+		{{ image "Saber_Slime_SP.webp", { classes: ["slime"]} }}
+		{{ image "Tabby_Slime_SP.webp", { classes: ["slime"]} }}
+		{{ image "Phosphor_Slime_SP.webp", { classes: ["slime"]} }}
+		{{ image "Honey_Slime_SP.webp", { classes: ["slime"]} }} #}}
+		{{# {{ image "S1060032.JPG", { alt: "uwu" } }}
+		{{ image "miku.png" }}
+		{{ image "oh-no-riv-dont-look-d-v0-trs5vm61jhqd1.webp" }}
+		{{ image "raw/S1080001.JPG" }} #}}
+		{{# <img src="" alt=""> #}}
+		{{# <img src="images/raw/S1080001.JPG" alt="" fetchpriority="low"> #}}
+		
+		
+		
+		</main>
+		</div>
+</div>
+
+<script src="/modules/starry-bg/core.js" type="module" defer></script>	
+{{# <script>{{ include "./critical.js" }}</script> {{# Inline important Javascript #}}
+{{ /layout }}
+
+
