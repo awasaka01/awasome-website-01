@@ -12,7 +12,41 @@
 @include reset;
 
 ///////////////////////////////////////////////////////////////////////////////////
+/* ✿ ╟━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╢ ✿ */
 
+// - Root Properties
+$base-font-size: 22px;
+$base-line-height: 1.2;
+
+/* ❀ ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴ ❀ */
+// 	- Custom units in pixels based on the actual font metrics, and the base font size
+// For use in places where you want to use character-based units for a different font size than the one the element has
+// Otherwise, when the font size passed is the same, values will (hopefully) be identical to 1ch, 1ex, 1lh, and 1cap
+
+// - The exact ratios for 'gohu11'
+$ch-ratio: 0.53759765625;  // = 1101 (xAvgCharWidth)                                 / 2048 (unitsPerEm) = width of x
+$ex-ratio: 0.45654296875;  // =  935 (sxHeight)                                      / 2048 (unitsPerEm) = height of x
+$lh-ratio: 1.18408203125;  // = 2425 (sTypoAscender - sTypoDescender + sTypoLineGap) / 2048 (unitsPerEm) = line height
+$cap-ratio: 0.63818359375; // = 1307 (sCapHeight)                                    / 2048 (unitsPerEm) = height of caps
+// [precision calculator: https://www.mathsisfun.com/calculator-precision.html]
+// [getting the font metrics: https://opentype.js.org/font-inspector.html]
+
+// - Functions to calculate the character-based units from a font size, output is in pixels/px
+@function ch($i: 1, $font-size: $base-font-size) { @return ($font-size * $ch-ratio) * $i; }   // width of x
+@function ex($i: 1, $font-size: $base-font-size) { @return ($font-size * $ex-ratio) * $i; }   // height of x
+@function lh($i: 1, $font-size: $base-font-size) { @return ($font-size * $lh-ratio) * $i; }   // line height
+@function cap($i: 1, $font-size: $base-font-size) { @return ($font-size * $cap-ratio) * $i; } // height of X
+
+/* ❀ ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴ ❀ */
+// - Helpful variables and root properties
+
+:root {
+	font-size: $base-font-size;
+	line-height: $base-line-height;
+}
+
+
+$gap: lh(1) ch(2) ; // shorthand list for margins and paddings that are 2 characters wide and 1 line tall
 
 body {
 	box-sizing: border-box;

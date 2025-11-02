@@ -1,6 +1,15 @@
 ................................................................................................................................
+==== do NOT to:
+
+- overcomplicate
+- add features wont use
+- forget to add ideas to todo and forget about them
+
+
+................................................................................................................................
 ==== do ing:
-- html tutprial with checklist and cachijg
+//- html tutprial with checklist and cachijg
+- marquee
 
 
 ................................................................................................................................
@@ -49,16 +58,9 @@
 
 
 ................................................................................................................................
-==== do NOT to:
-
-- overcomplicate
-- add features wont use
-- forget to add ideas to todo and forget about them
-
-
-................................................................................................................................
 ==== istanity:
 
+- bayer matrix svg css filter
 - download page as single file button... must replace all urls and embed images as data uris
   + insanteity x 2 =   minify using gzip, then to base64, then decode it in the browser
 - site history view, with snapshots in past, 

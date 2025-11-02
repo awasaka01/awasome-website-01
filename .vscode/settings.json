@@ -17,6 +17,7 @@
 		"**/stylelint.config.mjs": true,
 		"__cache/": true,
 		"__compiled/": true,
+		".history/": true,
 		"scripts/": true
 	},
 	"terminal.integrated.minimumContrastRatio": 1,

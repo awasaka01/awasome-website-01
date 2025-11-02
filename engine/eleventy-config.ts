@@ -78,6 +78,7 @@ export default ((eleventyConfig : Eleventy.EleventyConfig) => {
 	eleventyConfig.addPassthroughCopy("./source/**/*.{mp3}");
 	eleventyConfig.addPassthroughCopy("./source/fonts/**/*");
 	eleventyConfig.setDataFileBaseName("override");
+	eleventyConfig.addPassthroughCopy("./source/images/**/*");
 
 	eleventyConfig.addShortcode("importmap", () => JSON.stringify(mono.importmap));
 
