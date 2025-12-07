@@ -64,8 +64,8 @@ export default function (options : PluginOptions) {
 		eleventyConfig.addTemplateFormats("scss");
 		eleventyConfig.addExtension("scss", { // [https://www.11ty.dev/docs/languages/custom/]
 			outputFileExtension: "css",
-			useLayouts: false,
-			compile: async function (inputContent : string, inputPath : string) {
+			useLayouts         : false,
+			compile            : async function (inputContent : string, inputPath : string) {
 				const { addDependencies } = this;
 				return async function (data : EleventyScope) {
 					return await compile(options, inputContent, inputPath, data, addDependencies);

@@ -71,7 +71,7 @@ console.log("");
 
 const eleventy_process = childProcess.spawn(`${command} ${eleventy_cli_args.join(" ")}`, {
 	stdio: ["inherit", "pipe", "pipe", "ipc"],
-	env: { ...env, ...process.env, FORCE_COLOR: "1" },
+	env  : { ...env, ...process.env, FORCE_COLOR: "1" },
 	shell: true,
 });
 eleventy_process.on("message", (message : any) => {
@@ -96,7 +96,7 @@ let esbuild_context : esbuild.BuildContext | null = null;
 const entryPoints = glob.sync(abs_paths.source + "/**/*.{js,jsx,ts,tsx}");
 
 // - Reformat entryPoints to an object of pairs
-const entryPointsIO : { in : string, out : string }[] = entryPoints.map((entry) => {
+const entryPointsIO : { in: string, out: string }[] = entryPoints.map((entry) => {
 	const out = entry
 		.replace(abs_paths.source, abs_paths.output)
 		.replace(".ts", "") // .js is added automatically by esbuild
@@ -119,17 +119,17 @@ if (env.VERBOSE_LOG_ALL_FILES === "true") {
 
 // - ESBuild options
 const options : esbuild.BuildOptions = {
-	loader: { ".png": "file", ".jpg": "file", ".svg": "file", ".mp3": "file" },
+	loader  : { ".png": "file", ".jpg": "file", ".svg": "file", ".mp3": "file" },
 	external: mono.external_dependencies,
 	logLevel: "error",
 
-	format: "esm", platform: "browser",
-	target: mono.supported_browsers_esbuild,
-	write: env.DRY_RUN === "false",
-	entryPoints: entryPointsIO, outdir: paths.output,
-	bundle: true, minify: env.MINIFY_FILES === "true",
-	sourcemap: env.SOURCE_MAPS === "true" ? "inline" : undefined,
-	plugins: [
+	format     : "esm", platform   : "browser",
+	target     : mono.supported_browsers_esbuild,
+	write      : env.DRY_RUN === "false",
+	entryPoints: entryPointsIO, outdir     : paths.output,
+	bundle     : true, minify     : env.MINIFY_FILES === "true",
+	sourcemap  : env.SOURCE_MAPS === "true" ? "inline" : undefined,
+	plugins    : [
 		// externalizeAllPackagesExcept(config.bundled_packages),
 		esbuildPluginReplace({ "__util__": "/awa-util/core.js" }),
 	],
@@ -183,11 +183,11 @@ eleventy_process.on("close", async (code = 0) => {
 /** Recursively delete all files and folders inside a directory */
 async function clearDirectory (path : string) {
     const files = await glob(`**/*`, {
-        cwd: path,
-        absolute: true,
-        onlyFiles: false,
+        cwd            : path,
+        absolute       : true,
+        onlyFiles      : false,
         markDirectories: true,
-        ignore: env.CLEAR_IMAGES === "false" ? undefined : ["images/**"],
+        ignore         : env.CLEAR_IMAGES === "false" ? undefined : ["images/**"],
     });
 
     await Promise.all(files.map((f) => fs.promises.rm(f, { recursive: true })));

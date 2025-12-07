@@ -22,10 +22,22 @@
 	🔗   [https://eslint.style/rules#rules]
 
 
-	Last Edited: 2025/10/18
+	Last Edited: 2025/11/11
 	Eslint Version: 9.38.9
 	Stylistic Version: 5.5.0
 */
+
+/* ALLOWED IGNOREDNODES:
+	'ObjectExpression'
+	'ObjectPattern'
+	'ImportDeclaration'
+	'ExportNamedDeclaration'
+	'ExportAllDeclaration'
+	'TSTypeLiteral'
+	'TSInterfaceBody'
+	'ClassBody'
+*/
+
 
 import tseslint from "@typescript-eslint/eslint-plugin";
 import tsParser from "@typescript-eslint/parser";
@@ -34,9 +46,15 @@ import eslint from "eslint";
 
 
 // | ---------------------------------------------------------------------------
+// |  MONKEYPATCH: Fix @stylistic/key-spacing to allow ignoredNodes with singleLine/multiLine
+// @ts-ignore
+const originalKeySpacingRule = stylistic.rules["key-spacing"], listeningNodes = ["ObjectExpression", "ObjectPattern", "ImportDeclaration", "ExportNamedDeclaration", "ExportAllDeclaration", "TSTypeLiteral", "TSInterfaceBody", "ClassBody"], ignoredNodesSchema = { type: "array", items: { type: "string", enum: listeningNodes } };originalKeySpacingRule?.meta?.schema?.[0]?.anyOf ? stylistic.rules["key-spacing"] = { ...originalKeySpacingRule, meta: { ...originalKeySpacingRule.meta, schema: [{ anyOf: originalKeySpacingRule.meta.schema[0].anyOf.map(((e) => ({ ...e, properties: { ...e.properties, ignoredNodes: ignoredNodesSchema } }))) }] } } : console.warn("Warning: Could not patch @stylistic/key-spacing rule - schema structure unexpected");
+
+
+
+// | ---------------------------------------------------------------------------
 // |  JavaScript exclusive rule overrides:
 /** @type { eslint.Linter.RulesRecord } */ const JS_RULES = {
-	// not in ts because breaks with ?: optional property
 	"@stylistic/key-spacing" : ["error", {
 		"singleLine" : { "beforeColon": false, "afterColon": true },
 		"multiLine"  : { "beforeColon": true, "afterColon": true, "align": "colon" },
@@ -47,7 +65,16 @@ import eslint from "eslint";
 // | ---------------------------------------------------------------------------
 // |  TypeScript exclusive rule overrides:
 /** @type { eslint.Linter.RulesRecord } */ const TS_RULES = {
-	"@stylistic/key-spacing" : 0,
+	"@stylistic/key-spacing" : ["error", {
+		"singleLine"   : { "beforeColon": false, "afterColon": true, "mode": "strict" },
+		"multiLine"    : { "beforeColon": false, "afterColon": true, "mode": "strict", "align": "colon" },
+		"ignoredNodes" : ["TSInterfaceBody", "TSTypeLiteral", "ClassBody"],
+	}], // 💼 🔧 Enforce consistent spacing between property names and type annotations in types and interfaces
+
+
+	/* -- allows function overloads -- */
+	"no-redeclare"                    : "off",
+    "@typescript-eslint/no-redeclare" : ["error", { "ignoreDeclarationMerge": true }],
 
 	/* -- typescript-eslint rules -- */ // [https://typescript-eslint.io/rules/]
 	"@typescript-eslint/no-empty-object-type"        : "error",
@@ -180,7 +207,7 @@ import eslint from "eslint";
 	"no-eval"                        : 0, // Disallow the use of eval()
 	"no-extend-native"               : 0, // Disallow extending native types
 	"no-extra-bind"                  : 0, // Disallow unnecessary calls to .bind()
-	"no-extra-boolean-cast"          : "error", // Disallow unnecessary boolean casts
+	"no-extra-boolean-cast"          : 0, // Disallow unnecessary boolean casts
 	"no-extra-label"                 : 0, // Disallow unnecessary labels
 	"no-global-assign"               : 0, // Disallow assignments to native objects or read-only global variables
 	"no-implicit-coercion"           : ["error", { allow: ["+"] }], // Disallow shorthand type conversions
@@ -304,7 +331,7 @@ import eslint from "eslint";
 	"@stylistic/space-before-blocks"           : "error", // 💼 🔧 Enforce consistent spacing before blocks
 	"@stylistic/space-before-function-paren"   : "error", // 💼 🔧 Enforce consistent spacing before function parenthesis
 	"@stylistic/space-in-parens"               : "error", // 💼 🔧 Enforce consistent spacing inside parentheses
-	"@stylistic/space-infix-ops"               : "error", // 💼 🔧 Require spacing around infix operators
+	"@stylistic/space-infix-ops"               : ["error", { "int32Hint": false }], // 💼 🔧 Require spacing around infix operators
 	"@stylistic/space-unary-ops"               : "error", // 💼 🔧 Enforce consistent spacing before or after unary operators
 	"@stylistic/switch-colon-spacing"          : 0, // 🔧 Enforce spacing around colons of switch statements
 	"@stylistic/template-curly-spacing"        : "error", // 💼 🔧 Require or disallow spacing around embedded expressions of template strings
@@ -325,7 +352,7 @@ import eslint from "eslint";
 	"@stylistic/newline-per-chained-call"        : 0, // 🔧 Require a newline after each call in a method chain
 	"@stylistic/object-curly-newline"            : 0, // 🔧 Enforce consistent line breaks after opening and before closing braces
 	"@stylistic/object-property-newline"         : 0, // 🔧 Enforce placing object properties on separate lines
-	"@stylistic/operator-linebreak"              : ["error", "before"], // 💼 🔧 Enforce consistent linebreak style for operators
+	"@stylistic/operator-linebreak"              : ["error", "before", { "overrides": { "=": "before" } }], // 💼 🔧 Enforce consistent linebreak style for operators
 	"@stylistic/padding-line-between-statements" : 0, // 🔧 Require or disallow padding lines between statements
 
 	// (21) Brackets [https://eslint.style/rules?filter=brackets]
@@ -387,7 +414,7 @@ import eslint from "eslint";
 	"@stylistic/jsx-indent-props"             : 0, // 💼 🔧 Enforce props indentation in JSX
 
 	// ( 3) Types [https://eslint.style/rules?filter=type]
-	"@stylistic/type-annotation-spacing"  : ["error", { before: true, after: true }], // 💼 🔧 Require consistent spacing around type annotations
+	"@stylistic/type-annotation-spacing"  : ["error", { before: false, after: true }], // 💼 🔧 Require consistent spacing around type annotations
 	"@stylistic/type-generic-spacing"     : "error", // 💼 🔧 Enforces consistent spacing inside TypeScript type generics
 	"@stylistic/type-named-tuple-spacing" : "error", // 💼 🔧 Expect space before the type declaration in the named tuple
 
@@ -403,7 +430,7 @@ import eslint from "eslint";
 	// ( 6) Misc. [https://eslint.style/rules?filter=misc]
 	"@stylistic/max-len"                          : 0, // Enforce a maximum line length
 	"@stylistic/max-statements-per-line"          : 0, // 💼 Enforce a maximum number of statements allowed per line
-	"@stylistic/member-delimiter-style"           : 0, // 💼 🔧 Require a specific member delimiter style for interfaces and type literals
+	"@stylistic/member-delimiter-style"           : ["error", { "multiline": { "delimiter": "semi", "requireLast": true }, "singleline": { "delimiter": "semi", "requireLast": true } }], // 💼 🔧 Require a specific member delimiter style for interfaces and type literals
 	"@stylistic/nonblock-statement-body-position" : 0, // 🔧 Enforce the location of single-line statements
 	"@stylistic/one-var-declaration-per-line"     : 0, // 🔧 Require or disallow newlines around variable declarations
 	"@stylistic/padded-blocks"                    : 0, // 💼 🔧 Require or disallow padding within blocks

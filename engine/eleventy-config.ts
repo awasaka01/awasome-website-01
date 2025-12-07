@@ -39,6 +39,7 @@ import { VentoPlugin } from "eleventy-plugin-vento";
 // import eleventyPluginImageCompressor from "./eleventy-plugin--image-compressor.js";
 import eleventyPluginSassCompiler from "./eleventy-plugin--sass-compiler.js";
 import eleventyPluginTransforms from "./eleventy-plugin--transforms.js";
+import eleventyPluginCodeblock from "./eleventy-plugin--codeblock.js";
 
 
 
@@ -50,9 +51,9 @@ import eleventyPluginTransforms from "./eleventy-plugin--transforms.js";
 // |_____________________________________________________________________________________________________________
 
 const eleventy_config = {
-	dir: { input: paths.source, includes: paths.includes, output: paths.output },
+	dir               : { input: paths.source, includes: paths.includes, output: paths.output },
 	htmlTemplateEngine: "vto",
-	pathPrefix: "/",
+	pathPrefix        : "/",
 }; export { eleventy_config as config }; // < to avoid name conflict
 
 
@@ -100,8 +101,8 @@ export default ((eleventyConfig : Eleventy.EleventyConfig) => {
 	eleventyConfig.addTemplateFormats("css");
 	eleventyConfig.addExtension("css", { // [https://www.11ty.dev/docs/languages/custom/]
 		outputFileExtension: "css",
-		useLayouts: false,
-		compile: (inputContent : string) => (data : Eleventy.EleventyScope) => minifyCSS(inputContent, data),
+		useLayouts         : false,
+		compile            : (inputContent : string) => (data : Eleventy.EleventyScope) => minifyCSS(inputContent, data),
 	});
 
 
@@ -111,25 +112,29 @@ export default ((eleventyConfig : Eleventy.EleventyConfig) => {
 
 
 	eleventyConfig.setServerOptions({
-		port: mono.port,
-		domDiff: true,
+		port      : mono.port,
+		domDiff   : true,
 		liveReload: true,
-		useCache: true,
-		watch: ["**/*.{js,ts,tsx,jsx}", "images/**/*"],
+		useCache  : true,
+		watch     : ["**/*.{js,ts,tsx,jsx}", "images/**/*"],
 	});
 
 
 	log(chalk.dim.italic("   Eleventy Config loaded!"), "11ty");
+
+	eleventyConfig.addPlugin(eleventyPluginCodeblock());
+
+
 });
 
 
 function minifyCSS (content : string, data : Eleventy.EleventyScope, sourceMap ?: import("sass-embedded").CompileResult["sourceMap"]) : string {
 	const result = lightningcss.transform({
-		filename: data.page.fileSlug + ".css",
-		code: Buffer.from(content, "utf8"),
-		targets: lightningcss.browserslistToTargets(mono.supported_browsers),
-		minify: true,
-		sourceMap: env.SOURCE_MAPS === "true",
+		filename      : data.page.fileSlug + ".css",
+		code          : Buffer.from(content, "utf8"),
+		targets       : lightningcss.browserslistToTargets(mono.supported_browsers),
+		minify        : true,
+		sourceMap     : env.SOURCE_MAPS === "true",
 		inputSourceMap: env.SOURCE_MAPS === "true" && Boolean(sourceMap) ? JSON.stringify(sourceMap) : undefined,
 	});
 	return result.code + (result.map ? `\n/*# sourceMappingURL=data:application/json;base64,${Buffer.from(JSON.stringify(result.map)).toString("base64")}*/` : "");
