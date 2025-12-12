@@ -31,7 +31,7 @@ export const paths = {
 };
 // - Generate all absolute paths from relative
 export const absPath = (p) => path.resolve(process.cwd(), p).replace(/\\/g, "/");
-/** @type {Record<keyof typeof paths, string>} */ export const absPaths = Object.fromEntries(Object.entries(paths).map(([x, y]) => [x, absPath(y)]));
+/** @type {Record<keyof typeof paths, string>} */ export const abs_paths = Object.fromEntries(Object.entries(paths).map(([x, y]) => [x, absPath(y)]));
 
 
 
@@ -121,7 +121,7 @@ export const supported_browsers = browserslist(">=0.1%, not dead, not IE 11, not
 /** @type {import("sass-embedded").StringOptions} */
 export const scss = {
 	alertColor: true,
-	loadPaths: [absPaths.scss],
+	loadPaths: [abs_paths.scss],
 	style: env.MINIFY_FILES === "true" ? "compressed" : "expanded",
 	sourceMap: env.SOURCE_MAPS === "true",
 	// functions:

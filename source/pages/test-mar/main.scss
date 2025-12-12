@@ -1,6 +1,7 @@
+/* stylelint-disable @stylistic/block-opening-brace-newline-after */
 /* stylelint-disable no-duplicate-selectors */
 // @use "sass:color";
-// @use "sass:list";
+@use "sass:list";
 // @use "sass:map";
 // @use "sass:math";
 // @use "sass:meta";
@@ -18,12 +19,12 @@
 $base-font-size: 22px;
 $base-line-height: 1.2;
 
-/* ❀ ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴ ❀ */
-// 	- Custom units in pixels based on the actual font metrics, and the base font size
-// For use in places where you want to use character-based units for a different font size than the one the element has
-// Otherwise, when the font size passed is the same, values will (hopefully) be identical to 1ch, 1ex, 1lh, and 1cap
+// ❀ ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴ ❀
+// ~  Custom units in pixels based on the actual font metrics, and the base font size
+// ~  For use in places where you want to use character-based units for a different font size than the one the element has
+// ~  Otherwise, when the font size passed is the same, values will (hopefully) be identical to 1ch, 1ex, 1lh, and 1cap
 
-// - The exact ratios for 'gohu11'
+// ~  The exact ratios for 'gohu11'
 $ch-ratio: 0.53759765625;  // = 1101 (xAvgCharWidth)                                 / 2048 (unitsPerEm) = width of x
 $ex-ratio: 0.45654296875;  // =  935 (sxHeight)                                      / 2048 (unitsPerEm) = height of x
 $lh-ratio: 1.18408203125;  // = 2425 (sTypoAscender - sTypoDescender + sTypoLineGap) / 2048 (unitsPerEm) = line height
@@ -31,23 +32,29 @@ $cap-ratio: 0.63818359375; // = 1307 (sCapHeight)                               
 // [precision calculator: https://www.mathsisfun.com/calculator-precision.html]
 // [getting the font metrics: https://opentype.js.org/font-inspector.html]
 
-// - Functions to calculate the character-based units from a font size, output is in pixels/px
+// ~  Functions to calculate the character-based units from a font size, output is in pixels/px
 @function ch($i: 1, $font-size: $base-font-size) { @return ($font-size * $ch-ratio) * $i; }   // width of x
 @function ex($i: 1, $font-size: $base-font-size) { @return ($font-size * $ex-ratio) * $i; }   // height of x
 @function lh($i: 1, $font-size: $base-font-size) { @return ($font-size * $lh-ratio) * $i; }   // line height
 @function cap($i: 1, $font-size: $base-font-size) { @return ($font-size * $cap-ratio) * $i; } // height of X
 
-/* ❀ ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴ ❀ */
-// - Helpful variables and root properties
+// ❀ ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴ ❀
+// ~  Helpful variables and root properties
 
 :root {
 	font-size: $base-font-size;
 	line-height: $base-line-height;
 }
 
-
+.javascript-enabled {
+	background-color: red;
+}
 $gap: lh(1) ch(2) ; // shorthand list for margins and paddings that are 2 characters wide and 1 line tall
-
+svg {
+	width: 100%;
+	height: 100%;
+	display: block;
+}
 
 
 .diagonal-stripes {
@@ -66,9 +73,10 @@ $gap: lh(1) ch(2) ; // shorthand list for margins and paddings that are 2 charac
 }
 
 body {
-	padding: 30px;
+	// padding: 5vh 10vw;
 	// padding: 50vw;
-	// width: 200vw;
+	width: 100%;
+
 	box-sizing: border-box;
 	// overflow: hidden;
 }
@@ -77,9 +85,11 @@ body {
 	display: flex;
 	flex-direction: row;
 	gap: 40px;
-	justify-content: center;
+	justify-content: left;
 	> * {
-		max-height: 200px;
+		display: flex;
+		flex-direction: row;
+		height: 800px;
 	}
 	.marquee-track > * {
 		height: 100%;
@@ -88,94 +98,24 @@ body {
 }
 .t { max-width: 100%; overflow: visible; display: flex; opacity: 0.6; }
 
+main {
+	margin: 5vh 10vw;
+}
+
+#content {
+	padding: 10px;
+	box-sizing: border-box;
+}
 .marquee-track > * {
-	background-color: c(bg, 550);
-	// outline: 4px outset rgb(0 0 0 / 20%);
-	outline-offset: -4px;
+	// outline: 1px solid rgb(255 255 255 / 10.3%);
+	// outline-offset: -3px;
+	// border-radius: 10px;
+	box-sizing: border-box;
+	// background-color: c(bg, 550);
 }
 
-
-
-/* ✿ ╟━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╢ ✿ */
-
-
-
-
-// /* ~~~~~ west / right-to-left scrolling animation ~~~~~ */
-// .marquee.direction-west .marquee-track > *,
-// .marquee.rtl .marquee-track > *,
-// .marquee.W .marquee-track > *, {
-// 	animation: LTRscroll var(--duration) linear infinite reverse;
-// 	animation-delay: calc((var(--duration) / var(--children) * (var(--children) - var(--i) - 1)) * -1);
-// }
-
-// /* ~~~~~ (default) east / left-to-right scrolling animation ~~~~~ */
-// .marquee .marquee-track > * {
-// 	animation: LTRscroll var(--duration) linear infinite;
-// 	animation-delay: calc((var(--duration) / var(--children) * (var(--i) + 1)) * -1);
-// }
-// @keyframes LTRscroll { /* from right edge of item touching left edge of viewport to far right end of track */
-// 	from { transform: translateX(calc(-100% * (var(--i) + 1))); }
-// 	to { transform: translateX(calc(100% * (var(--children) - var(--i) - 1))); }
-// }
-
-
-// /* ❀ ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴ ❀ */
-
-// /* ~~~~~ vertical marquees ~~~~~ */
-// .marquee.direction-north .marquee-track,
-// .marquee.N .marquee-track {
-// 	display: grid;
-// 	grid-auto-flow: row;
-// 	flex-shrink: 0;
-// 	justify-content: start;
-// 	justify-items: center;
-// 	grid-template-columns: 1fr;
-// 	grid-template-rows: repeat(var(--children), 1fr);
-// 	min-height: calc(100% * var(--children) / (var(--children) - 1)); // this if breaks: calc(100% * (var(--children) + 1) / var(--children));
-// 	height: max-content;
-// }
-// .marquee.direction-north .marquee-track > *,
-// .marquee.N .marquee-track > * {
-// 	animation: TBscroll var(--duration) linear infinite;
-// 	// animation-delay: calc((var(--duration) / var(--children) * (var(--i) + 1)) * -1);
-// }
-
-
-// .marquee.hover-pause:hover .marquee-track > * { animation-play-state: paused !important; }
-
-
-// /* ❀ ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴ ❀ */
-
-
-// /* ~~~~~ hover highlights ~~~~~ */
-
-// // 3 spaced pixels corner border
-// .marquee.hover-highlight-1 .marquee-track > *:hover::before {
-// 	content: "";
-// 	position: absolute;
-// 	width: 100%;
-// 	height: 100%;
-// 	pointer-events: none;
-// 	inset: 0;
-// 	color: rgb(255 255 255 / 49.1%);
-
-// 	--square-size: 0.3vmin;
-// 	background:
-// 		repeating-linear-gradient(90deg, currentcolor 0 var(--square-size)) top left,
-// 		repeating-linear-gradient(180deg, currentcolor 0 var(--square-size)) top left,
-// 		repeating-linear-gradient(270deg, currentcolor 0 var(--square-size)) top right,
-// 		repeating-linear-gradient(180deg, currentcolor 0 var(--square-size)) top right,
-// 		repeating-linear-gradient(90deg, currentcolor 0 var(--square-size)) bottom left,
-// 		repeating-linear-gradient(0deg, currentcolor 0 var(--square-size)) bottom left,
-// 		repeating-linear-gradient(270deg, currentcolor 0 var(--square-size)) bottom right,
-// 		repeating-linear-gradient(0deg, currentcolor 0 var(--square-size)) bottom right;
-// 	background-size: var(--square-size-4) var(--square-size), var(--square-size) var(--square-size-4);
-// 	background-repeat: no-repeat;
-// }
-
-
-// /* ❀ ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴ ❀ */
+@function array-wrap($list, $before: "", $after: "") { $out: (); @each $item in $list { $out: list.append($out, "#{$before}#{$item}#{$after}", comma); }	@return $out; }
+@function string-wrap($list, $before: "", $after: "") { $out: ""; @each $item in $list { $out: "#{$out}#{$before}#{$item}#{$after}"; }	@return $out; }
 
 
 
@@ -183,280 +123,429 @@ body {
 
 
 
+// ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+// |▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+// |  Define direction classes, in easy-to-use variables:
+// |_____________________________________________________________________________________________________________
+
+
+// Define all classes for valid marquee directions
+$mar-n-raw: ".n", ".north", ".northward", ".to-north", ".up", ".down-to-up", ".dtu";
+$mar-e-raw: ".e", ".east", ".eastward", ".to-east", ".right", ".left-to-right", ".ltr";
+$mar-s-raw: ".s", ".south", ".southward", ".to-south", ".down", ".up-to-down", ".utd";
+$mar-w-raw: ".w", ".west", ".westward", ".to-west", ".left", ".right-to-left", ".rtl";
+
+// Format all directions to proper selectors, like ".marquee.<dir>"
+$mar-n: array-wrap($mar-n-raw, ".marquee"); 
+$mar-e: array-wrap($mar-e-raw, ".marquee"); 
+$mar-s: array-wrap($mar-s-raw, ".marquee"); 
+$mar-w: array-wrap($mar-w-raw, ".marquee");
+
+// Shorthand for horizontal and vertical marquees
+$mar-ver: $mar-n, $mar-s;
+$mar-hor: $mar-e, $mar-w;
+
+// Make east the default direction - by modifying mar-e to also select marquees that are :not() N, S, or W
+/* stylelint-disable-next-line @stylistic/function-whitespace-after */
+$mar-e: $mar-e, ".marquee#{(string-wrap(list.join($mar-n-raw, list.join($mar-s-raw, $mar-w-raw)), ":not(", ")"))}";
+
+
+// @debug "Marquee North : #{$mar-n}";
+// @debug "Marquee East  : #{$mar-e}";
+// @debug "Marquee South : #{$mar-s}";
+// @debug "Marquee West  : #{$mar-w}";
+// @debug "";
+// @debug "Vertical Marquees   : #{$mar-ver}";
+// @debug "Horizontal Marquees : #{$mar-hor}";
 
 
 
+// ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
+// |▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+// |  Variables:
+// |_____________________________________________________________________________________________________________
 
-
-/* ✿ ╟━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╢ ✿ */
-/*   ~~~~~   BASE MARQUEE RULES FOR ALL DIRECTIONS   ~~~~~   */
-
-
-/* ❀ ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴ ❀ */
-/*  ~~~  main marquee container  ~~~  */
 .marquee {
-	/* -- critical */
-	--children: 19;
+	// 🎛️: Set by user / Allowed to be overriden by user
+	// 🧠: Computed
+	// 🧰: Optional script exists to auto set it
 
-	/* -- styling */
-	/* user set */ --background: rgb(0 0 0 / 20%);
-	/* user set */ --gradient-color: rgb(0 0 0 / 60%);
-	/* user set */ --gradient-length: 0px;
-	/* user set */ --fadeout-length: 40px;
-	/* user set */ --scrollbar-size: 12px;
-	
-	/* -- animation speed calculation */
-	/* user set */ --speed: 80; /* in unitless px/s */
-	/* user set */ --item-size: 200; /* in unitless px, width/height depending on orientation, is only needed for accurate speed calculations */
-	/* computed */ --animation-distance: calc(var(--width-per-child) * var(--children));
-	/* user overrides */ --duration: calc(1s * (var(--animation-distance) / var(--speed)));
+	//  ----  CRITICAL DATA  ----  //
+	/* 🎛️ ▪️ 🧰 */ --children: 19;
+
+	//  ----  STYLING  ----  //
+	/* 🎛️ ▪️ ▪️ */ --background: rgb(0 0 0 / 20%);
+	/* 🎛️ ▪️ ▪️ */ --gradient-color: rgb(0 0 0 / 30%);
+	/* 🎛️ ▪️ ▪️ */ --gradient-length: 80px;
+	/* 🎛️ ▪️ ▪️ */ --fadeout-length: 10px;
+	/* 🎛️ ▪️ ▪️ */ --scrollbar-size: 12px;
+
+	// TODO verify if actually px:
+	//  ----  SPEED IN PX/S -> ANIMATION DURATION CALCULATION  ----  //
+	/* 🎛️ ▪️ ▪️ */ --speed: 10; // [unitless px/s] 
+	/* 🎛️ ▪️ 🧰 */ --item-size: 81; // [unitless px] width/height of each item - depending on orientation. it is only needed for accurate speed calculations!!!
+	/* ▪️ 🧠 ▪️ */ --animation-distance: calc(var(--item-size) / 10 * var(--children));
+	/* 🎛️ 🧠 ▪️ */ --animation-duration: calc(1s * (var(--animation-distance) / var(--speed)));
+
+	//  ----  ITEM BUFFER, amount of items to have offscreen at once, min 1  ----  //
+	/* 🎛️ ▪️ ▪️ */ --item-buffer: 1;
+	/* ▪️ 🧠 ▪️ */ --item-buffer-safe: min(calc(var(--children) - 1), max(var(--item-buffer), 1));
 }
-/* -- angle variables for all 4 directions, mainly for gradients */
-.marquee.N, .marquee.direction-north { --direction: 0deg; /* to top */ }
-.marquee.S, .marquee.direction-south { --direction: 180deg; /* to bottom */ }
-.marquee.W, .marquee.direction-west, .marquee.rtl { --direction: 270deg; /* to left */ }
-.marquee:not(.N, .S, .W, .rtl, .direction-north, .direction-south, .direction-west),
-.marquee.E, .marquee.direction-east, .marquee.ltr { --direction: 90deg; /* to right */ }
+//  ----  Angle variables for all 4 directions, mainly used for gradients  ----  //
+#{$mar-n} { --direction: 0deg; /*   to top    */ }
+#{$mar-e} { --direction: 90deg; /*  to right  */ }
+#{$mar-s} { --direction: 180deg; /* to bottom */ }
+#{$mar-w} { --direction: 270deg; /* to left   */ }
 
 
-/* ❀ ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴ ❀ */
-/*  ~~~  viewport, area that is visible, like a window into the track  ~~~  */
+
+// ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+// |▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+// |  :
+// |_____________________________________________________________________________________________________________
+
+// ❀ ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴ ❀
+// ~  Viewport, the area that is visible to the user, like a window into the track  
 .marquee .marquee-viewport {
-	width: 100%;
 	display: flex;
 	overflow: hidden;
 	position: relative;
-	justify-content: flex-start;
-	/* fade out opacity on edges: */
+	height: 100%;
+	// fade out opacity on edges:
 	mask-position: left;
 	mask-size: 100% 100%;
 	mask-image: linear-gradient(var(--direction), #0000 0%, #fff var(--fadeout-length) calc(100% - var(--fadeout-length)), #0000 100%);
+	// shadow gradient on edges:
+	&::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(var(--direction), var(--gradient-color) 0%, transparent var(--gradient-length) calc(100% - var(--gradient-length)), var(--gradient-color) 100%); }
 }
-/* shadow gradient on edges: */
-.marquee-viewport::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(var(--direction), var(--gradient-color) 0%, transparent var(--gradient-length) calc(100% - var(--gradient-length)), var(--gradient-color) 100%); }
 
-
-/* ❀ ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴ ❀ */
-/*  ~~~  track, holds all items - if not enough content to fill the viewport, it's spaced out  ~~~  */
+// ❀ ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴ ❀
+// ~  Track, holds all items - if there's not enough content to fill the viewport, it's spaced out
 .marquee .marquee-viewport .marquee-track {
 	display: grid;
 	flex-shrink: 0;
-	background-color: var(--background);
 }
 
-
-/* ❀ ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴ ❀ */
-/*  ~~~  each item in the track  ~~~  */
+// ❀ ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴ ❀
+// ~  Each item in the track
 .marquee .marquee-viewport .marquee-track > * {
-	--i: var(--nth-child);
+	--i: var(--nth-child); // requires [https://github.com/awasaka01/css-nth-child-variables/tree/main]
 	position: relative;
 	display: flex;
-	flex: none;
 	place-content: center center;
 	place-items: center center;
+	animation-play-state: running;
+	animation-fill-mode: both;
 }
 
 
 
+// ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
-/* ✿ ╟━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╢ ✿ */
-/*   ~~~~~   HORIZONTAL MARQUEES   ~~~~~   */
+// |▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+// |  Horizontal Marquees
+// |_____________________________________________________________________________________________________________
 
-
-/* ❀ ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴ ❀ */
-/*  ~~~  horizontal viewport  ~~~ */
-.marquee:not(.N, .S, .W, .rtl, .direction-north, .direction-south, .direction-west) .marquee-viewport,
-.marquee.E .marquee-viewport, .marquee.direction-east .marquee-viewport, .marquee.ltr .marquee-viewport,
-.marquee.W .marquee-viewport, .marquee.direction-west .marquee-viewport, .marquee.rtl .marquee-viewport {
-
-}
-
-
-/* ❀ ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴ ❀ */
-/*  ~~~  horizontal track  ~~~  */
-.marquee:not(.N, .S, .W, .rtl, .direction-north, .direction-south, .direction-west) .marquee-track,
-.marquee.E .marquee-track, .marquee.direction-east .marquee-track, .marquee.ltr .marquee-track,
-.marquee.W .marquee-track, .marquee.direction-west .marquee-track, .marquee.rtl .marquee-track {
-	grid-auto-flow: column;
-	width: max-content;
-	/* always be at least 1 item wider than the viewport: */
-	min-width: calc(100% * (var(--children) / (var(--children) - 1)));
-}
-
-
-/* ❀ ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴ ❀ */
-/*  ~~~  horizontal items  ~~~ */
-.marquee:not(.N, .S, .W, .rtl, .direction-north, .direction-south, .direction-west) .marquee-track > *,
-.marquee.E .marquee-track > *, .marquee.direction-east .marquee-track > *, .marquee.ltr .marquee-track > *,
-.marquee.W .marquee-track > *, .marquee.direction-west .marquee-track > *, .marquee.rtl .marquee-track > * {
-
-}
-
-
-
-
-/* ✿ ╟━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╢ ✿ */
-/*   ~~~~~   VERTICAL MARQUEES   ~~~~~   */
-
-
-/* ❀ ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴ ❀ */
-/*  ~~~  vertical viewport  ~~~ */
-.marquee.N .marquee-viewport, .marquee.direction-north .marquee-viewport,
-.marquee.S .marquee-viewport, .marquee.direction-south .marquee-viewport {
-
-}
-
-
-/* ❀ ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴ ❀ */
-/*  ~~~  vertical track  ~~~  */
-.marquee.N .marquee-track, .marquee.direction-north .marquee-track,
-.marquee.S .marquee-track, .marquee.direction-south .marquee-track {
-
-	grid-auto-flow: row;
+#{$mar-hor} {
+	width: 100%;
 	height: max-content;
-	/* always be at least 1 item wider than the viewport: */
-	min-height: calc(100% * (var(--children) / (var(--children) - 1)));
+	.marquee-track {
+		grid-auto-flow: column;
+		width: max-content;
+		min-width: calc(100% * (var(--children) / (var(--children) - var(--item-buffer-safe))));
+	}
+}
+#{$mar-e} .marquee-viewport { width: 100%; justify-content: right; }
+#{$mar-w} .marquee-viewport { width: 100%; justify-content: left; }
+
+
+
+// ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+// |▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+// |  Vertical Marquees
+// |_____________________________________________________________________________________________________________
+
+#{$mar-ver} {
+	width: max-content;
+	height: 100%;
+	.marquee-track {
+		grid-auto-flow: row;
+		height: max-content;
+		min-height: calc(100% * (var(--children) / (var(--children) - var(--item-buffer-safe))));
+	}
+}
+#{$mar-n} { .marquee-viewport { width: 100%; height: 100%; align-items: flex-start; } }
+#{$mar-s} { .marquee-viewport { width: 100%; height: 100%; align-items: flex-end; } }
+
+
+
+// ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+// |▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+// |  Animations:
+// |_____________________________________________________________________________________________________________
+
+#{$mar-n} { .marquee-track > * {
+		animation: marqueeScrollN var(--animation-duration) linear infinite;
+		animation-delay: calc((var(--animation-duration) / var(--children) * (var(--children) - var(--i))) * -1);
+	}}
+#{$mar-e} { .marquee-track > * {
+		animation: marqueeScrollE var(--animation-duration) linear infinite;
+		animation-delay: calc((var(--animation-duration) / var(--children) * (var(--i) + var(--item-buffer-safe) - 1)) * -1);
+	}}
+#{$mar-s} { .marquee-track > * {
+		animation: marqueeScrollS var(--animation-duration) linear infinite;
+		animation-delay: calc((var(--animation-duration) / var(--children) * (var(--i) + var(--item-buffer-safe) - 1)) * -1);
+	}}
+#{$mar-w} { .marquee-track > * {
+		animation: marqueeScrollW var(--animation-duration) linear infinite;
+		animation-delay: calc((var(--animation-duration) / var(--children) * (var(--children) - var(--i))) * -1);
+	} }
+@keyframes marqueeScrollN { // at bottom edge --> above top edge
+	from { transform: translateY(calc(100% * (var(--children) - var(--i)))); }
+	to { transform: translateY(calc(-100% * (var(--i)))); }
+}
+@keyframes marqueeScrollE { // past left edge --> at right edge
+	from { transform: translateX(calc(-100% * (var(--i) - 1))); }
+	to { transform: translateX(calc(100% * (var(--children) - var(--i) + 1))); }	
+}
+@keyframes marqueeScrollS { // at top edge --> below bottom edge
+	from { transform: translateY(calc(-100% * (var(--i) - 1))); }
+	to { transform: translateY(calc(100% * (var(--children) - var(--i) + 1))); }
+}
+@keyframes marqueeScrollW { // past right edge --> at left edge
+	from { transform: translateX(calc(100% * (var(--children) - var(--i)))); }
+	to { transform: translateX(calc(-100% * (var(--i)))); }
 }
 
 
-/* ❀ ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴ ❀ */
-/*  ~~~  vertical items  ~~~ */
-.marquee.N .marquee-track > *, .marquee.direction-north .marquee-track > *,
-.marquee.S .marquee-track > *, .marquee.direction-south .marquee-track > * {
 
+// ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+// |▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+// |  Extra Features:
+// |_____________________________________________________________________________________________________________
+
+// ❀ ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴ ❀
+// ~  Pause on hover:
+@media (pointer: fine), (hover: hover) {
+	.marquee.hover-pause:hover .marquee-track > * { animation-play-state: paused !important; }
+	.marquee.hover-highlight-1 .marquee-track > *:hover {
+		// outline: 5px dashed rgb(255 255 255 / 80%);
+		// outline-offset: -5px;
+	}
 }
 
+// ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
+// |▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+// |  Patches, 
+// |  	- Some have multiple types, to pick another method if it's conflicting with the user's other styling
+// |_____________________________________________________________________________________________________________
 
+// ❀ ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴ ❀
+// ~  Issue with items unloading offscreen and taking too long to load back when entering the viewport again
+// ~  General concept is to increase the "size" of all items so they are never actually offscreen
+// ~  massive outline and box-shadow break chrome
+.marquee .marquee-track > *::after {
+	content: ""; position: absolute; top: 50%; left: 50%;
+	transform: translate(-50%, -50%);
+	width: 1px; height: 1000vh; background-color: transparent;
+	pointer-events: none;
+} 
+#{$mar-hor} { .marquee-track > *::after { width: 1000vw; height: 1px; } }
 
-/* ✿ ╟━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╢ ✿ */
-/*    ~~~~~   MISCELLANEOUS RULES   ~~~~~   */
+// ~  Use contain: paint instead of overflow: hidden if it's supported - fixes issue sometimes
+// @supports (contain: paint) { .marquee-viewport { contain: all; overflow: unset !important; } }
 
-
-/* use 'contain: paint' for clipping instead of 'overflow: hidden' if it's supported - prevents image unloading issues on firefox */
-@supports (contain: paint) { .marquee-viewport { contain: paint; overflow: unset !important; } }
-
-/* miscellaneous things that may or may not fix issues with image unloading */
-.marquee-track img { backface-visibility: hidden; }
-.marquee-track { transform-style: preserve-3d; }
+// ❀ ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴ ❀
+// ~  Miscellaneous
 .marquee-track > * { will-change: transform; }
-
-/* removes some whitespace around images */
-.marquee { vertical-align: middle; }
+.marquee img { vertical-align: middle; } 
 
 
+
+
+
+
+
+.marquee {
+	position: relative;
+	background-color: var(--background);
+}
+.marquee-track {
+	opacity: 0;
+	animation: fadeIn 800ms ease-in-out 50ms forwards 1;
+}
+@keyframes fadeIn {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+
+#{$mar-ver} { .marquee-view-as-grid-icon, .marquee-view-as-grid { width: 100%; height: auto; } }
+
+.marquee .marquee-view-as-grid, .marquee .marquee-view-as-grid-icon {
+	position: absolute; top: 0; left: 0; z-index: 5; 
+	cursor: zoom-in;
+	height: 100%; width: auto; 
+	aspect-ratio: 1 / 1;
+	max-width: 1.1lh;
+}
+.marquee-view-as-grid-icon {
+	transition: opacity 100ms ease-out;
+	pointer-events: none;
+	opacity: 0;
+}
+.marquee:hover .marquee-view-as-grid-icon { opacity: 0.6; }
+@media (pointer: none), (pointer: coarse), (hover: none) {
+	.marquee-view-as-grid-icon { opacity: 0.6; }
+}
+
+.marquee:has(.marquee-view-as-grid:checked) {
+	position: fixed; inset: 0; z-index: 101;
+	width: 100%; height: 100%;
+	margin: auto;
+	> * { z-index: 101; }
+	box-sizing: border-box;
+	padding: calc(30px + 1lh) 0 30px 0;
+
+	.marquee-viewport {
+		background-color: #2b272f;
+		width: 100%; height: 100%;
+		max-width: 40rem;
+		margin: auto;
+		box-sizing: border-box;
+		mask: none;
+		&::after { display: none; }
+		display: flex;
+		flex-direction: column;
+		overflow: visible !important;
+		contain: unset !important;
+		&::before {
+			content: "x";
+			text-align: right;
+			box-sizing: border-box;
+			padding-right: 7px;
+			width: 100%; height: auto;
+			background-color: #242028;
+			pointer-events: none;
+			z-index: 102;
+			bottom: 100%;
+			position: absolute;
+		}
+		.marquee-track {
+			padding: 20px;
+			zoom: 2;
+			min-width: unset;
+			min-height: unset;
+			width: 100%; height: 100%;
+			display: flex;
+			place-content: center center;
+			place-items: center center;
+			box-sizing: border-box;
+			flex-flow: row wrap;
+			overflow:  hidden auto; contain: unset;
+			> * {
+				margin: 10px;
+				min-width: unset !important; min-height: unset !important;
+				width: max-content !important; height: max-content !important;
+				animation: none !important;
+				&:hover {
+					outline: none;
+				}
+				&::after { display: none; }
+			}
+		}
+	}
+	svg { display: none; }
+}
+
+.marquee-view-as-grid:checked {
+	max-width: unset;
+	cursor: zoom-out;
+	position: absolute; inset: 0; z-index: 0 !important;
+	width: 100%; height: 100%;
+	--grid-line-color: rgb(255 255 255 / 5%); /* line color */
+	--grid-size: 100px;                             /* size of each grid square */
+	--grid-line-width: 1px;                         /* thickness of lines */
+	background-image: linear-gradient(var(--grid-line-color) var(--grid-line-width), transparent var(--grid-line-width)), linear-gradient(90deg, var(--grid-line-color) var(--grid-line-width), transparent var(--grid-line-width));
+	background-position: -50px -50px;
+	background-size: var(--grid-size) var(--grid-size);
+	backdrop-filter: blur(20px) grayscale(0.5) brightness(0.9);
+	// background-color: #151515;
+}
+
+.marquee img { cursor: pointer; } 
+
+body:has(.marquee-view-as-grid:checked) { overflow: hidden; }
+
+.marquee button {
+	margin: 0;
+	padding: 0;
+	border: none;
+	background: inherit;
+	font: inherit;
+	font-size: inherit;
+	line-height: inherit;
+	color: inherit;
+	text-align: inherit;
+	cursor: inherit;
+}
+// .marquee:hover::after {
+// 	opacity: 1;
+// }
+// .marquee::after {
+// 	content: "";
+// 	position: absolute;
+// 	top: 0; left: 0;
+	 
+// 	height: 100%;
+// 	aspect-ratio: 1 / 1;
+// 	color: inherit;
+// 	background-color: rgb(0 0 0 / 19.6%);
+// 	// border-radius: 100%;
+// 	background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><rect width="24" height="24" fill="none"/><path fill="white" fill-opacity="0.8" d="M9 3H5a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2m10 0h-4a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2M9 13H5a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2m10 0h-4a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2" stroke-width="0.5" stroke="currentColor"/></svg>');
+// 	background-size: contain;       /* preserve SVG proportions */
+// 	background-position: top left;  /* align top-left */
+// 	background-repeat: no-repeat;
+// 	cursor: pointer;
+// 	z-index: 100;
+// 	opacity: 0;
+// 	transition: opacity 80ms ease-out;
+// }
+
+
+
+
+
+
+#selection-test-1 {
+	display: flex;
+	flex-wrap: nowrap;
+	justify-content: center;
+	align-items: center;
+
+	span {
+		flex: 1 1;
+		cursor: pointer;
+		img {
+			transition: all 0.1s ease-in-out;
+			width: 100%;
+			height: auto;
+			pointer-events: none;
+			image-rendering: pixelated;
+		}
+		&:hover { > img { transform: scale(2); } }
+	}
+}
 
 
 /* ✿ ╟━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╫━━━━╢ ✿ */
+
+
+
 @include compile-colors;
-
-
-
-// /*.marquee {
-// 	--speed: 0.1s;
-// 	--gradient-length: 9%;
-// 	--scrollbar-height: 12px;
-// 	--children: 19;
-// 	overflow: visible;
-
-
-// 	.marquee-viewport {
-// 		height: 31px;
-// 		border: 2px solid rgb(255 255 255);
-// 		overflow: hidden;
-// 		width: 100%;
-
-// 		.marquee-track {
-// 			display: flex;
-// 			justify-content: space-around;
-// 			min-width: 100%;
-// 			width: max-content;
-// 			> * {
-// 				/* Define the per-element index */
-// // 				--i: calc(var(--nth-child) - 1);
-
-// // 				order: var(--i); /* optional if you want reordering */
-// // 				display: block;
-
-// // 				/* Define animatable property for transform offset */
-				
-
-// // 				animation: scroll var(--speed) linear infinite reverse;
-// // 				animation-delay: calc(var(--speed) / var(--children) * var(--i) * -1);
-// // 			}
-// // 		}
-// // 	}
-// // }
-
-// // .marquee.ltr .marquee-track, .marquee:not(.rtl) .marquee-track { justify-content: end; }
-// // .marquee.ltr .marquee-track, .marquee:not(.rtl) .marquee-viewport { justify-content: flex-end; }
-// // @keyframes LTRscroll { /* from far left end of track to left edge of item touching right edge of viewport */
-// // 	from { transform: translateX(calc(-100% * (var(--i)))); }
-// // 	to { transform: translateX(calc(100% * (var(--children) - var(--i)))); }
-// // }
-// // .marquee-track * {
-// // 	will-change: transform;
-// // 	transform: translateZ(0);
-// // 	image-rendering: auto;
-// // 	content-visibility: visible; /* stops skipping rendering */
-// // }
-
-
-// // @keyframes scroll {
-// // 	0% { transform: translateX(calc(-100% * (var(--i) + 1))); }
-// // 	100% { transform: translateX(calc(100% * (var(--children) - var(--i) - 1))); }
-// // }
-// //  */
-
-
-// /*  ~~~  angle variables for all four directions, mainly for gradients  ~~~  */
-// .marquee.N, .marquee.direction-north { --direction: 0deg; /* to top */ }
-// .marquee.S, .marquee.direction-south { --direction: 180deg; /* to bottom */ }
-// .marquee.W, .marquee.direction-west, .marquee.rtl { --direction: 270deg; /* to left */ }
-// .marquee:not(.N):not(.S):not(.W):not(.rtl):not(.direction-north):not(.direction-south):not(.direction-west),
-// .marquee.E, .marquee.direction-east, .marquee.ltr { --direction: 90deg; /* to right */ }
-
-
-// /* ❀ ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴ ❀ */
-// /* viewport, area that is visible, like a window into the track */
-// .marquee .marquee-viewport {
-// 	width: 100%;
-// 	display: flex;
-// 	overflow: hidden;
-// 	position: relative;
-// 	justify-content: flex-start;
-// 	/* fade out opacity on edges: */
-// 	mask-position: left;
-// 	mask-size: 100% 100%;
-// 	mask-image: linear-gradient(var(--direction), #0000 0%, #fff var(--fadeout-length) calc(100% - var(--fadeout-length)), #0000 100%);
-// }
-// /* shadow gradient on edges: */
-// .marquee-viewport::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(var(--direction), var(--gradient-color) 0%, transparent var(--gradient-length) calc(100% - var(--gradient-length)), var(--gradient-color) 100%); }
-
-
-// /* ❀ ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴ ❀ */
-// /* track, contains all items - if not enough content to fill the viewport, it's spaced out */
-// .marquee .marquee-viewport .marquee-track {
-// 	display: grid;
-// 	grid-auto-flow: column;
-// 	flex-shrink: 0;
-// 	min-width: calc(100% * var(--children) / (var(--children) - 1)); // this if breaks: calc(100% * (var(--children) + 1) / var(--children));
-// 	width: max-content;
-// 	background-color: var(--background);
-// }
-
-// /* ❀ ╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴ ❀ */
-
-// /* each item in the track */
-// .marquee .marquee-viewport .marquee-track > * {
-// 	--i: var(--nth-child);
-// 	position: relative;
-// 	display: flex;
-// 	flex: none;
-// 	place-content: center center;
-// 	place-items: center center;
-// 	background-color: c(bg, 550);
-// 	outline: 4px outset rgb(0 0 0 / 40.5%);
-// 	outline-offset: -4px;
-// }

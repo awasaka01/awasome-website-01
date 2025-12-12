@@ -1,16 +1,47 @@
-// engine/11ty-plugin-sass.ts
+/*
+	filename
+	description
+*/
+// ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
-import * as util from "__util__";
-import * as config from "./config.js";
-const { log, err, colors, paths, absPaths } = config;
-const { blue: b, pink: p, white: w } = colors;
-const env = process.env as import("./config.js").env_type & NodeJS.ProcessEnv;
+// |▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+// |  Imports, globals, and minor setup:
+// |_____________________________________________________________________________________________________________
 
-import * as sass from "sass-embedded";
-import deepmerge from "deepmerge";
+// ✧ node modules
+import fs from "node:fs";
+import path from "node:path";
+import crypto from "node:crypto";
+import esbuild from "esbuild";
+import { replace as esbuildPluginReplace } from "esbuild-plugin-replace";
+import browserslistToEsbuild from "browserslist-to-esbuild";
+import * as lightningcss from "lightningcss";
 import chalk from "chalk";
-import { parse } from "node:path";
-import type { EleventyConfig, EleventyScope } from "11ty.ts";
+import deepmerge from "deepmerge";
+import treeKill from "tree-kill";
+import glob from "fast-glob";
+import getFolderSize from "get-folder-size";
+import sharp from "sharp";
+import type { EleventyBrowserSync, EleventyConfig, EleventyScope, EleventyServer, EleventySuppliedData, OnRequestCallbackParams, defineConfig } from "11ty.ts";
+import { imageSizeFromFile } from "image-size/fromFile";
+import * as sass from "sass-embedded";
+
+// ✧ my imports:
+import * as util from "__util__";
+import * as mono from "./monolith.js";
+const { log, warn, error, paths, abs_paths, colors } = mono;
+const { blue: b, pink: p, white: w } = colors.fg;
+const env = process.env as mono.env_arguments_type & Record<string, string>;
+
+
+
+// ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+// |▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+// |  Unnamed:
+// |	- Detailed steps or extra info
+// |_____________________________________________________________________________________________________________
+
 
 const default_options : PluginOptions = {
 	sassOptions: {
@@ -25,8 +56,7 @@ export interface PluginOptions {
 	sassOptions ?: sass.StringOptions<"async">;
 }
 /** Eleventy Sass compiler plugin    
- * Includes inline source maps when sourceMap: true
- */
+Includes inline source maps in response when sourceMap: true */
 export default function (options : PluginOptions) {
 	options = deepmerge(default_options, options);
 
@@ -34,8 +64,8 @@ export default function (options : PluginOptions) {
 		eleventyConfig.addTemplateFormats("scss");
 		eleventyConfig.addExtension("scss", { // [https://www.11ty.dev/docs/languages/custom/]
 			outputFileExtension: "css",
-			useLayouts: false,
-			compile: async function (inputContent : string, inputPath : string) {
+			useLayouts         : false,
+			compile            : async function (inputContent : string, inputPath : string) {
 				const { addDependencies } = this;
 				return async function (data : EleventyScope) {
 					return await compile(options, inputContent, inputPath, data, addDependencies);

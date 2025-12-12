@@ -27,7 +27,7 @@ jobs:
       # ─────────────────────────────────────────────────── ─── ── ─
       #  🛈  Build and deploy to Nekoweb
       # ─────────────────────────────────────────────────── ─── ── ─
-      - run: pnpm run bot:build
+      - run: pnpm run bot:buildneko
       - name: List ^~^ website recursively
         run: |
           echo "Listing all files in ^~^ website:"
@@ -36,23 +36,23 @@ jobs:
         uses: indiefellas/deploy2nekoweb@main
         with:
           nekoweb-api-key: ${{ secrets.NEKOWEB_API_KEY }}
-          directory: ^~^ website
-          nekoweb-username: awasaka01
-          nekoweb-domain: awasaka01.nekoweb.org
+          directory: '^~^ website'
+          nekoweb-username: 'awasaka01'
+          nekoweb-domain: 'awasaka01.nekoweb.org'
 
       # ─────────────────────────────────────────────────── ─── ── ─
       #  🛈  Build with Neocities flag and deploy to Neocities
       # ─────────────────────────────────────────────────── ─── ── ─
-      - run: pnpm run bot:buildneo
-      - name: List ^~^ website recursively
-        run: |
-          echo "Listing all files in ^~^ website:"
-          find "^~^ website" -type f
-      - name: Deploy to Neocities
-        uses: bcomnes/deploy-to-neocities@v3
-        with:
-          api_key: ${{ secrets.NEOCITIES_API_KEY }}
-          dist_dir: ^~^ website
-          neocities_supporter: false
-          preview_before_deploy: true
-          cleanup: true
+      # - run: pnpm run bot:buildneo
+      # - name: List ^~^ website recursively
+      #   run: |
+      #     echo "Listing all files in ^~^ website:"
+      #     find "^~^ website" -type f
+      # - name: Deploy to Neocities
+      #   uses: bcomnes/deploy-to-neocities@v3
+      #   with:
+      #     api_key: ${{ secrets.NEOCITIES_API_KEY }}
+      #     dist_dir: ^~^ website
+      #     neocities_supporter: false
+      #     preview_before_deploy: true
+      #     cleanup: true

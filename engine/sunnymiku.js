@@ -1,272 +1,352 @@
 // @ts-check
 
 /* ~~~~~ sunnymiku.js ~~~~~
-   - Entrypoint for building the engine and utilities.
-   - Press Q or Ctrl+C in the terminal to gracefully stop everything.
+   - Entrypoint/Bootstrap/CLI for the engine, compiles TS to JS then runs build.js
+   - Also handles reloading when engine files change
+     Q to stop / R to restart
 
    - Command to check all running node processes:
      Get-Process | Where-Object {$_.ProcessName -eq "node"}
    - To kill them:
-     taskkill /F /IM node.exe   or   pnpm kill
+   taskkill /F /IM node.exe   or   pnpm kill
 */
-chalk.level = 3;
-process.env.FORCE_COLOR = "1";
+/*
+	filename
+	description
+*/
+// ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
+// |▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+// |  Imports, globals, and minor setup:
+// |_____________________________________________________________________________________________________________
 
-// - node modules
-import { fork } from "node:child_process";
+// ✧ node modules
+import childProcess from "node:child_process";
 import crypto from "node:crypto";
-import path from "node:path";
 import fs from "node:fs";
-import { fileURLToPath } from "url";
-
 import treeKill from "tree-kill";
 import chokidar from "chokidar";
 import esbuild from "esbuild";
 import { replace as esbuildPluginReplace } from "esbuild-plugin-replace";
-import externalizeAllPackagesExcept from "esbuild-plugin-noexternal";
 import glob from "fast-glob";
-import chroma from "chroma-js";
 import chalk from "chalk";
 
+// ✧ config file
+import * as mono from "./monolith.js";
+const { log, warn, error, env_arguments_key, colors, paths, abs_paths } = mono;
+const { blue: b, pink: p, white: w } = colors.fg;
 
-// ! only import config that doesn't depend on env variables
-import { paths, absPaths, env_key, log, err, colors, divider } from "./config.js";
-import { fail } from "node:assert";
-const { blue: b, pink: p, white: w, warn } = colors;
-
-
-
-
-const TIMEOUT = 500; // < time for watcher to wait before restarting
-console.log("");
+process.env.IS_ROOT_PROCESS = "true";
+process.env.FORCE_COLOR = "1";
+chalk.level = 3;
 
 
-/* - Stores the PID's of all child processes */ /** @type {Set<number>} */
-const child_processes = new Set();
 
 
-/* ~~~~~ Parse CLI Flags used to set Environment Variables ~~~~~ 
-- Search for flags defined in 'env_key',
-	  for each valid flag, set it and any dependant flags to 'true'
-	- Default all unset flags to 'false'
-*/
-const env = /** @type {import('./config.js').env_type} */ ({}); // < casted, aka: forced type
+// ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+// |▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+// |  Parse CLI flags into environment variables:
+// |	- flag definitions are in ./monolith.js
+// |	- ensure all flag environment variables is set to 'true' or 'false'
+// |	- modifies `process.env`
+// |_____________________________________________________________________________________________________________
+
+const FLAGS = /** @type {import('./monolith.js').env_arguments_type} */ ({}); // < casted, aka: forced type
 process.argv.slice(2).forEach((arg) => {
 	arg = arg.replace(/^(-)+/, "").toLowerCase();
-	const [name, { enable = [] }] = Object.entries(env_key).find(([, { flags }]) => flags?.includes(arg)) ?? [,{}];
-	if (name === undefined) return err(`¯\\_('•_•)_/¯ Unknown CLI argument provided: '${arg}' ⁭`);
-	env[name] = "true";
-	enable.forEach((k) => { if (env[k] === undefined) env[k] = "true"; });
+	const entry = Object.entries(env_arguments_key).find(([_, { flags = [] }]) => flags.includes(arg));
+	if (!entry) return error(`¯\\_('•_•)_/¯ Unknown CLI argument provided: '${b(arg)}', Available flags: \n${Object.entries(env_arguments_key).filter(([k, v]) => v.flags?.length > 0).map(([k, v]) => `                      ${k.padEnd(19)} : ${w(v.flags.join(", "))}`).join("\n")}\n`);
+	const [name, { enable = [] }] = entry;
+	FLAGS[name] = "true";
+	enable.forEach((k1) => Object.keys(env_arguments_key).filter((k2) => k2.startsWith(k1)).forEach((k2) => { if (FLAGS[k2] === undefined) FLAGS[k2] = "true"; }));
 });
-for (const k of Object.keys(env_key)) { if (env[k] === undefined) env[k] = "false"; }
-process.env = { ...process.env, ...env };
+for (const k of Object.keys(env_arguments_key)) { if (FLAGS[k] === undefined) FLAGS[k] = "false"; }
+Object.assign(process.env, FLAGS);
 
-if (env.WATCH === "true") {
-	const width = process.stdout.columns || 80;
-	console.log(chalk.bgBlack.hex("#78ff60").bold("◢◤".repeat(~~(width / 2))));
-	log(`—— Running in watch mode!`);
-	log(`—— ${p(`> Press ${b.bold("Q")} to shutdown! or ${b.bold("R")} to restart! <`)}`);
-	console.log(chalk.bgBlack.hex("#78ff60").bold("◢◤".repeat(~~(width / 2))));
-	console.log("");
+const env = /** @type {import('./monolith.js').env_arguments_type & NodeJS.ProcessEnv} */ (process.env);
+
+
+
+
+// ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+// |▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+// |  Modules:
+// |_____________________________________________________________________________________________________________
+
+
+
+
+// ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+// |▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+// |  Global State:
+// |_____________________________________________________________________________________________________________
+
+let registeredKeys = /** @type {Array<[string, () => boolean]>} */ ([]);
+let buildLock = true;
+let buildProcess = /** @type {import("child_process").ChildProcess | null} */ (null);
+let childPIDs = [];
+console.log(mono.SUNNYMIKU_BANNER);
+if (env.VERBOSE_MISC === "true") log(chalk.dim.italic(`   Environment flags enabled: [${Object.entries(FLAGS).filter(([k, v]) => v === "true").map(([k]) => b(k)).join(", ")}]`), "miku");
+
+
+
+
+// ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+// |▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+// |  Utility functions to handle and clean up child processes
+// |_____________________________________________________________________________________________________________
+
+/** store child process pid, and log it @param {number} pid */
+function registerChildProcess (pid) {
+	childPIDs.push(pid);
+	if (env.VERBOSE_SHOW_CHILDREN === "true") log(chalk.dim.italic(`   Registered child process: ${b("PID=" + pid)}`), "miku");
 }
-log(`—— Environment Variables: [ ${Object.entries(env).filter(([, v]) => v === "true").map(([k]) => k).join(", ")} ]`);
+
+/** treeKill() all child processes in child_pids */
+async function killAllChildProcesses () {
+	for (const pid of childPIDs.reverse()) {
+		await new Promise((resolve) => treeKill(pid, "SIGKILL", (err) => {
+			if (env.VERBOSE_SHOW_CHILDREN === "true") log(chalk.dim.italic(`   Killed child process: ${b("PID=" + pid)}`), "miku");
+			resolve();
+		}));
+	}
+	childPIDs = [];
+}
+
+// Attempt to clean up child processes on accidental ctrl+c / other forms of exit
+process.on("exit", async () => await killAllChildProcesses());
+process.on("SIGINT", async () => await killAllChildProcesses());
+process.on("SIGTERM", async () => await killAllChildProcesses());
 
 
-/* ~~~~~ Main Function ~~~~~ 
-	- Compile all files in engine/ and util/ to JS
-	- Run build.js
-	- Automatically re-run when files in engine/ change (with --watch)
-*/
-async function build () {
 
-	/* ~~~~~ 1. Ensure all directories exist ~~~~~ */
+
+// ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+// |▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+// |  Build orchestration:
+// |	1. Ensure all directories exist
+// |	2. Compile all engine/ and util/ files
+// |	3. Fork ./build.ts
+// |	 - Handles process messages for: functions that need to be run on the main process, and child process PIDs
+// |	 - Handles clean shutdown on exit
+// |_____________________________________________________________________________________________________________
+
+async function START () {
+
+	/*  --  1. Ensure all directories exist  --  */
 	await Promise.all([
-		fs.promises.mkdir(absPaths.compiled, { recursive: true }),
-		fs.promises.mkdir(absPaths.cache, { recursive: true }),
-		fs.promises.mkdir(absPaths.output, { recursive: true }),
+		fs.promises.mkdir(abs_paths.cache, { recursive: true }),
+		fs.promises.mkdir(abs_paths.output, { recursive: true }),
+		fs.promises.mkdir(abs_paths.compiled, { recursive: true }),
 	]);
 
 
-	/* ~~~~~ 2. Compile the other engine files to JS ~~~~~ */
-	await compileTS(paths.util, `${paths.compiled}/awa-util`, { minify: true }),
-	await compileTS(paths.engine, `${paths.compiled}/${paths.engine}`),
+	/*  --  2. Compile the files in engine/ and util/  --  */
+	try {
+		await compileTypescript(paths.util, `${paths.util.replace(paths.source, paths.compiled)}`);
+		await compileTypescript(paths.engine, `${paths.compiled}/${paths.engine}`);
+	} catch {
+		if (env.WATCH === "false") process.exit(0);
+		return;
+	}
 
 
+	const build_start_time = Date.now();
+	if (env.VERBOSE_MISC === "true") log(p(`🏁 Starting build process...`), "miku");
+	console.log(mono.divider(0));
 
-	/* ~~~~~ 3. Run build.js ~~~~~ */
-	log(`🟢 Running ${b("build.js")}...`, p);
-	console.log(divider());
-	const buildProcess = fork("./__compiled/engine/build.js", [], {
-		stdio: ["inherit", "inherit", "pipe", "ipc"],
-		env: { ...process.env, ...env },
-		detached: process.platform !== "win32", // detach only on Unix
+
+	/*  --  3. Run build.ts  --  */
+	buildProcess = childProcess.fork(`${paths.compiled}/${paths.engine}/build-orchestrator.js`, [], {
+		stdio    : ["inherit", "pipe", "pipe", "ipc"],
+		env      : { ...process.env, ...env, "IS_ROOT_PROCESS": "false" },
+		detached : process.platform !== "win32", // detach only on Unix
 	});
+	buildProcess.on("error", (err) => error(`   Failed to fork build process: "${err.toString()}"`));
 	registerChildProcess(buildProcess.pid);
 
-	/* ~~~~~ 4. Accept and register child processes sent up from build.js ~~~~~ */
-	buildProcess.on("message", /** @param {Record<string, any>} msg */ (msg) => {
-		if (msg.type === "child_process") {
-			// console.log(chalk.italic.hex("#47404e")(`⫷ registered child process '${msg.pid}' ⫸`));
-			registerChildProcess(msg.pid);
+	buildProcess.on("message", (/** @type {{ bubble: boolean, [key: string]: any }} */ message) => {
+		if (typeof message !== "object") throw new Error(`Unexpected message from buildProcess: ${message}`);
+		else if (message.type === "child_pid") registerChildProcess(message.pid);
+	});
+
+	buildProcess.on("exit", async (code, signal) => {
+		if (buildLock === false) {
+			console.log(mono.divider(1));
+			log(p(`${code === 0 ? "✅" : "⛔"} Build process ${code === 0 ? "finished" : "failed"} with code ${code === 0 ? chalk.bold.hex(colors.success)("0") : chalk.bold.hex(colors.failure)(code)} — took ${b(Date.now() - build_start_time + "ms")} `), "miku");
+			await killAllChildProcesses();
+			if (env.WATCH === "false") process.nextTick(() => process.exit(0x0));
 		}
-		else { return err(`Why message me? ${msg}`); }
 	});
 
-	/* ~~~~~ 5. Handle build.js exit ~~~~~ */
-	buildProcess.on("exit", (code, signal) => {
-		console.log(divider(true));
-		if (code === 0) log(`✅ ${b("build.js")} finished with code ${b.bold(code)}`, p);
-		else log(`❌ ${b("build.js")} failed with code ${colors.red.bold(code)}`, p);
-		if (env.WATCH === "false") SHUTDOWN();
-	});
-
-	buildProcess.on("error", (err) => {
-		log(`❌ build.js failed to start: ${err.message}`, colors.red);
-	});
-	buildProcess.stderr.on("data", (data) => {
-		console.log(data.toString());
-	});
+    buildProcess.stdout.on("data", (data) => { handleChunkStreams(data, (str) => {
+		if (str.startsWith(mono.IPC_IDENTIFIER)) mono.handleIPCMessage(str);
+		else if (buildProcess?.stdout) console.log(str);
+	}); });
+    buildProcess.stderr.on("data", (data) => { if (buildProcess?.stderr) process.stderr.write(data); });
 }
 
-
-/* ~~~~~ Watch the engine folder for changes ~~~~~ 
-    - With a one second timeout feature to avoid restarting too often
-    - On change: kill all sub processes, then run build() again
-*/
-let watcher;
-if (env.WATCH === "true") {
-	let restartTimeout;
-	log("—— Watching engine folder for changes...");
-	watcher = chokidar.watch(paths.engine, { ignoreInitial: true });
-	watcher.on("all", (eventType, path, stats) => {
-		if (!path.endsWith(".ts")) return;
-		if (restartTimeout) clearTimeout(restartTimeout);
-		restartTimeout = setTimeout(async () => {
-			log(`🔧 Restarting ${b("build.js")} due to file changes in ${b(path)}...`, p, "\n");
-			RESTART();
-		}, TIMEOUT);
-	});
-}
+// - Initialize
+START().then(() => buildLock = false);
 
 
 
-/* ~~~~~ Restart build.js ~~~~~ */
-async function RESTART () {
-	await KILLALLCHILDREN();
-	build();
-}
 
+// ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
-/* ~~~~~ Properly terminate this process and cleanup ~~~~~ */
-let dead = false;
-async function SHUTDOWN () {
-	if (dead) { return; } dead = true; // < only run once
-	log(`🛑 Shutting down all processes...`, w);
-	if (watcher?.close) { log(`—— Closing file watcher...`); watcher.close(); }
-	await KILLALLCHILDREN();
-	process.exit(0); // < bug solfed: DO NOT DO THIS WITHOUT WAIT, KILLS PROCESS BEFORE CHILDREN ARE KILLED
+// |▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+// |  Handle keypresses 
+// |_____________________________________________________________________________________________________________
 
-}
-process.on("SIGINT", () => SHUTDOWN());
-process.on("SIGTERM", () => SHUTDOWN());
+function registerKey (key, callback) { registeredKeys.push([key.toLowerCase(), callback]); }
 
-
-
-/* ~~~~~ Terminate all stored child processes ~~~~~ */
-async function KILLALLCHILDREN () {
-	const promises = Array.from(child_processes.values()).map((pid) => {
-		child_processes.delete(pid);
-		// log(`—— Terminated PID:${(pid)}`, w);
-		return new Promise((res) => treeKill(pid, "SIGTERM", () => res()));
-	});
-	return Promise.all(promises);
-}
-
-
-// - Start initial
-build();
-
-
-
-/* ~~~~~ Shutdown when Q is pressed ~~~~~ */
 if (process.stdin.isTTY && !process.env.CI) {
 	process.stdin.setEncoding("utf8");
 	process.stdin.setRawMode(true);
 	process.stdin.resume();
 	process.stdin.on("data", (input) => {
-		const key = input.toString().toLowerCase();
-		if (key === "q" || key === "\u0003") {
+		const glyph = input.toString().toLowerCase();
+		const callback = registeredKeys.find(([k]) => k === glyph)?.[1];
+		if (!callback) return;
+		const result = callback();
+		if (result === true) {
 			process.stdin.setRawMode(false);
 			process.stdin.pause();
-			log(`🛑 ${b.bold(key === "q" ? "Q" : "CTRL+C")} pressed...`, p);
-			SHUTDOWN();
 		}
-		else if (key === "r") {
-			log(`🛑 ${b.bold("R")} pressed...`, p);
-			log(`🔧 Restarting ${b("build.js")}...`, p, "\n");
-			RESTART();
-		}
+	});
+}
+
+// - Shutdown on Q
+registerKey("Q", async () => {
+	if (buildLock) return;
+	buildLock = true;
+	buildProcess?.stderr?.destroy();
+	buildProcess?.stdout?.destroy();
+	buildProcess = null;
+
+	console.log(mono.divider(3));
+	console.log("");
+	console.log(mono.padBoth(`Key ${b.bold("Q")} was pressed, shutting down...`) + "\n");
+
+	await killAllChildProcesses();
+	process.nextTick(() => process.exit(0x0));
+});
+
+
+
+
+// ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+// |▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+// |  Auto Restarting when --watch is enabled:
+// |  	- Watch engine/ and for changes, then shutdown, recompile, and restart build.ts
+// |	- Also when R is pressed
+// |_____________________________________________________________________________________________________________
+
+async function RESTART () {
+	await killAllChildProcesses();
+	await START();
+}
+
+if (env.WATCH === "true") {
+	let watcher;
+	let restartTimeout;
+	if (env.VERBOSE_MISC === "true") log(chalk.dim.italic(`   Watching ${b(paths.engine + "/")} for changes...`), "miku");
+	log(chalk.dim.italic(`   Press ${b.bold("R")} to restart or ${b.bold("Q")} to quit`), "miku");
+	watcher = chokidar.watch(paths.engine, { ignoreInitial: true });
+	watcher.on("all", (eventType, path, stats) => {
+		if (!path.endsWith(".ts") && !path.endsWith("monolith.js")) return;
+		if (restartTimeout) clearTimeout(restartTimeout);
+		restartTimeout = setTimeout(async () => {
+			console.log(mono.divider(2));
+			console.log("");
+			console.log(mono.padBoth(`Restarting ${b("build.js")} due to file changes in ${b(path)}...`));
+			console.log("\n");
+			await RESTART();
+		}, 700);
+	});
+
+	registerKey("R", async () => {
+		if (buildLock) return console.log("bee patience buddy!!");
+		buildLock = true;
+
+		buildProcess?.stderr?.destroy();
+		buildProcess?.stdout?.destroy();
+		buildProcess = null;
+
+		console.log(mono.divider(2));
+		console.log("");
+		console.log(mono.padBoth(`Key ${b.bold("R")} was pressed, restarting...`) + "\n");
+		await RESTART();
+
+		setTimeout(() => buildLock = false, 200);
 	});
 }
 
 
 
-/* ~~~~~ Functions ~~~~~ */
 
-/** @param {number} pid */
-function registerChildProcess (pid) {
-	if (child_processes.has(pid)) err(`Child process already registered: ${pid}`);
-	child_processes.add(pid);
-}
+// ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
-/**
- * Helper function to quickly compile TS using esbuild
- * @param {string} inputPath 
- * @param {string} outputPath 
- * @param {esbuild.BuildOptions} [options]
- * @returns {Promise<esbuild.BuildResult>}
- */
-async function compileTS (inputPath, outputPath, options = {}) {
-	// env.CLEAR_CACHE = "true";
+// |▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+// |  Helper function to quickly compile a directory of TypeScript files using esbuild
+// |_____________________________________________________________________________________________________________
 
-	// - Get all the .ts and .js files in the input path
-	const files = await glob(`${inputPath}/**/*!(_).{ts,js}`);
-	if (files.length === 0) err(`No .ts files found in ${inputPath}`);
+/** @param {string} inputPath  @param {string} outputPath  @param {esbuild.BuildOptions} [options] @returns {Promise<esbuild.BuildResult>} */
+async function compileTypescript (inputPath, outputPath, options = {}) {
+
+	// - Get all the files in the input path
+	const files = (await glob(`${inputPath}/**/*!(_).{ts,js}`));
+	if (files.length === 0) error(`No .ts files found in ${inputPath}`);
 
 	// - Path to store the hash file
 	const cacheFilePath = `${paths.cache}/hashfile.${inputPath.replaceAll("/", "_")}.bin`;
 
 	// - Create a hash of all the files joined together
-	const buffer = Buffer.concat(await Promise.all(files.map((path) => fs.promises.readFile(path))));
+	const buffer = Buffer.concat(await Promise.all(files.filter((f) => !f.endsWith("sunnymiku.js")).map((path) => fs.promises.readFile(path))));
 	const hash = crypto.createHash("sha1").update(buffer).digest();
 
 	// - Get the old hash for comparison, or null
-	const oldHash = env.CLEAR_CACHE === "true" ? null : await fs.promises.readFile(cacheFilePath).catch(() => null);
+	const oldHash = env.NO_CACHE === "true" ? null : await fs.promises.readFile(cacheFilePath).catch(() => null);
 
 	// @ Return and don't recompile if the old and new hashes are the same
 	if (oldHash !== null && hash.equals(oldHash)) return;
 
 	// - Log the start message
 	const reason
-		= env.CLEAR_CACHE === "true" ? "the cache was cleared"
+		= env.NO_CACHE === "true" ? "NO_CACHE is enabled"
 		: !oldHash ? `${b(cacheFilePath)} didn't exist`
 		: "the files have changed";
-	log(p(`${chalk.bold.hex("#2f74c0")("TS")} Recompiling ${b(inputPath + "/")}`) + ` because ${reason}...`, w);
+	log((`${mono.symbols.ts} Recompiling ${b(inputPath + "/")}`) + ` because ${reason}...`, "miku");
 
 	// - Write the new hash and recompile
-	await fs.promises.writeFile(cacheFilePath, hash);
-	return esbuild.build({
-		entryPoints: files,
-		outdir: outputPath,
-		logLevel: "error",
-		sourcemap: false, bundle: false,
-		minify: options.minify ?? false,
-		format: "esm", platform: "node", target: "node24",
-		plugins: [
-			// externalizeAllPackagesExcept(["__util__"]),
+	await esbuild.build({
+		entryPoints : files,
+		outdir      : outputPath,
+		logLevel    : "warning",
+		sourcemap   : false, bundle      : false,
+		minify      : options.minify ?? false,
+		format      : "esm", platform    : "node", target      : "node24",
+		plugins     : [
 			esbuildPluginReplace({ "__util__": `../awa-util/core.js` }),
 		],
-	});
-	const MAX_BUNDLE_SIZE = 50 * 1024;
+	}).catch((err) => { log(chalk.bold.hex(colors.langTS)("TS") + " " + chalk.hex(colors.failure).bold.underline(`Failed to compile ${b(inputPath + "/")}`), "miku"); throw null; });
+	await fs.promises.writeFile(cacheFilePath, hash);
+}
+
+
+
+/*  --  Helper Functions  --  */
+let buffer = "";
+/** Convert stdout chunks into singular lines */
+function handleChunkStreams (chunk, logger) {
+	const data = typeof chunk === "string" ? chunk : chunk.toString();
+	let lines = (buffer + data).split(/\r?\n/);
+	buffer = lines.pop();
+	for (let line of lines) { logger(line);	}
 }

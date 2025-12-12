@@ -124,6 +124,7 @@ git checkout "$ORIGINAL_BRANCH"
 
 echo
 gradient_echo_rgb "$FANCY_LINE ⋆.˚ ⋆.˚ ⋆.˚" 255 105 180 0 0 0
-echo -e "${GREEN}${tab}✅ Merge complete! 'main' updated with '$CURRENT_BRANCH'.${RESET}"
+echo -e "${GREEN}${tab}✅ Merge complete! 'main' updated with '$CURRENT_BRANCH'${RESET}"
+echo -e "${MAGENTA}${tab}🔗 https://github.com/awasaka01/awasome-website-01/actions/workflows/build.yaml${RESET}"
 gradient_echo_rgb "$FANCY_LINE ⋆.˚ ⋆.˚ ⋆.˚" 255 105 180 0 0 0
 echo

@@ -1,46 +1,66 @@
-// @ts-nocheck
+/*
+	filename
+	description
+*/
+// ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
-// - my config
-import * as util from "__util__";
-import * as config from "./config.js";
-const { log, err, colors, paths, absPaths } = config;
-const { blue: b, pink: p, white: w } = colors;
-const env = process.env as import("./config.js").env_type & NodeJS.ProcessEnv;
+// |▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+// |  Imports, globals, and minor setup:
+// |_____________________________________________________________________________________________________________
 
-// - Miscellaneous:
-import sharp from "sharp";
+// ✧ node modules
+import fs from "node:fs";
 import path from "node:path";
-import fs, { existsSync } from "node:fs";
-import { imageSizeFromFile } from "image-size/fromFile";
+import crypto from "node:crypto";
+import esbuild from "esbuild";
+import { replace as esbuildPluginReplace } from "esbuild-plugin-replace";
+import browserslistToEsbuild from "browserslist-to-esbuild";
+import * as lightningcss from "lightningcss";
+import chalk from "chalk";
+import deepmerge from "deepmerge";
+import treeKill from "tree-kill";
 import glob from "fast-glob";
+import getFolderSize from "get-folder-size";
+import sharp from "sharp";
+import type Eleventy from "11ty.ts";
+import { imageSizeFromFile } from "image-size/fromFile";
 
-// let verbose = true;
-env.MINIFY_IMAGES = "true";
+// ✧ my imports:
+import * as util from "__util__";
+import * as mono from "./monolith.js";
+const { log, warn, error, paths, abs_paths, colors } = mono;
+const { blue: b, pink: p, white: w } = colors.fg;
+const env = process.env as mono.env_arguments_type & Record<string, string>;
 
+
+
+// ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+// |▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+// |  Unnamed:
+// |	- Detailed steps or extra info
+// |_____________________________________________________________________________________________________________
 
 
 const MAX_WIDTH_WEBP = 32; // Max width for the small min. images 
 let MAX_WIDTH_AVIF = 512; // Max width for the full sized .avif images
 
-/**
- * Eleventy Image Plugin - Minimizes images
- * @param {{ postprocess?: (content: string, data: import("11ty.ts").EleventyScope) => string, sassOptions?: import("sass-embedded").StringOptions }} options
- * @returns {(eleventyConfig: import("11ty.ts").EleventyConfig) => void}
- */
-export default function (options) {
-	return function (eleventyConfig) {
+/** Eleventy Image Plugin - Minimizes images */
+export default function () {
+	return function (eleventyConfig : Eleventy.EleventyConfig) {
+
+		return; // Disabled for now
 
 		// Copy raw images that don't need to be minified, or all in dev mode
 		eleventyConfig.addPassthroughCopy(`source/images/raw/**/*`);
 		if (env.MINIFY_IMAGES === "false") eleventyConfig.addPassthroughCopy(`${paths.images}/**`);
 
-
 		// Create all folders
 		const imagesubfolders = glob.sync(`${paths.images}/**/`, { onlyDirectories: true });
 		for (const folder of imagesubfolders) {
-			if (existsSync(path.join(absPaths.output, folder.replace("source/", "")))) continue;
+			if (fs.existsSync(path.join(abs_paths.output, folder.replace("source/", "")))) continue;
 			log(`📸 Created folder: ${b(folder.replace("source/", ""))}`);
-			fs.mkdirSync(path.join(absPaths.output, folder.replace("source/", "")), { recursive: true });
+			fs.mkdirSync(path.join(abs_paths.output, folder.replace("source/", "")), { recursive: true });
 		}
 
 		/**
@@ -61,7 +81,7 @@ export default function (options) {
 			/* ~~~~~ Option validation and defaults ~~~~~ */
 			options = { alt: "", classes: [], priority: "auto", ...options };
 			const err = (msg) => config.err(`plugin_11ty_image: ${msg}\n       ${config.colors.grey(`at ${this.page.inputPath}`)}`);
-			if (!(["high", "low", "auto"].includes(options.priority))) throw err(`Priority must be high|auto|low, got '${options.priority}'`);
+			if (!(["high", "low", "auto"].includes(options.priority))) throw error(`Priority must be high|auto|low, got '${options.priority}'`);
 			// - convert options key to an actual html attribute
 			options.priority
 				= options.priority === "high" ? `fetchpriority="high"`
@@ -90,14 +110,14 @@ export default function (options) {
 				// log(`${colors.pink("🖼️  11ty-plugin-image.js")}: ${colors.blue(url)} skipped!`);
 				return imgElement(url, options.classes, options, extraAttr);
 			}
-			if (!existsSync(absPaths.images + "/" + url)) return `Image '${url}' doesn't exist!`;
+			if (!existsSync(abs_paths.images + "/" + url)) return `Image '${url}' doesn't exist!`;
 
 			let width, height;
 
 			/* ~~~~~ Create the compressed images ~~~~~ */
-			if (!existsSync(`${absPaths.output}/images/${filename}.avif`)) {
+			if (!existsSync(`${abs_paths.output}/images/${filename}.avif`)) {
 
-				const img = /** @type {sharp.Sharp} */ (await new sharp(absPaths.images + "/" + url, {}));
+				const img = /** @type {sharp.Sharp} */ (await new sharp(abs_paths.images + "/" + url, {}));
 				const metadata = await img.metadata();
 
 
@@ -106,14 +126,14 @@ export default function (options) {
 					? img.clone().resize({ width: MAX_WIDTH_WEBP })
 					: img.clone()
 				).webp({ force: true, quality: 1, alphaQuality: 100, lossless: true },
-				).toFile(`${absPaths.output}/images/${filename}.min.webp`);
+				).toFile(`${abs_paths.output}/images/${filename}.min.webp`);
 
 				// 2. Create an imagename.avif - at a balance between size and quality
 				await (metadata.width > MAX_WIDTH_AVIF
 					? img.clone().resize({ width: MAX_WIDTH_AVIF })
 					: img.clone()
 				).avif({ force: true, quality: 50, effort: env.MAX_QUALITY === "true" ? 9 : 1 },
-				).toFile(`${absPaths.output}/images/${filename}.avif`);
+				).toFile(`${abs_paths.output}/images/${filename}.avif`);
 
 				width = metadata.width;
 				height = metadata.height;
@@ -121,15 +141,15 @@ export default function (options) {
 
 				// - Calculate and log file size
 				const [filesize, filesizeAVIF, filesizeWEBP] = (await Promise.all([
-					fs.promises.stat(`${absPaths.images}/${url}`),
-					fs.promises.stat(`${absPaths.output}/images/${filename}.avif`),
-					fs.promises.stat(`${absPaths.output}/images/${filename}.min.webp`),
+					fs.promises.stat(`${abs_paths.images}/${url}`),
+					fs.promises.stat(`${abs_paths.output}/images/${filename}.avif`),
+					fs.promises.stat(`${abs_paths.output}/images/${filename}.min.webp`),
 				])).map((f) => (f.size / 1024 > 99.99 ? `${(f.size / 1024 / 1024).toFixed(2)} mB` : `${(f.size / 1024).toFixed(2)} kB`).padStart(8, " "));
 
 				log(`${colors.pink("📸 Compressed!")} original: ${colors.blue(filesize)} -> avif: ${colors.blue(filesizeAVIF)}, webp: ${colors.blue(filesizeWEBP)} - ${colors.pink(url)}`);
 			}
 			else {
-				const dimensions = await imageSizeFromFile(absPaths.images + "/" + url);
+				const dimensions = await imageSizeFromFile(abs_paths.images + "/" + url);
 				width = dimensions.width;
 				height = dimensions.height;
 				// log(`${colors.pink("🖼️  11ty-plugin-image.js")}: File ${colors.blue(url)} is already compressed!`);

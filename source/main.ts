@@ -49,18 +49,20 @@ function shimmerLogo () {
 async function slimey () {
 	type cssTimingFunction = "linear" | "ease" | "ease-in" | "ease-out" | "ease-in-out";
 
-	const types : ((el : HTMLElement) => { transforms : string[], duration ?: string, timing ?: cssTimingFunction })[] = [
+	const types : ((el : HTMLElement) => { transforms: string[], duration ?: string, timing ?: cssTimingFunction })[] = [
 	(el) => {
 		// if (Math.random() > 0.5) return null;
 		return {
-		transforms : [`translateY(-${util.rr(10, 80)}px)`],
-		timing : "ease-out", duration : `${util.rr(250, 400)}ms`,
+			transforms: [`translateY(-${util.rr(10, 80)}px)`],
+			timing: "ease-out",
+			duration: `${util.rr(250, 400)}ms`,
 	}; },
 	(el) => {
 		const angle = util.rr(1, 20) * (Math.random() > 0.5 ? 1 : -1);
 		return {
-		transforms : [`rotate(${0 - angle}deg)`, `rotate(${angle * 2}deg)`],
-		timing : "ease-in-out", duration : `${util.rr(100, 400)}ms`,
+			transforms: [`rotate(${0 - angle}deg)`, `rotate(${angle * 2}deg)`],
+			timing: "ease-in-out",
+			duration: `${util.rr(100, 400)}ms`,
 	}; },
 	// (el) => { return {
 	// 	transforms : [`rotate(${util.rr(-2, 2) * 360}deg)`],
@@ -85,7 +87,7 @@ let animationProgress = 0;
 // track.style.left = `${5 * safetyMargin}rem`;
 
 // - Store each element in a Map
-const slimes : Map<HTMLElement, { index : number, animating ?: boolean }> = new Map();
+const slimes : Map<HTMLElement, { index: number, animating ?: boolean }> = new Map();
 
 // - Randomize order
 const values = Array.from(elements); // make an array of the elements

@@ -8,41 +8,41 @@ export * from "./_inputtracking.js";
 export * from "./_updateloop.js";
 
 /** DEPRECATED, use specific random int or float functions */
-export const rr = (min : number, max : number, floor = true) => floor ? Math.floor(Math.random() * (max - min + 1)) + min : Math.random() * (max - min + 1) + min;
+export const rr = (min: number, max: number, floor = true) => floor ? Math.floor(Math.random() * (max - min + 1)) + min : Math.random() * (max - min + 1) + min;
 
 /** Generate a random whole number between min and max */
-export const ri = (min : number, max : number) => Math.floor(Math.random() * (max - min + 1)) + min;
+export const ri = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min;
 
 /** Generate a random float between min and max */
-export const rf = (min : number, max : number) => Math.random() * (max - min) + min;
+export const rf = (min: number, max: number) => Math.random() * (max - min) + min;
 
 /** A promise that resolves after t milliseconds */
-export const delay = async (t = 1000) : Promise<void> => new Promise((resolve) => setTimeout(resolve, t));
+export const delay = async (t = 1000): Promise<void> => new Promise((resolve) => setTimeout(resolve, t));
 export const sleep = delay;
 
 /** Return the longest element of the given array */
-export const longestIn = <T extends { length : number }> (array : T[]) : T => {
+export const longestIn = <T extends { length: number }> (array: T[]): T => {
 	let longest = array[0];
 	for (const x of array) { if (longest.length < x.length) longest = x; }
 	return longest;
 };
 
 /** Removes all ANSI escape codes from a string */
-export const removeANSI = (str : string) => str.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/gi, "");
+export const removeANSI = (str: string) => str.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/gi, "");
 
 /** Escapes all ANSI escape codes, so they can be shown in the terminal */
-export const showANSI = (str : string) => str.replace(/\x1b(\[[0-9;]+m)/g, "$&\\x1b$1\x1b[0m");
+export const showANSI = (str: string) => str.replace(/\x1b(\[[0-9;]+m)/g, "$&\\x1b$1\x1b[0m");
 
 /** Regex to match all useless RGB escape codes, replace with $<fg>$<bg> */
 export const removeDuplicateRGBescapeCodes = /(?<fg>\\x1b\[38;2;(?:[0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]);(?:[0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]);(?:[0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])m){2,}|(?<bg>\\x1b\[48;2;(?:[0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]);(?:[0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]);(?:[0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])m){2,}/g;
 
 
 /* Generate a weighted array of values, based on an array of [weight, value] pairs, or an object */
-export function weightedArray<T> (pairs : [weight: number, value: T][] | { weight : number, value : T }[]) {
+export function weightedArray<T> (pairs: [weight: number, value: T][] | { weight: number, value: T }[]) {
 
 	// Convert input to array of objects
-	if (Array.isArray(pairs[0])) pairs = pairs.map((pair) => ({ weight : pair[0], value : pair[1] }));
-	const pairObjects = pairs as { weight : number, value : T }[];
+	if (Array.isArray(pairs[0])) pairs = pairs.map((pair) => ({ weight: pair[0], value: pair[1] }));
+	const pairObjects = pairs as { weight: number, value: T }[];
 
 	// Generate weighted array
 	const output = [] as T[];
@@ -52,7 +52,7 @@ export function weightedArray<T> (pairs : [weight: number, value: T][] | { weigh
 
 
 /** Returns a random value from an array of [weight, value] pairs */
-export function weightedRandom<T> (pairs : [weight: number, value: T][], returnArray = false) {
+export function weightedRandom<T> (pairs: [weight: number, value: T][], returnArray = false) {
 
 	// Create array with n number of each value
 	const ar = [];
@@ -69,13 +69,13 @@ export function weightedRandom<T> (pairs : [weight: number, value: T][], returnA
 
 
 /** Returns a random value from an array */
-export function arrayRandom<T> (array : T[]) { return array[Math.floor(Math.random() * array.length)]; }
+export function arrayRandom<T> (array: T[]) { return array[Math.floor(Math.random() * array.length)]; }
 
 /** Returns the average of the given array */
-export function average (arr : number[]) { return arr.reduce((a, b) => a + b, 0) / arr.length; }
+export function average (arr: number[]) { return arr.reduce((a, b) => a + b, 0) / arr.length; }
 
 /** Returns true if the given number is a power of 2 */
-export const isPowerOf2 = (n : number) : boolean => n > 0 && (n & (n - 1)) === 0;
+export const isPowerOf2 = (n: number): boolean => n > 0 && (n & (n - 1)) === 0;
 
 
 
@@ -86,24 +86,24 @@ type Point2 = [number, number, number, number];
 // L1 / Manhattan distance (diamond), min amount of grid spaces needed to traverse to reach target
 // L2 / Euclidean distance (circle), straight line to target
 // L∞ norm / Chebyshev distance (square), maximum of horizontal and vertical distance
-export const distanceL1 = (...[x1, y1, x2, y2] : Point2) => Math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2);
-export const distanceL2 = (...[x1, y1, x2, y2] : Point2) => Math.hypot(x1 - x2, y1 - y2);
-export const distanceLInf = (...[x1, y1, x2, y2] : Point2) => Math.max(Math.abs(x1 - x2), Math.abs(y1 - y2));
+export const distanceL1 = (...[x1, y1, x2, y2]: Point2) => Math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2);
+export const distanceL2 = (...[x1, y1, x2, y2]: Point2) => Math.hypot(x1 - x2, y1 - y2);
+export const distanceLInf = (...[x1, y1, x2, y2]: Point2) => Math.max(Math.abs(x1 - x2), Math.abs(y1 - y2));
 
 
 
 /* Store already computed coordinate offsets for a given radius + metric (L1, L2, LINF) */
-const offsetCaches : Record<DistanceMetric, Record<number, Int32Array>> = { L1: {}, L2: {}, LINF: {} };
+const offsetCaches: Record<DistanceMetric, Record<number, Int32Array>> = { L1: {}, L2: {}, LINF: {} };
 /** Precomputes and caches coordinate offsets for a given radius + metric (L1, L2, LINF)
 	Returns a flat Int32Array [dx, dy, distance, dx, dy, distance, ...] for fast coordinate lookup */
-export function getOffsets (radius : number, metric : DistanceMetric = "L2") : Int32Array {
+export function getOffsets (radius: number, metric: DistanceMetric = "L2"): Int32Array {
 	const cached = offsetCaches[metric][radius]; if (cached) return cached;
 
-	let offsets : [number, number, number][] = [];
+	let offsets: [number, number, number][] = [];
 	for (let y = -radius; y <= radius; y++) {
 		for (let x = -radius; x <= radius; x++) {
 			if (x === 0 && y === 0) continue;
-			let dist : number;
+			let dist: number;
 			switch (metric) {
 				case "L1": dist = Math.sqrt(x * x + y * y); break;
 				case "L2": dist = Math.hypot(x, y); break;
@@ -120,7 +120,7 @@ export function getOffsets (radius : number, metric : DistanceMetric = "L2") : I
 
 
 /** Convert a string of html to a DOM element */
-export function createElement (html : string) : HTMLElement {
+export function createElement (html: string): HTMLElement {
 	if (!document) throw new Error("'htmlToElement' can only be run in a browser environment");
 	const template = document.createElement("template");
 	template.innerHTML = html;
@@ -128,22 +128,32 @@ export function createElement (html : string) : HTMLElement {
 }
 
 
+/** Center text */
+export function padBoth (str: string, targetLength = process.stdout.columns ?? 80, char = " "): string {
+	const strLength = removeANSI(str).length;
+	if (strLength >= targetLength) return str;
+
+	const left = Math.floor((targetLength - strLength) / 2);
+	const right = targetLength - strLength - left;
+	return "".padStart(left, char) + str + "".padStart(right, char);
+}
+
 
 
 interface FileUploaderOptions {
-	multiple ?: boolean; // allow multiple files
-	accept ?: string | "image/*" | "audio/*" | "video/*";
-	button : string | HTMLButtonElement;
+	multiple?: boolean; // allow multiple files
+	accept?: string | "image/*" | "audio/*" | "video/*";
+	button: string | HTMLButtonElement;
 }
 
 /** File uploader class */
 export class FileUploader {
-	public input : HTMLInputElement;
-	public button : HTMLButtonElement;
+	public input: HTMLInputElement;
+	public button: HTMLButtonElement;
 
-	public onFiles ?: (files : File[]) => void;
+	public onFiles?: (files: File[])=> void;
 
-	constructor (options : FileUploaderOptions) {
+	constructor (options: FileUploaderOptions) {
 		if (!document) throw new Error("'FileUploader' can only be run in a browser environment");
 
 		// - Create hidden file <input> element
@@ -176,7 +186,7 @@ export class FileUploader {
 		document.addEventListener("paste", (e) => { if (e.clipboardData?.files.length) { this.emitFiles(e.clipboardData.files);	} });
 	}
 
-	private emitFiles (files : FileList | File[]) {
+	private emitFiles (files: FileList | File[]) {
 		let arr = Array.from(files);
 
 		// - Limit to 1 file if not multiple
@@ -185,6 +195,16 @@ export class FileUploader {
 		// - Emit
 		if (this.onFiles) this.onFiles(arr);
 	}
+}
+
+
+export function escapeHTML (str: string) {
+	return str
+		.replaceAll(`&`, "&amp;")
+		.replaceAll(`<`, "&lt;")
+		.replaceAll(`>`, "&gt;")
+		.replaceAll(`"`, "&quot;")
+		.replaceAll(`'`, "&#039;");
 }
 
 // Deprecated

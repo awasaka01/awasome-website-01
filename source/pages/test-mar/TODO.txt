@@ -1,3 +1,26 @@
+
+
+
+TODO NEW
+
+- disable marquee popup checkbox if doesn't @supports :has
+- add to js script a better popup without 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 if cannot FULLY contain all items, aka even a single pixel over, enable the marquee.
 - though this would then cause other "issue" where elements could technically be without gaps if there was a duplicate item?
 - actually would have to be dupe all as all would need to be able to show half/half on each side
