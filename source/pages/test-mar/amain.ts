@@ -20,3 +20,5 @@ for (const marquee of marquees) {
 	new ResizeObserver(updateChildWidth).observe(firstChild);
 	updateChildWidth();
 }
+
+document.body.classList.add("javascript-enabled");

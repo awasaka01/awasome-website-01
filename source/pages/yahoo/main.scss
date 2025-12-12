@@ -1,0 +1,191 @@
+/*
+	Uncompressed version of sitebox.css for nekoweb
+	- Created using [https://jbc.lol/utils/nekobox/]
+	- Compressed at [https://lune.dimden.dev/405a44b7e5.png]
+*/
+// rotating cube with png of miku inside or my own art
+// each side lifts on hover
+@use "sass:math";
+@use "sass:color";
+// sass --watch ./nekoweb/_sitebox.scss:./nekoweb/sitebox.css --style=compressed --no-source-map
+
+$cubeSize: 60px;
+/* .site-box — the main container <div id="site-praxinoscope-nekoweb-org" class="site-box t-"> */
+.site-box {
+	position: relative;
+	perspective-origin: center center;
+	perspective: 1500px;
+	transform-style: preserve-3d;
+}
+	
+/* .follow — the [+] button used to follow a site */
+.site-box .follow {
+
+	
+	color: transparent;
+	font-size: 0;
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+
+
+
+/* .sitefeature — the <div> wrapping the <img> screenshot */
+.site-box .sitefeature {
+	display: none; 
+	/* the screenshot image */
+	img {
+
+	}
+}
+
+
+/* <a> element inside .site-box — clickable wrapper containing content */
+.site-box > a {
+	color: transparent;
+	font-size: 0;
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+* {
+	
+	transform-style: preserve-3d;
+}
+
+/* <p> inside the <a> — contains site name text */
+.site-box > a > p {
+	
+}
+
+/* <span> inside the <a> — contains "My Nekoweb site!" text */
+.site-box > a > span {
+	display: block;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translateX(-50%) translateY(-50%);
+
+	width: $cubeSize;
+	height: $cubeSize;
+	
+	background: url("/images/miku.png");
+	background-size: cover;
+}
+
+@mixin side($color	) {
+	width: 60px;
+	height: 60px;
+	// background-color: rgb(math.random(255) math.random(255) math.random(255));
+	display: block;
+	position: absolute;
+	backface-visibility: visible;
+	pointer-events: none;
+	transform-style: preserve-3d;
+	background-color: color.change($color, $alpha: 0.2);
+	// padding: 5px;
+	// background-clip: content-box;
+	box-sizing: border-box;
+	box-shadow: inset 0 0 0 5px color.change($color, $alpha: 0.7);
+	transition: transform 2s ease-in-out;
+}
+
+$color1: #ff7d7daa; // top
+$color2: #fffa76aa; // bottom
+$color3: #70ff77aa; // back
+$color4: #7fe5ffaa; // left
+$color5: #b96dffaa; // front
+$color6: #fea5e6aa; // right
+
+/* .top-dot — <span class="top-dot"> decorative dot at the top */
+$distance-forward: 30px;
+$half-size: math.div($cubeSize, 2);
+.site-box:hover .top-dot {
+	transform: translateZ($distance-forward) rotateX(-45deg) rotateY(135deg) rotateY(540deg) rotateX(540deg);
+}
+.site-box:hover .bottom-dot {
+	transform: translateZ($distance-forward) translateZ(-60px) rotateX(-45deg) rotateY(135deg)  rotateY(-540deg) rotateX(-540deg);
+}
+.site-box:hover {
+	// perspective: 400px;
+}
+.site-box {
+	
+	transition: perspective 0.5s ease-in-out;
+}
+// front
+.site-box .top-dot {
+	$color: $color5;
+	transform-origin: center center -30px;
+	transform: translateZ($distance-forward) rotateX(-45deg) rotateY(45deg);
+	
+	@include side($color);
+	top: 50%;
+	left: 50%;
+	margin-top: -$half-size;
+	margin-left: -$half-size;
+	// top
+	&::after {
+		$color: $color1;
+		transform-origin: top;
+		transform: rotateX(-90deg) !important;
+		content: "";
+		@include side($color);
+	}
+	// right
+	&::before {
+		$color: $color6;
+		transform-origin: left;
+		transform: rotateY(90deg);
+		content: "";
+		@include side($color);
+	}
+}
+
+/* .bottom-dot — <span class="bottom-dot"> decorative dot at the bottom */
+
+// back
+.site-box .bottom-dot {
+	$color: $color3;
+	transform-origin: center center 30px;
+	transform: translateZ($distance-forward) translateZ(-60px) rotateX(-45deg) rotateY(45deg);
+	// transform: translateZ(-30px) rotateY(45deg);
+	@include side($color);
+	top: 50%;
+	left: 50%;
+	margin-top: -$half-size;
+	margin-left: -$half-size;
+	// left
+	&::after {
+		$color: $color4;
+		transform-origin: right;
+		transform: rotateY(90deg);
+		content: "";
+		@include side($color);
+	}
+	// bottom
+	&::before {
+		$color: $color2;
+		transform-origin: bottom;
+		transform: rotateX(-90deg) !important;
+		content: "";
+		@include side($color);
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -27,8 +27,8 @@ const env = process.env as mono.env_arguments_type & Record<string, string>;
 
 
 export default function () {
-	return function EleventyPlguin (eleventyConfig : Eleventy.EleventyConfig) {
-		eleventyConfig.addPairedShortcode("codeBlock", (content : string) => {
+	return function EleventyPlguin (eleventyConfig: Eleventy.EleventyConfig) {
+		eleventyConfig.addPairedShortcode("codeBlock", (content: string) => {
 			const result = hljs.highlight(content, { language: "xml", ignoreIllegals: true });
 			console.log(result);
 			return "<p>hi</p>";

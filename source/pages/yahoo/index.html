@@ -1,0 +1,36 @@
+---yaml
+title: Template Page
+description: silly little website
+# favicon: /images/raw/favicon.ico
+---
+{{ layout "main-base.vto" }} 
+{{#  ↓ Content to insert in <head> ↓  #}} {{ slot head }} 
+<link rel="stylesheet" href="index.css">
+
+{{#  ↓ Content to insert in <body> ↓  #}} {{ /slot }}  
+
+
+<div class="pre-pre-site">
+	<div class="pre-site" style="">
+		<div id="site-wii-mom" class="site-box t-" style="width: 275px !important; height: 190px !important; position: relative !important">
+			<span class="top-dot"></span>
+			<a href="//wii.mom/" target="_blank" rel="noopener ugc" style="position: relative !important">
+				<div class="sitefeature" style="position: relative !important">
+					<img src="/screenshots/wii.mom/index_large.jpg" class="screenshot" style="position: relative !important" />
+				</div>
+				<p style="position: relative !important">
+					wii.mom
+
+					<span style="position: relative !important" class="follow follow-wii-mom" data-domain="wii.mom" title="Follow" role="button">[+]</span>
+				</p>
+				<span style="position: relative !important">the gateway to the starry sky</span>
+				<br />
+			</a>
+			<span class="bottom-dot"></span>
+		</div>
+	</div>
+</div>
+
+
+{{# <script>{{ include "./critical.js" }}</script> {{# Inline important Javascript #}}
+{{ /layout }}

@@ -46,7 +46,9 @@ $cap-ratio: 0.63818359375; // = 1307 (sCapHeight)                               
 	line-height: $base-line-height;
 }
 
-
+.javascript-enabled {
+	background-color: red;
+}
 $gap: lh(1) ch(2) ; // shorthand list for margins and paddings that are 2 characters wide and 1 line tall
 svg {
 	width: 100%;

@@ -34,7 +34,8 @@ export const supported_browsers_lightningcss = lightningcss.browserslistToTarget
 
 /*  --  Environment Variables  --  */
 __temp = deepFreeze({
-	NEOCITIES             : { flags: ["neo", "neocities"] },
+	NEOCITIES             : { flags: ["neocities"] },
+	NEKOWEB               : { flags: ["nekoweb"] },
 	DRY_RUN               : { flags: ["d", "dry", "dryrun", "test"] },
 	DISABLE_INCREMENTAL   : { flags: ["no-inc", "no-incremental"] },
 	USE_NPX               : { flags: ["npx"] },
@@ -75,16 +76,18 @@ export const external_dependencies = ([...Object.keys(importmap.imports)]);
 /*  --  File Paths  --  */
 /** Paths to various directories, relative to cwd, use `abs_paths` for absolute */
 export const paths = Object.freeze({
-	"engine"   : "engine", // build tools and stuff
-	"cache"    : "__cache",
-	"compiled" : "__compiled", // compiled ts build scripts etc
-	"source"   : "source", // main source files (HTML, TS, SCSS, pages)
-	"util"     : "source/awa-util", // utilities for any page
-	"scss"     : "source/_styles", // SCSS files to scan when @use-ing
-	"includes" : "source/_templates", // template partials . layouts for Vento
-	"images"   : "source/images",
-	"fonts"    : "source/fonts",
-	"output"   : "^~^ website", // compiled site . build output
+	"engine"     : "engine", // build tools and stuff
+	"cache"      : "__cache",
+	"compiled"   : "__compiled", // compiled ts build scripts etc
+	"source"     : "source", // main source files (HTML, TS, SCSS, pages)
+	"util"       : "source/awa-util", // utilities for any page
+	"scss"       : "source/_styles", // SCSS files to scan when @use-ing
+	"includes"   : "source/_templates", // template partials . layouts for Vento
+	"images"     : "source/images",
+	"fonts"      : "source/fonts",
+	"output"     : env.NEKOWEB === "true" ? "^~^ website/awasaka01.nekoweb.org" : "^~^ website", // compiled site . build output
+	"outputRoot" : "^~^ website", // output folder with no subfolders
+	"nekoweb"    : "nekoweb", // nekoweb exclusive files
 });
 /** Absolute version of `paths` */
 export const abs_paths = /** @type {Readonly<Record<keyof typeof paths, string>>} */ (Object.freeze(Object.fromEntries(Object.entries(paths).map(([x, y]) => [x, path.resolve(process.cwd(), y).replace(/\\/g, "/")]))));

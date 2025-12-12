@@ -1,0 +1,148 @@
+/*
+	Uncompressed version of sitebox.css for nekoweb
+	- Created using [https://jbc.lol/utils/nekobox/]
+	- Compressed at [https://lune.dimden.dev/405a44b7e5.png]
+*/
+// rotating cube with png of miku inside or my own art
+// each side lifts on hover
+@use "sass:math";
+// sass --watch ./nekoweb/_sitebox.scss:./nekoweb/sitebox.css --style=compressed --no-source-map
+
+/* .site-box — the main container <div id="site-praxinoscope-nekoweb-org" class="site-box t-"> */
+.site-box {
+	position: relative;
+	perspective: 1000px;
+	transform-style: preserve-3d;
+}
+
+/* .follow — the [+] button used to follow a site */
+.site-box .follow {
+	::before {
+		
+	}
+	::after {
+		
+	}
+}
+
+
+
+/* .sitefeature — the <div> wrapping the <img> screenshot */
+.site-box .sitefeature {
+	display: none; 
+
+	/* the screenshot image */
+	img {
+
+	}
+}
+
+
+/* <a> element inside .site-box — clickable wrapper containing content */
+.site-box > a {
+	::before {
+		
+	}
+	::after {
+		
+	}
+}
+
+
+/* <p> inside the <a> — contains site name text */
+.site-box > a > p {
+	
+
+}
+
+/* <span> inside the <a> — contains "My Nekoweb site!" text */
+.site-box > a > span {
+	
+}
+
+
+
+@mixin side {
+	width: 30px;
+	height: 30px;
+	background-color: rgb(math.random(255) math.random(255) math.random(255));
+	display: block;
+	position: absolute;
+	transform-origin: 50% 50%;
+	backface-visibility: visible;
+	transform-style: preserve-3d;
+}
+
+/* .top-dot — <span class="top-dot"> decorative dot at the top */
+
+$size: 30px;
+$half-size: math.div($size, 2);
+	
+.site-box .top-dot {
+	@include side;
+	top: 50%;
+	left: 50%;
+	animation: front 1s linear infinite;
+	// top
+	&::after {
+		content: "";
+		animation: top 1s linear infinite;
+		@include side;
+	}
+	// bottom
+	&::before {
+		content: "";
+		animation: bottom 1s linear infinite;
+		@include side;
+	}
+}
+
+/* .bottom-dot — <span class="bottom-dot"> decorative dot at the bottom */
+
+// back
+.site-box .bottom-dot {
+	@include side;
+	top: 50%;
+	left: 50%;
+	animation: back 1s linear infinite;
+	// left
+	&::after {
+		animation: left 1s linear infinite;
+		content: "";
+		@include side;
+	}
+	// right
+	&::before {
+		animation: right 1s linear infinite;
+		content: "";
+		@include side;
+	}
+}
+
+
+@keyframes top {
+	0% { transform: rotateX(90deg) translateZ(30px); }
+	100% { transform: rotateX(90deg) translateZ(30px); }
+}
+@keyframes bottom {
+	0% { transform: rotateX(-90deg) translateZ(30px); }
+	100% { transform: rotateX(-90deg) translateZ(30px); }
+}
+@keyframes right {
+	0% { transform:rotateY(90deg) translateZ(30px); }
+	100% { transform:rotateY(90deg) translateZ(30px); }
+}
+@keyframes left {
+	0% { transform: rotateY(-90deg) translateZ(30px); }
+	100% { transform: rotateY(-90deg) translateZ(30px); }
+}
+
+@keyframes front {
+	0% { transform: translate(-50%, -50%) translateZ($half-size) rotateY(0deg); }
+	100% { transform: translate(-50%, -50%) translateZ($half-size) rotateY(360deg); }
+}
+@keyframes back {
+	0% { transform: translate(-50%, -50%) rotateY(180deg) translateZ($half-size) rotateY(0deg); }
+	100% { transform: translate(-50%, -50%) rotateY(180deg) translateZ($half-size) rotateY(60deg); }
+}
+

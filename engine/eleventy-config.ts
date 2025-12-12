@@ -64,7 +64,7 @@ const eleventy_config = {
 // |  Config function:    [https://www.11ty.dev/docs/config/]
 // |_____________________________________________________________________________________________________________
 
-export default ((eleventyConfig : Eleventy.EleventyConfig) => {
+export default ((eleventyConfig: Eleventy.EleventyConfig) => {
 
 	// - Ignore files
 	eleventyConfig.ignores.add(`${mono.paths.source}/_*{*/_*,*}`); // Ignore files and directories that start with an underscore  (glob to match _'s instead: !(_)*{*/!(_)*,*})
@@ -74,11 +74,11 @@ export default ((eleventyConfig : Eleventy.EleventyConfig) => {
 
 	// - 
 	eleventyConfig.setTemplateFormats(["html", "vto"]);
-	eleventyConfig.setDataFileSuffixes([".11ty", ".11tydata"]);
+	eleventyConfig.setDataFileBaseName("override");
+	eleventyConfig.setDataFileSuffixes([".11tydata"]);
 	eleventyConfig.setUseGitIgnore(false);
 	eleventyConfig.addPassthroughCopy("./source/**/*.{mp3}");
 	eleventyConfig.addPassthroughCopy("./source/fonts/**/*");
-	eleventyConfig.setDataFileBaseName("override");
 	eleventyConfig.addPassthroughCopy("./source/images/**/*");
 
 	eleventyConfig.addShortcode("importmap", () => JSON.stringify(mono.importmap));
@@ -102,7 +102,7 @@ export default ((eleventyConfig : Eleventy.EleventyConfig) => {
 	eleventyConfig.addExtension("css", { // [https://www.11ty.dev/docs/languages/custom/]
 		outputFileExtension: "css",
 		useLayouts         : false,
-		compile            : (inputContent : string) => (data : Eleventy.EleventyScope) => minifyCSS(inputContent, data),
+		compile            : (inputContent: string) => (data: Eleventy.EleventyScope) => minifyCSS(inputContent, data),
 	});
 
 
@@ -128,7 +128,7 @@ export default ((eleventyConfig : Eleventy.EleventyConfig) => {
 });
 
 
-function minifyCSS (content : string, data : Eleventy.EleventyScope, sourceMap ?: import("sass-embedded").CompileResult["sourceMap"]) : string {
+function minifyCSS (content: string, data: Eleventy.EleventyScope, sourceMap?: import("sass-embedded").CompileResult["sourceMap"]): string {
 	const result = lightningcss.transform({
 		filename      : data.page.fileSlug + ".css",
 		code          : Buffer.from(content, "utf8"),

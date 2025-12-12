@@ -9,8 +9,8 @@
 		"ansi": "node ./scripts/ansi.js",
 		"merge": "bash ./scripts/merge-to-main.sh",
 		"kill": "taskkill /F /IM node.exe",
-		"bot:build": "node ./engine/sunnymiku.js --production --no-incremental --max-quality --npx",
-		"bot:buildneo": "node ./engine/sunnymiku.js --production --no-incremental --max-quality --neocities --npx"
+		"bot:buildneko": "node ./engine/sunnymiku.js -v --production --no-incremental --max-quality --npx --nekoweb",
+		"bot:buildneo": "node ./engine/sunnymiku.js -v --production --no-incremental --max-quality --neocities --npx"
 	},
 	"keywords": [],
 	"author": "awasaka01",

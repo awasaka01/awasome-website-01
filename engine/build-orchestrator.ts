@@ -44,7 +44,7 @@ import beautifyEleventyLogs from "./build-task--logs-beautifier.js";
 // |_____________________________________________________________________________________________________________
 
 let deletedFiles = env.CLEAR_DIST === "false" ? 0 : glob.sync(`${abs_paths.output}/**/*`).length;
-if (env.CLEAR_DIST === "true") await clearDirectory(abs_paths.output);
+if (env.CLEAR_DIST === "true") await clearDirectory(abs_paths.output.replace("/awasaka01.nekoweb.org", ""));
 if (env.NO_CACHE === "true") await clearDirectory(abs_paths.cache);
 if (deletedFiles > 0 && env.VERBOSE_MISC === "true") log(chalk.dim.italic(`   Deleted ${b(deletedFiles)} file${deletedFiles === 1 ? "" : "s"} from ${b(paths.output + "/")}`));
 
@@ -74,7 +74,7 @@ const eleventy_process = childProcess.spawn(`${command} ${eleventy_cli_args.join
 	env  : { ...env, ...process.env, FORCE_COLOR: "1" },
 	shell: true,
 });
-eleventy_process.on("message", (message : any) => {
+eleventy_process.on("message", (message: any) => {
 	console.log(`message from 11ty:`, message);
 });
 process.send({ type: "child_pid", pid: eleventy_process.pid });
@@ -92,11 +92,13 @@ beautifyEleventyLogs(eleventy_process);
 // |    2. steps
 // |_____________________________________________________________________________________________________________
 
-let esbuild_context : esbuild.BuildContext | null = null;
+let esbuild_context: esbuild.BuildContext | null = null;
 const entryPoints = glob.sync(abs_paths.source + "/**/*.{js,jsx,ts,tsx}");
 
 // - Reformat entryPoints to an object of pairs
-const entryPointsIO : { in: string, out: string }[] = entryPoints.map((entry) => {
+const entryPointsIO: { in: string; out: string; }[] = entryPoints
+.filter((entry) => !entry.endsWith(".11tydata.js") && !entry.endsWith(".11ty.js"))
+.map((entry) => {
 	const out = entry
 		.replace(abs_paths.source, abs_paths.output)
 		.replace(".ts", "") // .js is added automatically by esbuild
@@ -118,7 +120,7 @@ if (env.VERBOSE_LOG_ALL_FILES === "true") {
 }
 
 // - ESBuild options
-const options : esbuild.BuildOptions = {
+const options: esbuild.BuildOptions = {
 	loader  : { ".png": "file", ".jpg": "file", ".svg": "file", ".mp3": "file" },
 	external: mono.external_dependencies,
 	logLevel: "error",
@@ -156,6 +158,21 @@ if (env.SERVE === "false") {
 
 eleventy_process.on("close", async (code = 0) => {
 
+	// - Copy nekoweb
+	if (env.NEKOWEB === "true" && env.SERVE === "false" && env.DRY_RUN === "false") {
+		await fs.promises.cp(abs_paths.nekoweb, abs_paths.outputRoot, {
+			recursive: true,
+			filter   : (src, dest) => {
+				if (src.endsWith(".md")) return false;
+				if (src.startsWith("_")) return false;
+				return true;
+			},
+		});
+	}
+
+
+
+
 	if (esbuild_context) {
 		esbuild_context.cancel();
 		esbuild_context.dispose();
@@ -181,7 +198,7 @@ eleventy_process.on("close", async (code = 0) => {
 // |_____________________________________________________________________________________________________________
 
 /** Recursively delete all files and folders inside a directory */
-async function clearDirectory (path : string) {
+async function clearDirectory (path: string) {
     const files = await glob(`**/*`, {
         cwd            : path,
         absolute       : true,
@@ -194,7 +211,7 @@ async function clearDirectory (path : string) {
 }
 
 /** Get the size of a folder in mB or kB - depending on the size */
-async function getDirectorySize (path : string) {
+async function getDirectorySize (path: string) {
 	const bytes = await getFolderSize.loose(path);
 	const greaterThanOneMB = bytes > 1048576;
 	const size = `${(bytes / (greaterThanOneMB ? 1048576 : 1024)).toFixed(2)}${greaterThanOneMB ? "M" : "K"}iB`;
