@@ -8,7 +8,7 @@ on:
 concurrency: # prevent concurrent deploys doing strange things
   group: deploy-to-sites
   cancel-in-progress: true
-
+# add auto build daily
 jobs:
   build:
     runs-on: ubuntu-latest

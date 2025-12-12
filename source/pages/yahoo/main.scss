@@ -3,19 +3,145 @@
 	- Created using [https://jbc.lol/utils/nekobox/]
 	- Compressed at [https://lune.dimden.dev/405a44b7e5.png]
 */
+// sass --watch ./nekoweb/_sitebox.scss:./nekoweb/sitebox.css --style=compressed --no-source-map
 // rotating cube with png of miku inside or my own art
 // each side lifts on hover
 @use "sass:math";
 @use "sass:color";
-// sass --watch ./nekoweb/_sitebox.scss:./nekoweb/sitebox.css --style=compressed --no-source-map
 
-$cubeSize: 60px;
+@function to-rgb-string($color) {
+	$r: color.channel($color, "red", $space: rgb);
+	$g: color.channel($color, "green", $space: rgb);
+	$b: color.channel($color, "blue", $space: rgb);
+	@return #{$r}, #{$g}, #{$b};
+}
+
+
+
+$cube-face-size: 60px;
+$cube-face-size-half: math.div($cube-face-size, 2);
+
+$distance-forward: 80px;
+$distance-forward-miku: 40px;
+$spins: 2;
+$animation-duration: 1s cubic-bezier(0.5, 0.5, 0.35, 1.25);
+$face-opacity: 0.1;
+$face-border: inset 0 0 0 5px rgba(var(--color), 0.9);
+
+
+$color-face1: #b96dff; // front face  | .top-dot
+$color-face2: #ff7d7d; // top face    | .top-dot::before
+$color-face3: #fea5e6; // left face   | .top-dot::after
+$color-face4: #70ff77; // back face   | .bottom-dot
+$color-face5: #fffa76; // bottom face | .bottom-dot::before
+$color-face6: #7fe5ff; // right face  | .bottom-dot::after
+
+
+
+/*
+	.top-dot and .bottom-dot are seemingly unused elements, 
+	I utilize them and their ::after and ::before pseudo-elements to create all six sides of the cube
+	
+	.top-dot is the front face, position untouched
+	.top-dot::before is the top face, created by rotating it 90deg around the ??? vertex of .top-dot
+	.top-dot::after is the left face, created by rotating it 90deg around the ??? vertex of .top-dot
+
+	.bottom-dot is the back face, created by moving it backwards away from the camera
+	.bottom-dot::before is the bottom face, created by rotating it 90deg around the ??? vertex of .bottom-dot
+	.bottom-dot::after is the right face, created by rotating it 90deg around the ??? vertex of .bottom-dot
+
+
+	start rotated so top left front corner is in the center
+*/
+
+
+// @keyframes spin {
+// 	from {
+// 		transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+// 	}
+// 	to {
+// 		transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg);
+// 	}
+// }
+.site-box {
+	box-shadow: 10px 10px 0 0 #000;
+	// transform-origin: center center;
+	animation: spin 5s infinite ease-in-out;
+	background: none !important;
+}
+
+.top-dot, .bottom-dot, .top-dot::before, .top-dot::after, .bottom-dot::before, .bottom-dot::after {
+	position: absolute;
+	inset: 0;
+	content: "";
+	width: $cube-face-size;
+	height: $cube-face-size;
+	background-color: rgba(var(--color), $face-opacity);
+	box-shadow: $face-border;
+}
+.top-dot, .bottom-dot {
+	left: 50%;
+	top: 50%;
+	transition: transform $animation-duration;
+	margin: (-$cube-face-size-half) 0 0 (-$cube-face-size-half);
+}
+
+.top-dot { // front face
+	--color: #{to-rgb-string($color-face1)};
+	transform-origin: center center (-$cube-face-size-half);
+	transform: translateZ($distance-forward) rotateX(-45deg) rotateY(45deg);
+	&::before { // top face
+		--color: #{to-rgb-string($color-face2)};
+		transform-origin: top;
+		transform: rotateX(-90deg);
+	}
+	&::after { // left face
+		--color: #{to-rgb-string($color-face3)};
+		transform-origin: left;
+		transform: rotateY(90deg);
+	}
+}
+.site-box:hover .top-dot {
+	transform: translateZ($distance-forward) rotateX(#{-45deg + 180deg  + ($spins * 360deg)}) rotateY(#{45deg  + ($spins * 360deg)});
+}
+.site-box:hover .bottom-dot {
+	// intentionally inverted spins
+	transform: translateZ($distance-forward - $cube-face-size) rotateX(#{-45deg + 180deg - ($spins * 360deg)}) rotateY(#{45deg  - ($spins * 360deg)}); 
+}
+.bottom-dot { // back face
+	--color: #{to-rgb-string($color-face4)};
+	transform-origin: center center ($cube-face-size-half);
+	transform: translateZ($distance-forward - $cube-face-size) rotateX(-45deg) rotateY(45deg); 
+	&::before { // bottom face
+		--color: #{to-rgb-string($color-face5)};
+		transform-origin: bottom;
+		transform: rotateX(-90deg);
+	}
+	&::after { // right face
+		--color: #{to-rgb-string($color-face6)};
+		transform-origin: right;
+		transform: rotateY(90deg);
+	}
+}
+
+
+
+// minimization techniuqe:  
+// --color: 240, 240, 240;
+
+
+
+
 /* .site-box — the main container <div id="site-praxinoscope-nekoweb-org" class="site-box t-"> */
 .site-box {
 	position: relative;
 	perspective-origin: center center;
-	perspective: 1500px;
+	perspective: 20000px;
 	transform-style: preserve-3d;
+	z-index: -100;
+	* {
+		z-index: 100;
+	}
 }
 	
 /* .follow — the [+] button used to follow a site */
@@ -65,114 +191,106 @@ $cubeSize: 60px;
 	position: absolute;
 	top: 50%;
 	left: 50%;
-	transform: translateX(-50%) translateY(-50%);
+	transform: translateX(-50%) translateY(-50%) translateZ($distance-forward-miku);
 
-	width: $cubeSize;
-	height: $cubeSize;
+	width: $cube-face-size;
+	height: $cube-face-size;
 	
 	background: url("/images/miku.png");
 	background-size: cover;
 }
 
 @mixin side($color	) {
-	width: 60px;
-	height: 60px;
+	width: $cube-face-size;
+	height: $cube-face-size;
 	// background-color: rgb(math.random(255) math.random(255) math.random(255));
 	display: block;
 	position: absolute;
 	backface-visibility: visible;
 	pointer-events: none;
 	transform-style: preserve-3d;
-	background-color: color.change($color, $alpha: 0.2);
+	background-color: color.change($color, $alpha: 0.4);
 	// padding: 5px;
 	// background-clip: content-box;
 	box-sizing: border-box;
 	box-shadow: inset 0 0 0 5px color.change($color, $alpha: 0.7);
-	transition: transform 2s ease-in-out;
+	transition: transform 0.1s cubic-bezier(0.5, 0.5, 0.35, 1.25);
 }
 
-$color1: #ff7d7daa; // top
-$color2: #fffa76aa; // bottom
-$color3: #70ff77aa; // back
-$color4: #7fe5ffaa; // left
-$color5: #b96dffaa; // front
-$color6: #fea5e6aa; // right
 
 /* .top-dot — <span class="top-dot"> decorative dot at the top */
-$distance-forward: 30px;
-$half-size: math.div($cubeSize, 2);
-.site-box:hover .top-dot {
-	transform: translateZ($distance-forward) rotateX(-45deg) rotateY(135deg) rotateY(540deg) rotateX(540deg);
-}
-.site-box:hover .bottom-dot {
-	transform: translateZ($distance-forward) translateZ(-60px) rotateX(-45deg) rotateY(135deg)  rotateY(-540deg) rotateX(-540deg);
-}
-.site-box:hover {
-	// perspective: 400px;
-}
-.site-box {
+// .site-box:hover .top-dot {
+// 	transform: translateZ($distance-forward) rotateX(-45deg) rotateY(135deg) rotateY(900deg) rotateX(900deg);
+// }
+// .site-box:hover .bottom-dot {
+// 	transform: translateZ($distance-forward) translateZ(-$cube-face-size) rotateX(-45deg) rotateY(135deg)  rotateY(-900deg) rotateX(-900deg);
+// }
+// .site-box:hover {
+// 	// perspective: 400px;
+// }
+// .site-box {
 	
-	transition: perspective 0.5s ease-in-out;
-}
-// front
-.site-box .top-dot {
-	$color: $color5;
-	transform-origin: center center -30px;
-	transform: translateZ($distance-forward) rotateX(-45deg) rotateY(45deg);
+// 	transition: perspective 0.5s ease-in-out;
+// }
+// // front
+// .site-box .top-dot {
+// 	$color: $color5;
+// 	transform-origin: center center -30px;
+// 	transform: translateZ($distance-forward) rotateX(-45deg) rotateY(45deg);
 	
-	@include side($color);
-	top: 50%;
-	left: 50%;
-	margin-top: -$half-size;
-	margin-left: -$half-size;
-	// top
-	&::after {
-		$color: $color1;
-		transform-origin: top;
-		transform: rotateX(-90deg) !important;
-		content: "";
-		@include side($color);
-	}
-	// right
-	&::before {
-		$color: $color6;
-		transform-origin: left;
-		transform: rotateY(90deg);
-		content: "";
-		@include side($color);
-	}
-}
+// 	@include side($color);
+// 	top: 50%;
+// 	left: 50%;
+// 	margin-top: -$cube-face-size-half;
+// 	margin-left: -$cube-face-size-half;
+// 	// top
+// 	&::after {
+// 		$color: $color1;
+// 		transform-origin: top;
+// 		transform: rotateX(-90deg) !important;
+// 		content: "";
+// 		@include side($color);
+// 	}
+// 	// right
+// 	&::before {
+// 		$color: $color6;
+// 		transform-origin: left;
+// 		transform: rotateY(90deg);
+// 		content: "";
+// 		@include side($color);
+// 	}
+// }
 
-/* .bottom-dot — <span class="bottom-dot"> decorative dot at the bottom */
+// /* .bottom-dot — <span class="bottom-dot"> decorative dot at the bottom */
 
-// back
-.site-box .bottom-dot {
-	$color: $color3;
-	transform-origin: center center 30px;
-	transform: translateZ($distance-forward) translateZ(-60px) rotateX(-45deg) rotateY(45deg);
-	// transform: translateZ(-30px) rotateY(45deg);
-	@include side($color);
-	top: 50%;
-	left: 50%;
-	margin-top: -$half-size;
-	margin-left: -$half-size;
-	// left
-	&::after {
-		$color: $color4;
-		transform-origin: right;
-		transform: rotateY(90deg);
-		content: "";
-		@include side($color);
-	}
-	// bottom
-	&::before {
-		$color: $color2;
-		transform-origin: bottom;
-		transform: rotateX(-90deg) !important;
-		content: "";
-		@include side($color);
-	}
-}
+// // back
+// .site-box .bottom-dot {
+// 	$color: $color3;
+// 	transform-origin: center center $cube-face-size-half;
+// 	transform: translateZ($distance-forward) translateZ(-$cube-face-size) rotateX(-45deg) rotateY(45deg);
+// 	// transform: translateZ(-30px) rotateY(45deg);
+// 	@include side($color);
+// 	top: 50%;
+// 	left: 50%;
+// 	margin-top: -$cube-face-size-half;
+// 	margin-left: -$cube-face-size-half;
+// 	// left
+// 	&::after {
+// 		$color: $color4;
+// 		transform-origin: right;
+// 		transform: rotateY(90deg);
+// 		content: "";
+// 		@include side($color);
+// 	}
+// 	// bottom
+// 	&::before {
+// 		$color: $color2;
+// 		transform-origin: bottom;
+// 		transform: rotateX(-90deg) !important;
+// 		content: "";
+// 		@include side($color);
+// 	}
+// }
 
 
 
