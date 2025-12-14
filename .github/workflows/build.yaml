@@ -39,7 +39,7 @@ jobs:
           nekoweb-api-key: ${{ secrets.NEKOWEB_API_KEY }}
           directory: ^~^ website
           nekoweb-username: awasaka01
-          nekoweb-domain: ""
+          nekoweb-domain: "/"
 
       # ─────────────────────────────────────────────────── ─── ── ─
       #  🛈  Build with Neocities flag and deploy to Neocities
