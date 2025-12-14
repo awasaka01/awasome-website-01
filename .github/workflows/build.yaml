@@ -28,22 +28,18 @@ jobs:
       # ─────────────────────────────────────────────────── ─── ── ─
       #  🛈  Build and deploy to Nekoweb
       # ─────────────────────────────────────────────────── ─── ── ─
-      - run: pnpm run bot:buildneko
+      - run: pnpm run bot:build
       - name: List ^~^ website recursively
         run: |
           echo "Listing all files in ^~^ website:"
           find "^~^ website" -type f
-      - name: Move files to a safer named folder
-        run: |
-          mkdir -p ./build
-          cp -r "./^~^ website/" ./build
       - name: Deploy to Nekoweb
-        uses: mp-pinheiro/nekoweb-deploy@main
+        uses: indiefellas/deploy2nekoweb@main
         with:
-          API_KEY: ${{ secrets.NEKOWEB_API_KEY }}
-          BUILD_DIR: './build'
-          DEPLOY_DIR: '/'
-          NEKOWEB_PAGENAME: 'awasaka01'
+          nekoweb-api-key: ${{ secrets.NEKOWEB_API_KEY }}
+          directory: ^~^ website
+          nekoweb-username: awasaka01
+          nekoweb-domain: ""
 
       # ─────────────────────────────────────────────────── ─── ── ─
       #  🛈  Build with Neocities flag and deploy to Neocities
