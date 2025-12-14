@@ -33,12 +33,13 @@ jobs:
           echo "Listing all files in ^~^ website:"
           find "^~^ website" -type f
       - name: Deploy to Nekoweb
-        uses: indiefellas/deploy2nekoweb@main
+        uses: mp-pinheiro/nekoweb-deploy@main
         with:
-          nekoweb-api-key: ${{ secrets.NEKOWEB_API_KEY }}
-          directory: '^~^ website'
-          nekoweb-username: 'awasaka01'
-          nekoweb-domain: 'awasaka01.nekoweb.org'
+          API_KEY: ${{ secrets.NEKOWEB_API_KEY }}
+          BUILD_DIR: './^~^ website'
+          DEPLOY_DIR: '/'
+          CLEANUP: 'True'
+          NEKOWEB_PAGENAME: 'awasaka01'
 
       # ─────────────────────────────────────────────────── ─── ── ─
       #  🛈  Build with Neocities flag and deploy to Neocities
