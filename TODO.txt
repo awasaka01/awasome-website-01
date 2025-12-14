@@ -14,6 +14,7 @@
 
 ................................................................................................................................
 ==== do to:
+CLEAR WARNINGS AFTER LOGGING THEM
 - make steve ai
 - pixel to svg converter
 - add 404 page

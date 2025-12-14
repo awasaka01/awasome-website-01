@@ -34,7 +34,7 @@ body {
 
 html {
 	height: 100%;
-	background: url("/assets/nekopattern.png") repeat;
+	background: url("https://nekoweb.org/assets/nekopattern.png") repeat;
 }
 
 body {
@@ -54,7 +54,7 @@ body {
 	margin-left: 15px;
 	height: 137px;
 	width: 244px;
-	background-image: url("/assets/previewplaceholder.png");
+	background-image: url("https://nekoweb.org/assets/previewplaceholder.png");
 	background-color: white;
 	border: 1px solid #ecbfa6;
 }
@@ -62,7 +62,7 @@ body {
 .nice-banner {
 	grid-area: alert;
 	background: #ffabdf;
-	background-image: url("/assets/zinepattern.png");
+	background-image: url("https://nekoweb.org/assets/zinepattern.png");
 	background-repeat: repeat;
 	background-size: 50px 38px;
 	color: rgb(54 16 16);
@@ -110,7 +110,7 @@ body {
 
 .site-box {
 	text-align: center;
-	background-image: url("/assets/cookiebox.png");
+	background-image: url("https://nekoweb.org/assets/cookiebox.png");
 	background-repeat: no-repeat;
 	width: 228px;
 	height: 160px;
@@ -223,7 +223,7 @@ button:disabled {
 
 .header {
 	grid-area: header;
-	background: url("/assets/checkerboard.png"), linear-gradient(to bottom, var(--cookie), var(--darkbrown));
+	background: url("https://nekoweb.org/assets/checkerboard.png"), linear-gradient(to bottom, var(--cookie), var(--darkbrown));
 	image-rendering: crisp-edges;
 	background-size: 10px 10px, auto;
 	border-bottom: var(--dough) 3px ridge;
@@ -359,7 +359,7 @@ input[type="password"] ~ br {
 	position: absolute;
 	width: 25px;
 	height: 100%;
-	background-image: url("/assets/zigzag.png");
+	background-image: url("https://nekoweb.org/assets/zigzag.png");
 	top: 0;
 	right: 0;
 	transform: translateX(100%);
@@ -696,7 +696,7 @@ img.nekoz {
 }
 
 #registerForm {
-	border-image: url("/assets/palegreencream.png") 50 fill 1.5em 1.5em 1.5em 1.5em 15px round round;
+	border-image: url("https://nekoweb.org/assets/palegreencream.png") 50 fill 1.5em 1.5em 1.5em 1.5em 15px round round;
 	border-style: solid;
 	margin: 10px;
 	padding: 5px;
