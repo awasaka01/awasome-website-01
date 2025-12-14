@@ -13,6 +13,8 @@
 @font-face {
 	font-family: "vcr";
 	src: url("/fonts/vhs-vcr-osd.ttf") format("truetype");
+	// font-weight: normal;
+	// font-style: normal;
 }
 
 @function to-rgb-string($color) {
@@ -39,6 +41,11 @@
 
 	start rotated so top left front corner is in the center
 */
+
+/* minificatiion ideas
+	replace rgba with hex
+*/
+
 
 $cube-face-size: 60px;
 $cube-face-size-half: math.div($cube-face-size, 2);
@@ -68,7 +75,7 @@ $color-url: #e74c7d;
 	line-height: 1.2;
 	outline: #2c2326 solid 4px;
 	outline-offset: -4px;
-	box-shadow: inset 0 0 80px 20px #0000009d;
+	box-shadow: inset  0 0 80px 20px #0000009d;
 	animation: spin 5s infinite ease-in-out;
 	background: #252425 !important;
 	// perspective-origin: center center;
@@ -127,6 +134,10 @@ $color-url: #e74c7d;
 
 
 .site-box > a > p {
+	// &::before {
+	// 	content: "> awasaka.nekoweb.org";
+	// }
+
 	color: $color-url;
 	font-size: 11px;
 	margin: 0 0 0 auto; 
@@ -207,5 +218,95 @@ $color-url: #e74c7d;
 	width: 100%; height: 100%;
 	background: url("/images/miku.png") center / $cube-face-size no-repeat;
 }
+
+
+
+/* .top-dot — <span class="top-dot"> decorative dot at the top */
+// .site-box:hover .top-dot {
+// 	transform: translateZ($distance-forward) rotateX(-45deg) rotateY(135deg) rotateY(900deg) rotateX(900deg);
+// }
+// .site-box:hover .bottom-dot {
+// 	transform: translateZ($distance-forward) translateZ(-$cube-face-size) rotateX(-45deg) rotateY(135deg)  rotateY(-900deg) rotateX(-900deg);
+// }
+// .site-box:hover {
+// 	// perspective: 400px;
+// }
+// .site-box {
+	
+// 	transition: perspective 0.5s ease-in-out;
+// }
+// // front
+// .site-box .top-dot {
+// 	$color: $color5;
+// 	transform-origin: center center -30px;
+// 	transform: translateZ($distance-forward) rotateX(-45deg) rotateY(45deg);
+	
+// 	@include side($color);
+// 	top: 50%;
+// 	left: 50%;
+// 	margin-top: -$cube-face-size-half;
+// 	margin-left: -$cube-face-size-half;
+// 	// top
+// 	&::after {
+// 		$color: $color1;
+// 		transform-origin: top;
+// 		transform: rotateX(-90deg) !important;
+// 		content: "";
+// 		@include side($color);
+// 	}
+// 	// right
+// 	&::before {
+// 		$color: $color6;
+// 		transform-origin: left;
+// 		transform: rotateY(90deg);
+// 		content: "";
+// 		@include side($color);
+// 	}
+// }
+
+// /* .bottom-dot — <span class="bottom-dot"> decorative dot at the bottom */
+
+// // back
+// .site-box .bottom-dot {
+// 	$color: $color3;
+// 	transform-origin: center center $cube-face-size-half;
+// 	transform: translateZ($distance-forward) translateZ(-$cube-face-size) rotateX(-45deg) rotateY(45deg);
+// 	// transform: translateZ(-30px) rotateY(45deg);
+// 	@include side($color);
+// 	top: 50%;
+// 	left: 50%;
+// 	margin-top: -$cube-face-size-half;
+// 	margin-left: -$cube-face-size-half;
+// 	// left
+// 	&::after {
+// 		$color: $color4;
+// 		transform-origin: right;
+// 		transform: rotateY(90deg);
+// 		content: "";
+// 		@include side($color);
+// 	}
+// 	// bottom
+// 	&::before {
+// 		$color: $color2;
+// 		transform-origin: bottom;
+// 		transform: rotateX(-90deg) !important;
+// 		content: "";
+// 		@include side($color);
+// 	}
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

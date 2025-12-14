@@ -76,6 +76,7 @@ export default defineConfig({
 
 		"length-zero-no-unit"               : null,
 		"property-no-unknown"               : null,
+		"declaration-block-no-redundant-longhand-properties" : null,
 		"custom-property-empty-line-before" : null,
 		"selector-not-notation"             : null, // dont force me to less supported options >:(
 		"selector-no-qualifying-type"       : null, // < I THINK STYLELINT DEVS AREW INSANE WHY IS input[type='button'] BANNED BY DEFAULT
