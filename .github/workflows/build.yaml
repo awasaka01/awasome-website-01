@@ -28,7 +28,7 @@ jobs:
       # ─────────────────────────────────────────────────── ─── ── ─
       #  🛈  Build and deploy to Nekoweb
       # ─────────────────────────────────────────────────── ─── ── ─
-      - run: pnpm run bot:build
+      - run: pnpm run bot:buildneko
       - name: List ^~^ website recursively
         run: |
           echo "Listing all files in ^~^ website:"
