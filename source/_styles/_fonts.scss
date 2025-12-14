@@ -25,7 +25,19 @@
 
 @font-face {
 	font-family: "vcr";
-	src: url("/fonts/vhs-vcr-osd.ttf") format("ttf");
+	src: url("/fonts/vhs-vcr-osd.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: "unscii-16-full";
+	src: url("/fonts/unscii-16-full.woff") format("woff");
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: "unscii-8";
+	src: url("/fonts/unscii-8.woff") format("woff");
 	font-weight: normal;
 	font-style: normal;
 }

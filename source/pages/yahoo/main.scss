@@ -23,189 +23,21 @@
 }
 
 
-
-/*
-	.top-dot and .bottom-dot are seemingly unused elements, 
-	I utilize them and their ::after and ::before pseudo-elements to create all six sides of the cube
-	
-	.top-dot is the front face, position untouched
-	.top-dot::before is the top face, created by rotating it 90deg around the ??? vertex of .top-dot
-	.top-dot::after is the left face, created by rotating it 90deg around the ??? vertex of .top-dot
-
-	.bottom-dot is the back face, created by moving it backwards away from the camera
-	.bottom-dot::before is the bottom face, created by rotating it 90deg around the ??? vertex of .bottom-dot
-	.bottom-dot::after is the right face, created by rotating it 90deg around the ??? vertex of .bottom-dot
-
-
-	start rotated so top left front corner is in the center
-*/
-
-$cube-face-size: 60px;
-$cube-face-size-half: math.div($cube-face-size, 2);
-
-$distance-forward: 80px;
-$distance-forward-miku: 40px;
-$spins: 2;
-$animation-duration: 1s cubic-bezier(0.5, 0.5, 0.35, 1.25);
-$face-opacity: 0.5;
-$face-border: inset 0 0 0 5px rgba(var(--color), 0.9), 0 0 5px 0 rgba(var(--color), 0.4);
-
-$color-face1: #724490; // front face  | .top-dot
-$color-face2: #8f7cdb; // top face    | .top-dot::before
-$color-face3: #895cb0; // left face   | .top-dot::after
-$color-face4: #c5be61; // back face   | .bottom-dot
-$color-face5: #d1ee7c; // bottom face | .bottom-dot::before
-$color-face6: #af8a51; // right face  | .bottom-dot::after
-
-$color-follow: #6b6b6b;
-$color-follow-hover: #c9c9c9;
-$color-url: #e74c7d;
-
-.site-box *, .site-box { transform-style: preserve-3d; }
 .site-box {
-	text-shadow: 0 0 1px currentcolor;
-	font-family: vcr;
-	line-height: 1.2;
-	outline: #2c2326 solid 4px;
-	outline-offset: -4px;
-	box-shadow: inset 0 0 80px 20px #0000009d;
-	animation: spin 5s infinite ease-in-out;
-	background: #252425 !important;
-	// perspective-origin: center center;
-	perspective: 20000px;
-
-	.top-dot, .bottom-dot, .top-dot::before, .top-dot::after, .bottom-dot::before, .bottom-dot::after {
-		content: ""; position: absolute; inset: 0;
-		width: $cube-face-size; height: $cube-face-size;
-		pointer-events: none;
-		box-shadow: $face-border;
-		background-color: rgba(var(--color), $face-opacity);
+	.top-dot {
+		content: "";
+		position: absolute;
+		inset: 0;
+		background-image: none;
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: contain;
+		width: 100%; height: 100%;
+		z-index: 1;
 	}
-
-	.top-dot, .bottom-dot {
-		left: 50%; top: 50%; margin: (-$cube-face-size-half) 0 0 (-$cube-face-size-half);
-		transition: transform $animation-duration;
-	}
-
-	.top-dot { // front face
-		--color: #{to-rgb-string($color-face1)};
-		transform-origin: center center (-$cube-face-size-half);
-		transform: translateZ($distance-forward) rotateX(-45deg) rotateY(45deg);
-		&::before { // top face
-			--color: #{to-rgb-string($color-face2)};
-			transform-origin: top;
-			transform: rotateX(-90deg);
-		}
-		&::after { // left face
-			--color: #{to-rgb-string($color-face3)};
-			transform-origin: left;
-			transform: rotateY(90deg);
-		}
-	}
-	.bottom-dot { // back face
-		--color: #{to-rgb-string($color-face4)};
-		transform-origin: center center ($cube-face-size-half);
-		transform: translateZ($distance-forward - $cube-face-size) rotateX(-45deg) rotateY(45deg); 
-		&::before { // bottom face
-			--color: #{to-rgb-string($color-face5)};
-			transform-origin: bottom;
-			transform: rotateX(-90deg);
-		}
-		&::after { // right face
-			--color: #{to-rgb-string($color-face6)};
-			transform-origin: right;
-			transform: rotateY(90deg);
-		}
-	}
-	&:hover .top-dot { transform: translateZ($distance-forward) rotateX(#{-45deg + 180deg + ($spins * 360deg)}) rotateY(#{45deg + ($spins * 360deg)}); }
-	&:hover .bottom-dot { transform: translateZ($distance-forward - $cube-face-size) rotateX(#{-45deg + 180deg - ($spins * 360deg)}) rotateY(#{45deg - ($spins * 360deg)}); }// intentionally inverted spins
-}
-
-// minimization techniuqe:  
-// --color: 240, 240, 240;
-
-
-
-.site-box > a > p {
-	color: $color-url;
-	font-size: 11px;
-	margin: 0 0 0 auto; 
-	width: max-content;
-	// box-sizing: border-box;
-	$padding: 2;
-	padding: #{$padding}%;
-	transform: translateY(-#{100 - $padding}%);
-	grid-area: text;
-	// z-index: 9;
-	// text-align: right;
-	display: flex;
-	flex-direction: column-reverse;
-}
-
-
-
-/* .follow — the [+] button used to follow a site */
-.site-box .follow {
-	color: $color-follow;
-	// z-index: 9999999999;
-	display: block;
-	// position: relative;
-	// height: auto;
-	margin-left: auto;
-	width: max-content;
-	font-size: 0.7em;
-	line-height: 2em;
 	&:hover {
-		color: $color-follow-hover;
-	}
-	&::before {
-		content: "FOLLOW ";
-		white-space: pre;
+		.top-dot {
+			background-image: url("/images/foxy-jumpscare.gif");
+		}
 	}
 }
-
-
-
-/* .sitefeature — the <div> wrapping the <img> screenshot */
-.site-box .sitefeature {
-	display: none; 
-	/* the screenshot image */
-	img {
-
-	}
-}
-
-
-/* <a> element inside .site-box — clickable wrapper containing content */
-.site-box > a {
-	// pointer-events: none;
-	display: grid;
-	grid-template: "miku" 100% "text" auto / 100%;
-	// grid-template-areas: "miku" "text";
-	// grid-template-rows: 100% auto;
-	// grid-template-columns: 100%;
-	// width: 100%;
-	height: 100%;
-}
-
-
-
-/* <p> inside the <a> — contains site name text */
-
-/* <span> inside the <a> — contains <title> of index.html - overriden for miku image */
-.site-box > a > span {
-	place-self: center;
-	grid-area: miku;
-	font-size: 0;
-	pointer-events: none;
-
-	// margin: auto;
-	// top: 50%;
-	// left: 50%;
-	transform: translateZ($distance-forward-miku);
-	
-	width: 100%; height: 100%;
-	background: url("/images/miku.png") center / $cube-face-size no-repeat;
-}
-
-

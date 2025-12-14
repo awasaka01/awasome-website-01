@@ -3,9 +3,9 @@
 
 @mixin base-styles {
 	body {
-		font-family: "gohu11", monospace;
+		font-family: "gohu11", "unscii-8", monospace;
 		color: c(fg, 500);
-		background-color: c(bg, 250);
+		background-color: c(bg, 100);
 		position: relative;
 	}
 	
