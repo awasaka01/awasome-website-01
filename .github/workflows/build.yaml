@@ -36,7 +36,7 @@ jobs:
       - name: Move files to a safer named folder
         run: |
           mkdir -p ./build
-          cp -r ./^~^ website/* ./build
+          cp -r "./^~^ website/*" ./build
       - name: Deploy to Nekoweb
         uses: mp-pinheiro/nekoweb-deploy@main
         with:
