@@ -9,16 +9,16 @@ const DEPTH = 16; // z dimension of 3D stars
 
 
 const defaultparams = {
-	octaves: 3, // Number of noise layers stacked; higher = more detail
-	bias: 4, // Exponent for reducing amplitude per octave; higher = smoother
-	frequency: 0.017, // Base frequency of noise (how zoomed in/out)
-	lacunarity: 10, // Frequency multiplier per octave; higher = more rapid detail
+	octaves    : 3, // Number of noise layers stacked; higher = more detail
+	bias       : 4, // Exponent for reducing amplitude per octave; higher = smoother
+	frequency  : 0.017, // Base frequency of noise (how zoomed in/out)
+	lacunarity : 10, // Frequency multiplier per octave; higher = more rapid detail
 	persistence: 0.03, // Amplitude multiplier per octave; higher = rougher noise
-	scale: 1, // Global scale multiplier for output
-	min: 0, // Minimum output value after scaling
-	max: 255, // Maximum output value after scaling
-	yspeed: 100, // How fast the noise moves vertically
-	zspeed: 300, // How fast the noise moves "depth-wise"
+	scale      : 1, // Global scale multiplier for output
+	min        : 0, // Minimum output value after scaling
+	max        : 255, // Maximum output value after scaling
+	yspeed     : 100, // How fast the noise moves vertically
+	zspeed     : 300, // How fast the noise moves "depth-wise"
 };
 
 
@@ -59,7 +59,7 @@ const PERSPECTIVE = 1000;
 
 const content = document.querySelector(".content");
 
-function createBackground (colorScale : chroma.Scale, id = "space-background", constoffset = 0, params = {} as Partial<typeof defaultparams>) {
+function createBackground (colorScale: chroma.Scale, id = "space-background", constoffset = 0, params = {} as Partial<typeof defaultparams>) {
 
 	params = { ...defaultparams, ...params };
 	//
@@ -70,11 +70,11 @@ function createBackground (colorScale : chroma.Scale, id = "space-background", c
 
 
 	// 2D array as lookup table, offsetLookup[y][x]
-	let offsetLookup : number[][];
-	let colorsLookup : [number, number, number, number][];
-	let height : number;
-	let widthXheight : number;
-	let starDistribution : Uint8Array; // 3d flat array index =    x   +   y * WIDTH   +   z * WIDTH * HEIGHT;
+	let offsetLookup: number[][];
+	let colorsLookup: [number, number, number, number][];
+	let height: number;
+	let widthXheight: number;
+	let starDistribution: Uint8Array; // 3d flat array index =    x   +   y * WIDTH   +   z * WIDTH * HEIGHT;
 
 	/*  -----  on window resize, update canvas height, and all values that depend on height  -----  */
 	updateAllValues();
@@ -221,7 +221,7 @@ function createBackground (colorScale : chroma.Scale, id = "space-background", c
 
 
 const page = {
-	width: window.innerWidth,
+	width : window.innerWidth,
 	height: content.scrollHeight,
 };
 const zValues = [0, 100, 200];
@@ -248,10 +248,10 @@ const zValues = [0, 100, 200];
 
 // create initial stars
 const pixelsPerUnit = window.innerWidth / WIDTH;
-type Star = { x : number, y : number, z : number, el : HTMLElement };
+type Star = { x: number; y: number; z: number; el: HTMLElement; };
 
 
-function moveStar (star : Star) {
+function moveStar (star: Star) {
 
 	const targetX = awa.rf(0, page.width);
 	const targetY = awa.rf(0, page.height);
@@ -284,7 +284,7 @@ function moveStar (star : Star) {
 // const starfield = document.createElement("div");
 	// starfield.id = "starfield";
 	// starfield.className = "bg-full";
-	const stars : Star[] = Array.from({ length: STAR_AMOUNT }, () => {
+	const stars: Star[] = Array.from({ length: STAR_AMOUNT }, () => {
 		const star = { x: 0, y: 0, z: 0, el: document.createElement("p") };
 		moveStar(star);
 		star.el.className = "star";

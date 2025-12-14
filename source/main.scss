@@ -72,16 +72,23 @@ br {
 	position: sticky;
 	z-index: 1000;
 }
-
+.text-divider {
+	overflow: hidden;
+	background-color: c(bg, 300);
+	color: c(bg, 300, 10);
+	word-wrap: nowrap;
+	height: 1lh;white-space: pre;
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////////
 // - Main
 
 main {
-	background-color: transparent;
-	max-width: 80ch;
+	background-color: c(bg, 500);
+	width: 100%;
 	margin: 0 auto;
+	// border-top: 1lh solid c(bg, 400);
 }
 
 
@@ -91,19 +98,28 @@ main {
 // - Logo
 
 #logo-text {
-	line-height: 1ch;
-	white-space: pre;
-	margin: auto;
-	* { display: inline; }
-	.color-000 { color: c(fg, 550, 0); } 
-	.color-001 { color: c(fg, 550); opacity: 0.1; }
-	cursor: default;
-	opacity: 0.9;
-	padding: 1ch;
-	text-shadow:
-		currentcolor 0 0 1em,
-		rgb(255 0 255 / 20%) 1ch 0 0.15em,
-		rgb(0 255 255 / 20%) -1ch 0 0.15em;
+	max-width: 100vw;
+	min-height: 100vmin;
+	box-sizing: border-box;
+	display: flex;
+	box-shadow: inset 0 0 1000px 0 rgba(0 0 0 / 30%);
+	place-content: center;
+	> div {
+		width: 100%;
+		line-height: 1ch;
+		white-space: pre;
+		margin: auto;
+		* { display: inline; }
+		.color-000 { color: c(fg, 550, 0); } 
+		.color-001 { color: c(fg, 550); opacity: 0.1; }
+		cursor: default;
+		opacity: 0.9;
+		padding: 1lh 20ch;
+		text-shadow:
+			currentcolor 0 0 1em,
+			rgb(255 0 255 / 20%) 1ch 0 0.15em,
+			rgb(0 255 255 / 20%) -1ch 0 0.15em;
+	}
 }
 
 // @debug "   creature: 🦒";
