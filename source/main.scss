@@ -97,28 +97,40 @@ main {
 ///////////////////////////////////////////////////////////////////////////////////
 // - Logo
 
-#logo-text {
-	max-width: 100vw;
+#hero {
+	position: relative;
+	overflow: hidden;
+	width: 100%;
 	min-height: 100vmin;
 	box-sizing: border-box;
-	display: flex;
 	box-shadow: inset 0 0 1000px 0 rgba(0 0 0 / 30%);
+
+	display: flex;
 	place-content: center;
-	> div {
+	place-items: center;
+	#logo-text {
 		width: 100%;
-		line-height: 1ch;
-		white-space: pre;
-		margin: auto;
-		* { display: inline; }
-		.color-000 { color: c(fg, 550, 0); } 
-		.color-001 { color: c(fg, 550); opacity: 0.1; }
-		cursor: default;
-		opacity: 0.9;
-		padding: 1lh 20ch;
-		text-shadow:
-			currentcolor 0 0 1em,
-			rgb(255 0 255 / 20%) 1ch 0 0.15em,
-			rgb(0 255 255 / 20%) -1ch 0 0.15em;
+		padding: 1lh 6vw;
+		display: flex;
+		place-content: center;
+		place-items: center;
+		max-width: 100vw;
+		> div {
+			width: 100%;
+			line-height: 1ch;
+			white-space: pre;
+			box-sizing: border-box;
+			margin: auto;
+			* { display: inline; }
+			.color-000 { color: c(fg, 550, 0); } 
+			.color-001 { color: c(fg, 550); opacity: 0.1; }
+			cursor: default;
+			opacity: 0.9;
+			text-shadow:
+				currentcolor 0 0 1em,
+				rgb(255 0 255 / 20%) 1ch 0 0.15em,
+				rgb(0 255 255 / 20%) -1ch 0 0.15em;
+		}
 	}
 }
 
@@ -132,6 +144,53 @@ main {
 // @warn "creature escape";
 // @warn "creature escape";
 // @warn "creature escape";
+
+///////////////////////////////////////////////////////////////////////////////////
+// - Stars
+#stars {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	pointer-events: none;
+	z-index: -1;
+
+	.star {
+		font-size: 0.75rem;
+		opacity: 0;
+		position: absolute;
+		transform-origin: center center;
+		text-shadow: 0 0 4em currentcolor;
+		// --tx: 0px;
+		// --ty: 0px;
+		// --scale: 1;
+		// --rot: 0deg;
+		// transform: translate(var(--tx), var(--ty)) scale(var(--scale)) rotate(var(--rot));
+	}
+}
+@keyframes animation1 {
+	0% { opacity: 0; }
+	50% { opacity: 1; }
+	100% { opacity: 0; }
+}
+@keyframes animation2 {
+	0% { transform: rotate(); opacity: 0; }
+	80% { opacity: 1; }
+	100% { opacity: 0; }
+}
+// @keyframes spin {
+// 	from { transform: rotate(0deg); }
+// 	to { transform: rotate(360deg); }
+// }
+@keyframes animation3 {
+	0% { opacity: 0; }
+	80% { opacity: 1; }
+	100% { opacity: 0; }
+}
+// @keyframes moveNORTH { from { transform: translateY(0%); } to { transform: translateY(100vh); } }
+// @keyframes moveSOUTH { from { transform: translateY(0%); } to { transform: translateY(-100vh); } }
+// @keyframes moveEAST { from { transform: translateX(0%); } to { transform: translateX(100vw); } }
+// @keyframes moveWEST { from { transform: translateX(0%); } to { transform: translateX(-100vw); } }
+
 
 ///////////////////////////////////////////////////////////////////////////////////
 // - Slime Rancher Scrolling Track
