@@ -24,6 +24,9 @@
 
 
 .site-box {
+	img {
+		display: none;
+	}
 	.top-dot {
 		content: "";
 		position: absolute;
@@ -34,6 +37,7 @@
 		background-size: contain;
 		width: 100%; height: 100%;
 		z-index: 1;
+		pointer-events: none;
 	}
 	&:hover {
 		.top-dot {

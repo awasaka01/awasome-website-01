@@ -1,4 +1,6 @@
+import chroma from "chroma-js";
 import * as util from "./awa-util/core.js";
+
 
 document.addEventListener("DOMContentLoaded", async () => {
 	// slimey();
@@ -7,8 +9,136 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 	// good();
 
-
+dostars();
 });
+
+
+
+
+
+
+
+
+
+
+// ================================================================
+//  stars:
+// ---------------------------------------------------------------- 
+
+type AnimationType = "animation1" | "animation2" | "animation3";
+type StarType = {
+	symbol: string;
+	color: string | chroma.Scale;
+	duration?: number;
+	animation?: AnimationType;
+	easing?: string;
+	loopCount?: number;
+	distance?: number;
+};
+type StarTypeGenerator = [weight: number, properties: ()=> StarType ];
+
+function dostars () {
+
+	// mini optimization: one function for all variables
+	const starTypes: StarTypeGenerator[] = [
+	[50, () => ({
+		symbol  : util.arrayRandom(["·", ""]),
+		color   : chroma.scale(["#ffffffb1", "#ffffff24"]),
+		duration: util.rr(2000, 10000),
+		distance: 1,
+	})],
+	[20, () => ({
+		symbol  : util.arrayRandom(["x", "+"]),
+		color   : chroma.scale(["#ffffffb1", "#ffffff24"]),
+		distance: 1,
+	})],
+	[10, () => ({
+		symbol: util.arrayRandom(["·", "◌", "x", "+", "", "o", "✧"]),
+		color : chroma.scale(["#a1acf8a4", "#a486ecd4"]),
+	})],
+	[10, () => ({
+		symbol: util.arrayRandom(["·", "◌", "x", "+", "", "o", "✧"]),
+		color : chroma.scale(["#7080e88f", "#a470e88f"]),
+	})],
+	[1, () => ({
+		symbol  : util.arrayRandom(["♥", "♦", "♣", "♠", "◊", "o", "x", "★", "✧"]),
+		color   : chroma.scale(["#f19fc9ac", "#e964c7a5"]),
+		distance: 200,
+	})],
+];
+	const default_star: StarTypeGenerator[1] = () => ({
+		color    : "#ff0000",
+		symbol   : "ERROR",
+		duration : util.rr(6000, 30000),
+		animation: util.arrayRandom(["animation1"]),
+		easing   : util.arrayRandom(["ease-in-out"]),
+		loopCount: 1,
+		distance : 10,
+	});
+	const startTypesWeighted = util.weightedArray(starTypes);
+
+	const starfield = document.getElementById("stars") as HTMLDivElement;
+
+	let starAmount = Math.min(200, Math.max(10, Math.round(window.innerWidth * window.innerHeight * 0.0001)));
+
+
+	// Initialize Starfield
+	for (let i = 0; i < starAmount; i++) {
+		const starElement = document.createElement("p");
+		starElement.classList.add("star");
+		starElement.addEventListener("animationend", async () => moveStar());
+
+
+		let timeout: NodeJS.Timeout | false = false;
+		moveStar(true);
+
+
+		async function moveStar (first = false) {
+			if (timeout) clearTimeout(timeout);
+
+			const type = util.arrayRandom(startTypesWeighted);
+			const star = { ...default_star(), ...type() };
+
+			starElement.innerText = star.symbol;
+			starElement.style.left = `${util.rr(0, window.innerWidth)}px`;
+			starElement.style.top = `${util.rr(0, window.innerHeight)}px`;
+			starElement.style.color = typeof star.color === "string" ? star.color : star.color(Math.random()).hex();
+			starElement.style.animation = "none";
+			await new Promise((res) => requestAnimationFrame(res));
+			await new Promise((res) => requestAnimationFrame(res));
+
+
+			const tx = Math.random() < 0.5 ? 0 : util.ri(-star.distance, star.distance);
+			const ty = Math.random() < 0.5 ? 0 : util.ri(-star.distance, star.distance);
+
+			starElement.style.animation = [
+				`${star.duration}ms ${star.easing} ${first ? -util.rr(0, star.duration) + "ms" : ""} ${star.loopCount} both ${star.animation}`,
+			].join(", ");
+			starElement.animate([
+				{ transform: "translate(0px, 0px) rotate(0deg)" },
+				{ transform: `translate(${tx}vmin, ${ty}vmin) rotate(${Math.random() > 0.5 ? 360 : -360}deg)` },
+			], {
+				duration : star.duration,
+				easing   : "linear",
+				fill     : "both",
+				direction: "reverse",
+			});
+		}
+		starfield.appendChild(starElement);
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -49,20 +179,20 @@ function shimmerLogo () {
 async function slimey () {
 	type cssTimingFunction = "linear" | "ease" | "ease-in" | "ease-out" | "ease-in-out";
 
-	const types : ((el : HTMLElement) => { transforms: string[], duration ?: string, timing ?: cssTimingFunction })[] = [
+	const types: ((el: HTMLElement)=> { transforms: string[]; duration?: string; timing?: cssTimingFunction; })[] = [
 	(el) => {
 		// if (Math.random() > 0.5) return null;
 		return {
 			transforms: [`translateY(-${util.rr(10, 80)}px)`],
-			timing: "ease-out",
-			duration: `${util.rr(250, 400)}ms`,
+			timing    : "ease-out",
+			duration  : `${util.rr(250, 400)}ms`,
 	}; },
 	(el) => {
 		const angle = util.rr(1, 20) * (Math.random() > 0.5 ? 1 : -1);
 		return {
 			transforms: [`rotate(${0 - angle}deg)`, `rotate(${angle * 2}deg)`],
-			timing: "ease-in-out",
-			duration: `${util.rr(100, 400)}ms`,
+			timing    : "ease-in-out",
+			duration  : `${util.rr(100, 400)}ms`,
 	}; },
 	// (el) => { return {
 	// 	transforms : [`rotate(${util.rr(-2, 2) * 360}deg)`],
@@ -87,7 +217,7 @@ let animationProgress = 0;
 // track.style.left = `${5 * safetyMargin}rem`;
 
 // - Store each element in a Map
-const slimes : Map<HTMLElement, { index: number, animating ?: boolean }> = new Map();
+const slimes: Map<HTMLElement, { index: number; animating?: boolean; }> = new Map();
 
 // - Randomize order
 const values = Array.from(elements); // make an array of the elements
@@ -131,7 +261,7 @@ function updatePositions (iteration = 0) {
 }
 updatePositions();
 
-async function animate (el : HTMLElement) {
+async function animate (el: HTMLElement) {
 	const slime = slimes.get(el);
 	if (slime.animating || Math.random() > 0.01) return;
 	slime.animating = true;

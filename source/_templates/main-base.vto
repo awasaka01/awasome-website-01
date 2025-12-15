@@ -6,9 +6,12 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+	{{# Import map for dependencies ignored in bundle #}}
+	<script type="importmap">{{ importmap }}</script>
+
 	{{# Local CSS and JS - LOAD CSS FIRST TO TRY PREVENT "Layout was forced before the page was fully loaded..." #}}
 	<link rel="stylesheet" href="./main.css">
-	<script src="./main.js"></script>
+	<script src="./main.js" type="module"></script>
 
 	{{# Display #}}
 	<title>{{ title || "default title" }}</title>
@@ -17,11 +20,6 @@
 	{{# Module : progressive image loading #}}
 	<link rel="stylesheet" href="/modules/progressive_image_loading/core.css">
 	<script src="/modules/progressive_image_loading/core.js"></script>
-
-
-	{{# Import map for dependencies ignored in bundle #}}
-	<script type="importmap">{{ importmap }}</script>
-
 
 	{{# Load theme before anything else #}}
 	<script>
