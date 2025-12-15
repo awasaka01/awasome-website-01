@@ -93,6 +93,7 @@ fi
 # ————————————————————————————————————————————————————————————
 #  Switch to main branch:
 # ————————————————————————————————————————————————————————————
+git push
 echo -e "${BLUE}${tab}⏳ Switching to 'main'...${RESET}"
 git fetch origin main
 git checkout main
